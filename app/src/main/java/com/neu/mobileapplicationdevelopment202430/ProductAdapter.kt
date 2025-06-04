@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.neu.mobileapplicationdevelopment202430.databinding.ItemProductBinding
 import com.neu.mobileapplicationdevelopment202430.model.Product
 
@@ -31,7 +32,12 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
 
         fun bind(product: Product) {
             binding.apply {
-                productImage.setImageResource(product.getImageResource())
+                // Load image using Coil
+                productImage.load(product.imageUrl) {
+                    crossfade(true)
+                    placeholder(if (product is Product.Food) R.drawable.food else R.drawable.equipment)
+                    error(if (product is Product.Food) R.drawable.food else R.drawable.equipment)
+                }
 
                 productName.setTextColor(Color.parseColor("#000000"))
                 productPrice.setTextColor(Color.parseColor("#000000"))

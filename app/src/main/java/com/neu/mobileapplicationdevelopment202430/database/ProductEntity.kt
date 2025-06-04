@@ -10,40 +10,58 @@ data class ProductEntity(
     val id: String,
     val name: String,
     val category: String,
-    val expiryDate: String?,
     val price: String,
-    val warranty: String?,
-    val imageUrl: String
+    val imageUrl: String,
+    val productType: String, // "food" or "equipment"
+    val expiryDate: String?, // Only for food products
+    val warranty: String?    // Only for equipment products
 ) {
     fun toProduct(): Product {
-        return Product.fromApiResponse(
-            id = id,
-            name = name,
-            category = category,
-            expiryDate = expiryDate,
-            price = price,
-            warranty = warranty,
-            imageUrl = imageUrl
-        )
+        return when (productType) {
+            "food" -> Product.Food(
+                id = id,
+                name = name,
+                category = category,
+                expiryDate = expiryDate,
+                price = price,
+                imageUrl = imageUrl
+            )
+            "equipment" -> Product.Equipment(
+                id = id,
+                name = name,
+                category = category,
+                warranty = warranty,
+                price = price,
+                imageUrl = imageUrl
+            )
+            else -> throw IllegalArgumentException("Unknown product type: $productType")
+        }
     }
 
     companion object {
         fun fromProduct(product: Product): ProductEntity {
-            return ProductEntity(
-                id = product.id,
-                name = product.name,
-                category = product.category,
-                expiryDate = when (product) {
-                    is Product.Food -> product.expiryDate
-                    is Product.Equipment -> null
-                },
-                price = product.price,
-                warranty = when (product) {
-                    is Product.Equipment -> product.warranty
-                    is Product.Food -> null
-                },
-                imageUrl = product.imageUrl
-            )
+            return when (product) {
+                is Product.Food -> ProductEntity(
+                    id = product.id,
+                    name = product.name,
+                    category = product.category,
+                    price = product.price,
+                    imageUrl = product.imageUrl,
+                    productType = "food",
+                    expiryDate = product.expiryDate,
+                    warranty = null
+                )
+                is Product.Equipment -> ProductEntity(
+                    id = product.id,
+                    name = product.name,
+                    category = product.category,
+                    price = product.price,
+                    imageUrl = product.imageUrl,
+                    productType = "equipment",
+                    expiryDate = null,
+                    warranty = product.warranty
+                )
+            }
         }
     }
 } 

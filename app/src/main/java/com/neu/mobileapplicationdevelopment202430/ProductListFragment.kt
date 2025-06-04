@@ -1,6 +1,7 @@
 package com.neu.mobileapplicationdevelopment202430
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ import com.neu.mobileapplicationdevelopment202430.viewmodels.ProductViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+private const val TAG = "ProductListFragment"
+
 class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
@@ -27,21 +30,25 @@ class ProductListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "onCreateView called")
         _binding = FragmentProductListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated called")
 
         setupRecyclerView()
         setupSpinner()
         setupObservers()
         
+        Log.d(TAG, "Initiating product load")
         viewModel.loadProducts()
     }
 
     private fun setupRecyclerView() {
+        Log.d(TAG, "Setting up RecyclerView")
         adapter = ProductAdapter()
         binding.recyclerView.apply {
             adapter = this@ProductListFragment.adapter
@@ -50,30 +57,37 @@ class ProductListFragment : Fragment() {
     }
 
     private fun setupSpinner() {
-        val categories = arrayOf("All", "Food", "Equipment")
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        Log.d(TAG, "Setting up Spinner")
+        val sortOptions = arrayOf("Sort A-Z", "Sort Z-A")
+        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sortOptions)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         
-        binding.categorySpinner.adapter = spinnerAdapter
-        binding.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.sortSpinner.adapter = spinnerAdapter
+        binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val category = if (position == 0) null else categories[position].lowercase()
-                viewModel.setCategory(category)
+                val isAscending = position == 0
+                Log.d(TAG, "Spinner selection changed: position=$position, isAscending=$isAscending")
+                viewModel.setSortOrder(isAscending)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Log.d(TAG, "Nothing selected in spinner")
+            }
         }
     }
 
     private fun setupObservers() {
+        Log.d(TAG, "Setting up observers")
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
+                Log.d(TAG, "Loading state changed: $isLoading")
                 binding.loadingIndicator.isVisible = isLoading
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.error.collectLatest { error ->
+                Log.d(TAG, "Error state changed: $error")
                 binding.errorText.isVisible = error != null
                 if (error != null) {
                     binding.errorText.text = error
@@ -83,6 +97,10 @@ class ProductListFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.products.collectLatest { products ->
+                Log.d(TAG, "Products updated: ${products.size} items")
+                products.forEach { product ->
+                    Log.d(TAG, "Product in UI: ${product.name}")
+                }
                 binding.errorText.isVisible = products.isEmpty()
                 binding.errorText.text = if (products.isEmpty()) "No products available" else ""
                 adapter.submitList(products)
@@ -92,6 +110,7 @@ class ProductListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView called")
         _binding = null
     }
 } 

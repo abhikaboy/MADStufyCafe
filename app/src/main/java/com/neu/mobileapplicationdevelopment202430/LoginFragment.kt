@@ -29,7 +29,7 @@ class LoginFragment : Fragment() {
             val username = binding.usernameInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
-            if (username == "admin" && password == "admin") {
+            if (username == "" && password == "") {
                 findNavController().navigate(R.id.action_loginFragment_to_productListFragment)
             } else {
                 Snackbar.make(view, "Invalid credentials", Snackbar.LENGTH_SHORT).show()

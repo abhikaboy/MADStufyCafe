@@ -92,7 +92,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
     implementation("androidx.work:work-runtime-ktx:2.10.0")
-    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation("io.coil-kt:coil:2.5.0")
     implementation("androidx.compose.material3:material3-android:1.3.1")
     debugImplementation("androidx.fragment:fragment-testing:1.8.5")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -120,6 +120,7 @@ dependencies {
 
     // Room
     val room_version = "2.6.1"
+    kapt("androidx.room:room-compiler:$room_version")
 
     implementation("androidx.room:room-runtime:$room_version")
 
@@ -168,4 +169,6 @@ dependencies {
     // paging
     implementation("androidx.paging:paging-runtime-ktx:3.3.5")
     implementation("androidx.paging:paging-compose:3.3.5")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }
