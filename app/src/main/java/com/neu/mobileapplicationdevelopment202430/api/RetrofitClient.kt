@@ -1,5 +1,5 @@
 object RetrofitClient {
-    private const val BASE_URL = " https://mobileapplicationdevelopment.pythonanywhere.com/api/"
+    private const val BASE_URL = "https://mobileapplicationdevelopment.pythonanywhere.com/api/"
     
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = if (BuildConfig.DEBUG) {
