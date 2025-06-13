@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mobileapplicationdevelopment202430</string>
+    <string name="app_name">Compose App</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -20,4 +21,21 @@
     <string name="product_warranty_placeholder">3 years</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
+
+    <!-- Sort options -->
+    <string name="sort_name_asc">Sort A-Z</string>
+    <string name="sort_name_desc">Sort Z-A</string>
+    <string name="sort_price_asc">Price: Low to High</string>
+    <string name="sort_price_desc">Price: High to Low</string>
+
+    <!-- Product details -->
+    <string name="expires_prefix">Expires: </string>
+    <string name="warranty_prefix">Warranty: </string>
+    <string name="not_available">N/A</string>
+    <string name="years_suffix">years</string>
+    <string name="no_products_available">No products available</string>
+
+    <!-- Login -->
+    <string name="button_login">Login</string>
+    <string name="error_invalid_credentials">Invalid credentials</string>
 </resources>
