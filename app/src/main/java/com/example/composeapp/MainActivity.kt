@@ -35,13 +35,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CafeListScreen(repository: CafeRepository) {
     val cafes by repository.allCafes.collectAsState(initial = emptyList())
     
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { 
                     Text(
                         text = "Cafes",
@@ -49,7 +50,7 @@ fun CafeListScreen(repository: CafeRepository) {
                         color = TextPrimary
                     ) 
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Primary,
                     titleContentColor = TextPrimary
                 )

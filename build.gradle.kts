@@ -22,8 +22,6 @@ plugins {
 }
 
 buildscript {
-    ext {
-    }
     repositories {
         google()
         mavenCentral()
