@@ -38,4 +38,19 @@
     <!-- Login -->
     <string name="button_login">Login</string>
     <string name="error_invalid_credentials">Invalid credentials</string>
+    <string name="tag_content">tag content</string>
+    <string name="cafe_image">Cafe Image</string>
+    <string name="cafe_name">Cafe Name</string>
+    <string name="location">location</string>
+    <string name="location_icon">Location icon</string>
+    <string name="location_location_location">Location, location, location</string>
+    <string name="some">Some</string>
+    <string name="outlet_icon">Outlet icon</string>
+    <string name="outlets">Outlets</string>
+    <string name="star">Star</string>
+    <string name="wifi_icon">Wifi icon</string>
+    <string name="excellent">Excellent</string>
+    <string name="study_rating">Study Rating</string>
+    <string name="wifi">Wifi</string>
+    <string name="great">great</string>
 </resources>
