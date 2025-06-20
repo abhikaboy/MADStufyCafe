@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,9 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeapp.R
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.theme.Background
 import com.example.composeapp.ui.theme.CardBackground
+import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.LargeCardBackground
-import com.example.composeapp.ui.theme.TextBackground
 
 
 @Composable
@@ -43,16 +45,18 @@ fun CafeCard(cafe: CafeEntity) {
         colors = CardDefaults.cardColors(
             containerColor = LargeCardBackground
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Image(
                 painterResource(id = R.drawable.cafe), "Card Image", Modifier
                     .fillMaxWidth()
-                    .height(180.dp), contentScale = ContentScale.Crop
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(9.dp)),
+                contentScale = ContentScale.Crop
             )
 
             Text(
@@ -66,9 +70,13 @@ fun CafeCard(cafe: CafeEntity) {
                 Image(
                     painter = painterResource(id = R.drawable.location_icon),
                     contentDescription = "Icon",
+                    modifier = Modifier.size(14.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp)) // spacing between image and text
-                Text(cafe.address)
+                Spacer(modifier = Modifier.width(4.dp)) // spacing between image and text
+                Text(
+                    text = cafe.address,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
 
             //Three card component
@@ -81,12 +89,12 @@ fun CafeCard(cafe: CafeEntity) {
                 Card(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .height(70.dp),
+                        .height(60.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = CardBackground
+                        containerColor = Background
                     ),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                    elevation = CardDefaults.cardElevation(1.dp)
                 ) {
                     Column(
                         modifier = Modifier
@@ -95,11 +103,11 @@ fun CafeCard(cafe: CafeEntity) {
                         // Top Text
                         Text(
                             text = "Study Rating",
-                            fontSize = 12.sp,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodySmall
                         )
+
                         //Add vertical spacing
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.align(Alignment.Start)
@@ -129,12 +137,12 @@ fun CafeCard(cafe: CafeEntity) {
                 Card(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .height(70.dp),
+                        .height(60.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = CardBackground
                     ),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                    elevation = CardDefaults.cardElevation(1.dp)
                 ) {
                     Column(
                         modifier = Modifier
@@ -143,8 +151,11 @@ fun CafeCard(cafe: CafeEntity) {
                         Text(
                             text = "Outlets",
                             fontSize = 12.sp,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodySmall
+
                         )
+                        Spacer(modifier = Modifier.height(5.dp))
+
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             modifier = Modifier.align(Alignment.Start)
@@ -154,15 +165,8 @@ fun CafeCard(cafe: CafeEntity) {
                                 contentDescription = "Outlet",
                                 modifier = Modifier.size(20.dp)
                             )
-                            Text(
-                                text = cafe.outletInfo,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .background(
-                                        color = TextBackground,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            LightLabel(
+                                text = cafe.outletInfo
                             )
                         }
                     }
@@ -172,12 +176,12 @@ fun CafeCard(cafe: CafeEntity) {
                 Card(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .height(70.dp),
+                        .height(60.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = CardBackground
                     ),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                    elevation = CardDefaults.cardElevation(1.dp)
                 ) {
                     Column(
                         modifier = Modifier
@@ -187,8 +191,9 @@ fun CafeCard(cafe: CafeEntity) {
                         Text(
                             text = "Wifi",
                             fontSize = 12.sp,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodySmall
                         )
+                        Spacer(modifier = Modifier.height(5.dp))
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             modifier = Modifier
@@ -197,17 +202,12 @@ fun CafeCard(cafe: CafeEntity) {
                             Image(
                                 painter = painterResource(id = R.drawable.wifi_icon),
                                 contentDescription = "Wifi",
+                                modifier = Modifier.size(18.dp)
                             )
-                            Text(
-                                text = cafe.wifiQuality,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .background(
-                                        color = TextBackground,
-                                        shape = RoundedCornerShape(10.dp)
-                                    )
-                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            LightLabel(
+                                text = cafe.wifiQuality
                             )
+
                         }
                     }
                 }
@@ -228,5 +228,7 @@ fun PreviewCafeCard() {
         wifiQuality = "excellent",
         imageUrl = ""
     )
-    CafeCard(cafe)
+    ComposeAppTheme {
+        CafeCard(cafe)
+    }
 }
