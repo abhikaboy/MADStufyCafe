@@ -75,6 +75,8 @@ dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.02.00")
     implementation(composeBom)
     androidTestImplementation(composeBom)
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+
 
     // Core Android dependencies
     implementation("androidx.core:core-ktx:1.12.0")

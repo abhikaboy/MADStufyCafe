@@ -51,7 +51,7 @@ fun CafeListScreen(repository: CafeRepository) {
                     ) 
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Primary,
+                    containerColor = TextPrimary,
                     titleContentColor = TextPrimary
                 )
             )
