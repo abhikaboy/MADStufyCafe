@@ -10,6 +10,8 @@ val Secondary = Color(0xFF03DAC6)
 // Text colors
 val TextPrimary = Color(0xFF000000)
 val TextSecondary = Color(0xFF666666)
+val CardBackground = Color(0xFFFFFFFF)
+val TextBackground = Color(0xffece7e7)
 
 // Background colors
 val Background = Color(0xFFFFFFFF)
