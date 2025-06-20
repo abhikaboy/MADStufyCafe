@@ -10,5 +10,8 @@ data class CafeEntity(
     val name: String,
     val tags: String, // Stored as comma-separated values
     val address: String,
+    val studyRating: Int,
+    val outletInfo: String,
+    val wifiQuality: String,
     val imageUrl: String
 ) 

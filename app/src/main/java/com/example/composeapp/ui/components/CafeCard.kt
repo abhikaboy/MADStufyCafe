@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,17 +27,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeapp.R
+import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.theme.CardBackground
+import com.example.composeapp.ui.theme.LargeCardBackground
 import com.example.composeapp.ui.theme.TextBackground
 
 
 @Composable
-fun CafeCard() {
+fun CafeCard(cafe: CafeEntity) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = LargeCardBackground
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
@@ -50,7 +56,7 @@ fun CafeCard() {
             )
 
             Text(
-                text = "Cafe Name",
+                text = cafe.name,
                 style = MaterialTheme.typography.titleLarge,
             )
 
@@ -62,7 +68,7 @@ fun CafeCard() {
                     contentDescription = "Icon",
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // spacing between image and text
-                Text("Location, location, location")
+                Text(cafe.address)
             }
 
             //Three card component
@@ -74,7 +80,7 @@ fun CafeCard() {
                 // Card 1
                 Card(
                     modifier = Modifier
-                        .weight(1f)
+                        .wrapContentWidth()
                         .height(70.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
@@ -84,7 +90,6 @@ fun CafeCard() {
                 ) {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
                             .padding(8.dp),
                     ) {
                         // Top Text
@@ -93,15 +98,27 @@ fun CafeCard() {
                             fontSize = 12.sp,
                             style = MaterialTheme.typography.bodyLarge
                         )
+                        //Add vertical spacing
+                        Spacer(modifier = Modifier.height(4.dp))
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.align(Alignment.Start) // align left
+                            modifier = Modifier.align(Alignment.Start)
                         ) {
-                            repeat(5) {
+                            val rating = cafe.studyRating.coerceIn(0, 5)
+                            repeat(rating) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.star_icon),
+                                    painter = painterResource(id = R.drawable.filled_star),
                                     contentDescription = "Star",
                                     modifier = Modifier.size(13.dp) // Adjust star size here
+                                )
+                            }
+
+                            // Empty stars for the rest
+                            repeat(5 - rating) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.star_icon),
+                                    contentDescription = "Empty Star",
+                                    modifier = Modifier.size(13.dp)
                                 )
                             }
                         }
@@ -111,7 +128,7 @@ fun CafeCard() {
                 // Card 2
                 Card(
                     modifier = Modifier
-                        .weight(1f)
+                        .wrapContentWidth()
                         .height(70.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
@@ -121,7 +138,6 @@ fun CafeCard() {
                 ) {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
                             .padding(8.dp),
                     ) {
                         Text(
@@ -139,7 +155,7 @@ fun CafeCard() {
                                 modifier = Modifier.size(20.dp)
                             )
                             Text(
-                                text = "Some",
+                                text = cafe.outletInfo,
                                 fontSize = 16.sp,
                                 modifier = Modifier
                                     .background(
@@ -155,7 +171,7 @@ fun CafeCard() {
                 // Card 3
                 Card(
                     modifier = Modifier
-                        .weight(1f)
+                        .wrapContentWidth()
                         .height(70.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
@@ -175,14 +191,15 @@ fun CafeCard() {
                         )
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            modifier = Modifier.align(Alignment.Start)
+                            modifier = Modifier
+                                .align(Alignment.Start),
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.wifi_icon),
                                 contentDescription = "Wifi",
                             )
                             Text(
-                                text = "great",
+                                text = cafe.wifiQuality,
                                 fontSize = 16.sp,
                                 modifier = Modifier
                                     .background(
@@ -201,6 +218,15 @@ fun CafeCard() {
 
 @Preview
 @Composable
-fun Preview() {
-    CafeCard()
+fun PreviewCafeCard() {
+    val cafe = CafeEntity(
+        name = "Cafe name",
+        address = "Location, location, location",
+        tags = "",
+        studyRating = 3,
+        outletInfo = "Many",
+        wifiQuality = "excellent",
+        imageUrl = ""
+    )
+    CafeCard(cafe)
 }

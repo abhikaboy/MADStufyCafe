@@ -8,8 +8,9 @@ val PrimaryVariant = Color(0xFF3700B3)
 val Secondary = Color(0xFF03DAC6)
 
 // Text colors
-val TextPrimary = Color(0xFF000000)
+val TextPrimary = Color(0xff756b69)
 val TextSecondary = Color(0xFF666666)
+val LargeCardBackground = Color(0xfff6f3f3)
 val CardBackground = Color(0xFFFFFFFF)
 val TextBackground = Color(0xffece7e7)
 
