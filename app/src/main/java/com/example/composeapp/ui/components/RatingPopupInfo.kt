@@ -1,0 +1,349 @@
+package com.example.composeapp.ui.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.composeapp.R
+import com.example.composeapp.data.database.RatingEntity
+import com.example.composeapp.ui.theme.TextPrimary
+import com.example.composeapp.ui.theme.TextSecondary
+import com.example.composeapp.ui.theme.CardBackground
+import com.example.composeapp.ui.theme.ComposeAppTheme
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+
+@Composable
+fun RatingPopupInfo(rating: RatingEntity) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 23.dp, end = 16.dp, bottom = 23.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBackground
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                CustomButton(
+                    text = "Leave a Review",
+                    onClick = { /* Handle leave Review */ }
+                )
+            }
+
+            Text(
+                text = rating.name,
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.location_icon),
+                    contentDescription = "Location Icon",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = rating.address,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent
+                ),
+                border = BorderStroke(
+                    width = 0.5.dp,
+                    color = TextPrimary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Study Rating",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            val studyRating = rating.studyRating.coerceIn(0, 5)
+                            repeat(studyRating) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.filled_star),
+                                    contentDescription = "Filled Star",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                            repeat(5 - studyRating) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.star_icon),
+                                    contentDescription = "Empty Star",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
+                    }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Outlets",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.outlet_icon),
+                                contentDescription = "Outlet Icon",
+                                modifier = Modifier.size(20.dp)
+                            )
+                            LightLabel(text = rating.outletInfo)
+                        }
+                    }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Wifi",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.wifi_icon),
+                                contentDescription = "Wifi Icon",
+                                modifier = Modifier.size(16.dp)
+                            )
+                            LightLabel(text = rating.wifiQuality)
+                        }
+                    }
+                }
+            }
+
+            TagSection(
+                title = "Atmosphere",
+                tags = rating.atmosphereTags
+            )
+
+            TagSection(
+                title = "Energy Level",
+                tags = rating.energyLevelTags
+            )
+
+            TagSection(
+                title = "Study-Friendly",
+                tags = rating.studyFriendlyTags
+            )
+
+            PhotosSection(
+                title = "Recent Photos",
+                imageUrls = rating.imageUrls
+            )
+        }
+    }
+}
+
+@Composable
+fun TagSection(
+    title: String,
+    tags: List<String>
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        if (tags.isNotEmpty()) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(tags) { tag ->
+                    Tag(text = tag)
+                }
+            }
+        } else {
+            Text(
+                text = "No tags available",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary
+            )
+        }
+    }
+}
+
+@Composable
+fun PhotosSection(
+    title: String,
+    imageUrls: List<String>
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        if (imageUrls.isNotEmpty()) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.height(120.dp) // Fixed height for all images
+            ) {
+                imageUrls.take(3).forEach { imageUrl ->
+                    PhotoCard(
+                        imageUrl = imageUrl,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        isSquare = true
+                    )
+                }
+
+                if (imageUrls.size > 3) {
+                    PhotoCard(
+                        imageUrl = imageUrls[3],
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        isLastItem = imageUrls.size > 4,
+                        remainingCount = if (imageUrls.size > 4) imageUrls.size - 4 else 0,
+                        isSquare = true
+                    )
+                }
+            }
+        } else {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFF5F5F5)
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No photos available",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextSecondary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun PhotoCard(
+    imageUrl: String,
+    modifier: Modifier = Modifier,
+    isLastItem: Boolean = false,
+    remainingCount: Int = 0,
+    isSquare: Boolean = false
+) {
+    Card(
+        modifier = modifier.then(
+            if (isSquare) Modifier else Modifier.aspectRatio(1f)
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Box {
+            GlideImage(
+                model = imageUrl,
+                contentDescription = "Cafe Photo",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
+            if (isLastItem && remainingCount > 0) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Color.Black.copy(alpha = 0.6f)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "+$remainingCount More",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRatingPopupInfo() {
+    val ratings = RatingEntity(
+        id = 1,
+        name = "Caffe Bene",
+        address = "14 Massachusetts Ave, Boston, MA",
+        studyRating = 3,
+        outletInfo = "Some",
+        wifiQuality = "Excellent",
+        atmosphereTags = listOf("Cozy", "Rustic", "Traditional", "Warm", "Clean"),
+        energyLevelTags = listOf("Quiet", "Low-Key", "Tranquil", "Moderate", "Average"),
+        studyFriendlyTags = listOf("Study Haven", "Good", "Decent", "Mixed", "Fair"),
+        imageUrls = listOf(
+            "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+            "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
+            "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
+            "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400",
+            "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400",
+            "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400"
+        )
+    )
+
+    ComposeAppTheme {
+        RatingPopupInfo(ratings)
+    }
+}

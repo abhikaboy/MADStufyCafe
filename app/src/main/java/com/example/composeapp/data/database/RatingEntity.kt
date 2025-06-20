@@ -4,14 +4,16 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "cafes")
-data class CafeEntity(
+data class RatingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val tags: String, // Stored as comma-separated values
     val address: String,
     val studyRating: Int,
     val outletInfo: String,
     val wifiQuality: String,
-    val imageUrl: String
-) 
+    val atmosphereTags: List<String>,
+    val energyLevelTags: List<String>,
+    val studyFriendlyTags: List<String>,
+    val imageUrls: List<String>
+)

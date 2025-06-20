@@ -5,6 +5,9 @@
       <SelectionState runConfigName="MobileApplicationDevelopment2025.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="PreviewExpandableFilterMenu">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
