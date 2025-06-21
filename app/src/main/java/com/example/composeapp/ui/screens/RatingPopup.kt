@@ -73,8 +73,10 @@ fun PreviewRatingPopup() {
             "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
             "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
             "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-            "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400"
-        )
+            "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400",
+            "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
+
+            )
     )
 
     ComposeAppTheme {
