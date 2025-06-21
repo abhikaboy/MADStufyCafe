@@ -30,8 +30,7 @@ fun ExperiencePopupInfo() {
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 25.dp, end = 25.dp, bottom = 25.dp),
+            .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = CardBackground

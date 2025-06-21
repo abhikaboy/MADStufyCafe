@@ -23,8 +23,6 @@ fun WifiRateButton(
     rating: String,
     text: String,
     onClick: () -> Unit,
-    backgroundColor: Color = TextBackground,
-    textColor: Color = TextPrimary,
     isSelected: Boolean = false,
     enabled: Boolean = true,
     cornerRadius: Int = 12,
@@ -37,7 +35,7 @@ fun WifiRateButton(
     }
     val finalTextColor = when {
         isSelected -> Color.White
-        else -> textColor
+        else -> TextPrimary
     }
 
     Surface(
@@ -75,7 +73,7 @@ fun WifiRateButton(
                         fontSize = 20.sp,
                         color = when {
                             isSelected -> Color.White
-                            else -> backgroundColor
+                            else -> LargeCardBackground
                         }
                     )
                 }
