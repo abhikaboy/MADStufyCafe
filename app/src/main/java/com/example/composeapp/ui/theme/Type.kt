@@ -21,6 +21,13 @@ val Typography = Typography(
         color = TextPrimary,
         lineHeight = 40.sp
     ),
+    headlineMedium = TextStyle(
+        fontSize = 28.sp,
+        fontFamily = LoraFont,
+        fontWeight = FontWeight.Bold,
+        color = TextPrimary,
+        lineHeight = 40.sp
+    ),
 
     titleLarge  = TextStyle(
         fontSize = 20.sp,

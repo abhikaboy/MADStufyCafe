@@ -8,14 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.composeapp.data.database.CafeEntity
-import com.example.composeapp.ui.components.RatingPopupInfo
+import com.example.composeapp.ui.components.ExperiencePopupInfo
 import com.example.composeapp.ui.theme.ComposeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RatingPopup(
-    cafe: CafeEntity?,
+fun ExperiencePopup(
     isVisible: Boolean,
     onDismiss: () -> Unit
 ) {
@@ -23,7 +21,6 @@ fun RatingPopup(
         skipPartiallyExpanded = true
     )
 
-    if (isVisible && cafe != null) {
         ModalBottomSheet(
             sheetState = bottomSheetState,
             onDismissRequest = onDismiss,
@@ -49,30 +46,17 @@ fun RatingPopup(
                         bottom = 0.dp
                     )
                 ) {
-                    RatingPopupInfo(cafe = cafe)
+                    ExperiencePopupInfo()
                 }
             }
         }
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewRatingPopup() {
-    val cafe = CafeEntity(
-        id = 1,
-        name = "Caffe Bene",
-        address = "14 Massachusetts Ave, Boston, MA",
-        studyRating = 3,
-        outletInfo = "Some",
-        wifiQuality = "Excellent",
-        atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
-        energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
-        studyFriendlyTags = "Study Haven,Good,Decent,Mixed,Fair",
-        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400,https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400,https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400,https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400",
-    )
-
+fun PreviewExperiencePopup() {
     ComposeAppTheme {
-        RatingPopupInfo(cafe = cafe)
+        ExperiencePopupInfo()
     }
 }
