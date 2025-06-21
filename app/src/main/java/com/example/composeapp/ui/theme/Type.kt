@@ -22,7 +22,7 @@ val Typography = Typography(
         lineHeight = 40.sp
     ),
     headlineMedium = TextStyle(
-        fontSize = 28.sp,
+        fontSize = 24.sp,
         fontFamily = LoraFont,
         fontWeight = FontWeight.Bold,
         color = TextPrimary,
@@ -30,7 +30,7 @@ val Typography = Typography(
     ),
 
     titleLarge  = TextStyle(
-        fontSize = 20.sp,
+        fontSize = 16.sp,
         fontFamily = DmSansFont,
         fontWeight = FontWeight.W800,
         color = TextPrimary,
@@ -38,7 +38,7 @@ val Typography = Typography(
     ),
 
     titleMedium  = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 12.sp,
         fontFamily = DmSansFont,
         fontWeight = FontWeight.W600,
         color = TextPrimary,
@@ -46,7 +46,7 @@ val Typography = Typography(
     ),
 
     titleSmall = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 10.sp,
         fontFamily = DmSansFont,
         fontWeight = FontWeight.Medium,
         color = TextPrimary,
