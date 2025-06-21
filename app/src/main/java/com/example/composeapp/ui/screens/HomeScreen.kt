@@ -62,7 +62,7 @@ fun PreviewHomeScreen() {
             studyRating = 4,
             outletInfo = "Many",
             wifiQuality = "Excellent",
-            imageUrl = ""
+            imageUrl = "",
         ),
         CafeEntity(
             name = "Study Spot",
@@ -71,7 +71,7 @@ fun PreviewHomeScreen() {
             studyRating = 3,
             outletInfo = "Some",
             wifiQuality = "Good",
-            imageUrl = ""
+            imageUrl = "",
         ),
         CafeEntity(
             name = "Java House",

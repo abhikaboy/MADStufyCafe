@@ -17,16 +17,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.R
-import com.example.composeapp.data.database.RatingEntity
 import com.example.composeapp.ui.theme.TextPrimary
 import com.example.composeapp.ui.theme.TextSecondary
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.composeapp.data.database.CafeEntity
 
 @Composable
-fun RatingPopupInfo(rating: RatingEntity) {
+fun RatingPopupInfo(cafe: CafeEntity) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,7 +51,7 @@ fun RatingPopupInfo(rating: RatingEntity) {
             }
 
             Text(
-                text = rating.name,
+                text = cafe.name,
                 style = MaterialTheme.typography.headlineLarge
             )
             Row(
@@ -64,7 +64,7 @@ fun RatingPopupInfo(rating: RatingEntity) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = rating.address,
+                    text = cafe.address,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -97,7 +97,7 @@ fun RatingPopupInfo(rating: RatingEntity) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            val studyRating = rating.studyRating.coerceIn(0, 5)
+                            val studyRating = cafe.studyRating.coerceIn(0, 5)
                             repeat(studyRating) {
                                 Image(
                                     painter = painterResource(id = R.drawable.filled_star),
@@ -132,7 +132,7 @@ fun RatingPopupInfo(rating: RatingEntity) {
                                 contentDescription = "Outlet Icon",
                                 modifier = Modifier.size(20.dp)
                             )
-                            LightLabel(text = rating.outletInfo)
+                            LightLabel(text = cafe.outletInfo)
                         }
                     }
                     Column(
@@ -153,7 +153,7 @@ fun RatingPopupInfo(rating: RatingEntity) {
                                 contentDescription = "Wifi Icon",
                                 modifier = Modifier.size(16.dp)
                             )
-                            LightLabel(text = rating.wifiQuality)
+                            LightLabel(text = cafe.wifiQuality)
                         }
                     }
                 }
@@ -161,22 +161,22 @@ fun RatingPopupInfo(rating: RatingEntity) {
 
             TagSection(
                 title = "Atmosphere",
-                tags = rating.atmosphereTags
+                tags = cafe.atmosphereTags.stringToList()
             )
 
             TagSection(
                 title = "Energy Level",
-                tags = rating.energyLevelTags
+                tags = cafe.energyLevelTags.stringToList()
             )
 
             TagSection(
                 title = "Study-Friendly",
-                tags = rating.studyFriendlyTags
+                tags = cafe.studyFriendlyTags.stringToList()
             )
 
             PhotosSection(
                 title = "Recent Photos",
-                imageUrls = rating.imageUrls
+                imageUrls = cafe.ratingImageUrls.stringToList()
             )
         }
     }
@@ -229,15 +229,14 @@ fun PhotosSection(
         if (imageUrls.isNotEmpty()) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.height(120.dp) // Fixed height for all images
+                modifier = Modifier.height(120.dp)
             ) {
                 imageUrls.take(3).forEach { imageUrl ->
                     PhotoCard(
                         imageUrl = imageUrl,
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight(),
-                        isSquare = true
+                            .fillMaxHeight()
                     )
                 }
 
@@ -248,8 +247,7 @@ fun PhotosSection(
                             .weight(1f)
                             .fillMaxHeight(),
                         isLastItem = imageUrls.size > 4,
-                        remainingCount = if (imageUrls.size > 4) imageUrls.size - 4 else 0,
-                        isSquare = true
+                        remainingCount = if (imageUrls.size > 4) imageUrls.size - 4 else 0
                     )
                 }
             }
@@ -284,13 +282,10 @@ fun PhotoCard(
     imageUrl: String,
     modifier: Modifier = Modifier,
     isLastItem: Boolean = false,
-    remainingCount: Int = 0,
-    isSquare: Boolean = false
+    remainingCount: Int = 0
 ) {
     Card(
-        modifier = modifier.then(
-            if (isSquare) Modifier else Modifier.aspectRatio(1f)
-        ),
+        modifier = modifier.aspectRatio(1f),
         shape = RoundedCornerShape(12.dp)
     ) {
         Box {
@@ -320,30 +315,31 @@ fun PhotoCard(
     }
 }
 
+fun String.stringToList(): List<String> {
+    return if (this.isEmpty()) {
+        emptyList()
+    } else {
+        this.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewRatingPopupInfo() {
-    val ratings = RatingEntity(
+    val cafe = CafeEntity(
         id = 1,
         name = "Caffe Bene",
         address = "14 Massachusetts Ave, Boston, MA",
         studyRating = 3,
         outletInfo = "Some",
         wifiQuality = "Excellent",
-        atmosphereTags = listOf("Cozy", "Rustic", "Traditional", "Warm", "Clean"),
-        energyLevelTags = listOf("Quiet", "Low-Key", "Tranquil", "Moderate", "Average"),
-        studyFriendlyTags = listOf("Study Haven", "Good", "Decent", "Mixed", "Fair"),
-        imageUrls = listOf(
-            "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
-            "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
-            "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-            "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400",
-            "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400",
-            "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400"
-        )
+        atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+        energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+        studyFriendlyTags = "Study Haven,Good,Decent,Mixed,Fair",
+        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400,https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400,https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400,https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400",
     )
 
     ComposeAppTheme {
-        RatingPopupInfo(ratings)
+        RatingPopupInfo(cafe)
     }
 }

@@ -16,23 +16,24 @@ import androidx.compose.ui.unit.sp
 import com.example.composeapp.ui.theme.TextPrimary
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.LargeCardBackground
+import com.example.composeapp.ui.theme.TextBackground
 
 @Composable
 fun WifiRateButton(
     rating: String,
     text: String,
     onClick: () -> Unit,
-    backgroundColor: Color = LargeCardBackground,
+    backgroundColor: Color = TextBackground,
     textColor: Color = TextPrimary,
     isSelected: Boolean = false,
     enabled: Boolean = true,
     cornerRadius: Int = 12,
-    strokeWidth: Float = 1f
+    strokeWidth: Float = 0.5f,
 
-) {
+    ) {
     val finalBackgroundColor = when {
         isSelected -> TextPrimary
-        else -> LargeCardBackground
+        else -> TextBackground
     }
     val finalTextColor = when {
         isSelected -> Color.White
@@ -50,7 +51,7 @@ fun WifiRateButton(
         ),
         modifier = Modifier
             .clickable(enabled = enabled) { onClick() }
-            .size(width = 70.dp, height = 100.dp)
+            .size(width = 50.dp, height = 70.dp)
     ) {
         Column(
             modifier = Modifier
@@ -65,7 +66,7 @@ fun WifiRateButton(
                     isSelected -> Color.White.copy(alpha = 0.2f)
                     else -> TextPrimary
                 },
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(30.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
