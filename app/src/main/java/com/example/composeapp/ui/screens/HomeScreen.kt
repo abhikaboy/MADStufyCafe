@@ -4,9 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,8 @@ import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.SearchBar
 import com.example.composeapp.ui.components.CafeList
 import com.example.composeapp.R
+import com.example.composeapp.ui.theme.TextPrimary
+import com.example.composeapp.ui.theme.TextSecondary
 
 @Composable
 fun HomeScreen(cafeList: List<CafeEntity>) {
@@ -36,14 +40,17 @@ fun HomeScreen(cafeList: List<CafeEntity>) {
         ) {
             Text(
                 text = "RECOMMENDED CAFE'S NEAR YOU",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary
             )
             Image (
                 painter = painterResource(id = R.drawable.phosphor2),
                 contentDescription = "phosphor",
-                Modifier.padding(top = 6.dp, bottom = 5.dp)
+                Modifier.padding(top = 6.dp, bottom = 5.dp).size(22.dp)
             )
         }
+        Spacer(Modifier.padding(bottom = 10.dp)
+        )
         CafeList(cafeList)
     }
 }

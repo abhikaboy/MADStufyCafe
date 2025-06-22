@@ -104,14 +104,14 @@ fun FilterChip(
 ) {
     Text(
         text = text,
-        color = if (isSelected) MaterialTheme.colorScheme.onPrimary else TextPrimary,
+        color = TextPrimary,
         modifier = Modifier
-            .clip(RoundedCornerShape(30))
+            .clip(RoundedCornerShape(50))
             .background(
                 color = if (isSelected) MaterialTheme.colorScheme.primary else LargeCardBackground,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(40.dp)
             )
-            .border(1.dp, TextPrimary, shape = RoundedCornerShape(10.dp))
+            .border(0.5.dp, TextPrimary, shape = RoundedCornerShape(50.dp))
             .clickable { onClick() }
             .padding(horizontal = 12.dp, vertical = 8.dp)
     )

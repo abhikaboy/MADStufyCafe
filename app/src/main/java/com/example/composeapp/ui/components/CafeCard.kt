@@ -45,7 +45,7 @@ fun CafeCard(cafe: CafeEntity) {
         colors = CardDefaults.cardColors(
             containerColor = LargeCardBackground
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
