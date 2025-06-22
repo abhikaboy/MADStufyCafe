@@ -60,7 +60,7 @@ fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () ->
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Can you tell us more about the ambiance of this cafe?",
+                text = "Can you tell us more about the ambiance of ${cafe.name}?",
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),

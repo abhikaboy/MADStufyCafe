@@ -14,6 +14,7 @@ import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.popup.AmbiancePopupInfo
 import com.example.composeapp.ui.components.popup.ExperiencePopupInfo
 import com.example.composeapp.ui.components.popup.RatingPopupInfo
+import com.example.composeapp.ui.components.popup.UploadPhotoInfo
 import com.example.composeapp.ui.theme.CardBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,7 +83,17 @@ fun CafePopup(
                                 navController.popBackStack()
                             },
                             toUploadPhoto = {
-                                /* Add navController.navigate("photoUpload") */
+                                navController.navigate("upload")
+                            }
+                        )
+                    }
+                    composable("upload") {
+                        UploadPhotoInfo(
+                            cafe = cafe,
+                            onBack = {
+                                navController.popBackStack()
+                            },
+                            completeReview = {
                             }
                         )
                     }

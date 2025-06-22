@@ -50,7 +50,8 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "How was your working experience at this cafe?",
+                text = "How was your working experience at ${cafe.name}" +
+                        "?",
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
