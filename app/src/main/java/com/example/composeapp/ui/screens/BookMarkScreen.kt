@@ -44,11 +44,13 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
         ExpandableFilterBar()
         Spacer(modifier = Modifier.height(15.dp))
         Text(
-            text = "Showing 14 Bookmarked Cafes",
+            text = "Showing ${cafeList.size} bookmarked cafes",
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
+        CafeList(cafeList) { cafe ->
+        }
         //CafeList(cafeList, onNavigate = {})
         Spacer(modifier = Modifier.height(15.dp))
     }
@@ -56,34 +58,43 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBookMarks() {
+fun PreviewBookMarkScreen() {
     val cafesList = listOf(
         CafeEntity(
             name = "Bean & Brew",
-            address = "123 Main Street",
-            tags = "",
+            address = "123 Main Street, Boston, MA",
             studyRating = 4,
             outletInfo = "Many",
             wifiQuality = "Excellent",
-            imageUrl = ""
+            atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+            energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+            studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+            imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+            ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
         ),
         CafeEntity(
             name = "Study Spot",
-            address = "45 College Ave",
-            tags = "",
+            address = "45 College Ave, Cambridge, MA",
             studyRating = 3,
             outletInfo = "Some",
             wifiQuality = "Good",
-            imageUrl = ""
+            atmosphereTags = "Modern,Clean,Minimalist,Bright",
+            energyLevelTags = "Calm,Focused,Productive,Moderate",
+            studyFriendlyTags = "Study-Haven,Good,Decent,Quiet",
+            imageUrl = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
+            ratingImageUrls = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400"
         ),
         CafeEntity(
             name = "Java House",
-            address = "88 Coffee Blvd",
-            tags = "",
+            address = "88 Coffee Blvd, Somerville, MA",
             studyRating = 5,
             outletInfo = "Few",
             wifiQuality = "Fair",
-            imageUrl = ""
+            atmosphereTags = "Cozy,Traditional,Warm,Industrial",
+            energyLevelTags = "Moderate,Average,Social,Lively",
+            studyFriendlyTags = "Mixed,Fair,Decent,Social",
+            imageUrl = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
+            ratingImageUrls = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400,https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400"
         )
     )
     BookMarkScreen(cafesList)

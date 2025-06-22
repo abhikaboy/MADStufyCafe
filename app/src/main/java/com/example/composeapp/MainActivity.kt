@@ -19,18 +19,13 @@ import com.example.composeapp.ui.theme.*
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Initialize database
         val database = AppDatabase.getDatabase(applicationContext)
         val repository = CafeRepository(database.cafeDao())
-        
+
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = Background
-            ) {
-                CafeListScreen(repository)
-            }
+            CafeAppWithDatabase(repository = repository)
         }
     }
 }

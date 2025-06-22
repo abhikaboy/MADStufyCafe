@@ -1,9 +1,11 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.popup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,26 +15,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.R
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.components.button.CustomButton
+import com.example.composeapp.ui.components.Tag
+import com.example.composeapp.ui.components.button.WifiRateButton
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.TagBackground
 
 
 @Composable
-fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails:() -> Unit) {
+fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails:() -> Unit, onRatingChanged: ((Float) -> Unit)? = null
+) {
     var selectedOutlet by remember { mutableStateOf("") }
     var selectedWifi by remember { mutableStateOf(-1) }
+    var userRating by remember { mutableStateOf(cafe.studyRating.toFloat()) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = CardBackground
         ),
@@ -58,25 +65,14 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
                 modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
 
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                val studyRating = (0)
-                repeat(studyRating) {
-                    Image(
-                        painter = painterResource(id = R.drawable.filled_star),
-                        contentDescription = "Filled Star",
-                        modifier = Modifier.size(28.dp)
-                    )
+            StarRatingBar(
+                maxStars = 5,
+                rating = userRating,
+                onRatingChanged = { newRating ->
+                    userRating = newRating
+                    onRatingChanged?.invoke(newRating)
                 }
-                repeat(5 - studyRating) {
-                    Image(
-                        painter = painterResource(id = R.drawable.star_icon),
-                        contentDescription = "Empty Star",
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
-            }
+            )
             Spacer(
                 modifier = Modifier.height(31.dp)
             )
@@ -193,17 +189,61 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
     }
 }
 
+@Composable
+fun StarRatingBar(
+    maxStars: Int = 5,
+    rating: Float,
+    onRatingChanged: (Float) -> Unit
+) {
+    val density = LocalDensity.current.density
+    val starSize = (14f * density).dp
+    val starSpacing = (2f * density).dp
+
+    Row(
+        modifier = Modifier.selectableGroup(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        for (i in 1..maxStars) {
+            val isSelected = i <= rating
+            val icon = if (isSelected) R.drawable.filled_star else R.drawable.star_icon
+
+            Image(
+                painter = painterResource(icon),
+                contentDescription = "Rate $i stars",
+                modifier = Modifier
+                    .selectable(
+                        selected = isSelected,
+                        onClick = {
+                            onRatingChanged(i.toFloat())
+                        }
+                    )
+                    .size(starSize)
+                    .padding(2.dp)
+            )
+
+            if (i < maxStars) {
+                Spacer(modifier = Modifier.width(starSpacing))
+            }
+        }
+    }
+}
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewExperiencePopupInfo() {
     val cafe = CafeEntity(
         name = "Bean & Brew",
-        address = "123 Main Street",
-        tags = "",
+        address = "123 Main Street, Boston, MA",
         studyRating = 4,
         outletInfo = "Many",
         wifiQuality = "Excellent",
-        imageUrl = ""
+        atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+        energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+        studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+        imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
     )
     ComposeAppTheme {
         ExperiencePopupInfo(cafe, onBack = {}, toShareMoreDetails = {})

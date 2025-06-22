@@ -7,15 +7,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.composeapp.data.database.CafeEntity
-import com.example.composeapp.ui.components.AmbiancePopupInfo
-import com.example.composeapp.ui.components.ExperiencePopupInfo
-import com.example.composeapp.ui.components.RatingPopupInfo
-import com.example.composeapp.ui.theme.ComposeAppTheme
+import com.example.composeapp.ui.components.popup.AmbiancePopupInfo
+import com.example.composeapp.ui.components.popup.ExperiencePopupInfo
+import com.example.composeapp.ui.components.popup.RatingPopupInfo
+import com.example.composeapp.ui.theme.CardBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +31,7 @@ fun CafePopup(
         ModalBottomSheet(
             sheetState = bottomSheetState,
             onDismissRequest = onDismiss,
+            containerColor = CardBackground,
             dragHandle = {
                 Surface(
                     modifier = Modifier.padding(vertical = 8.dp),
@@ -40,7 +40,7 @@ fun CafePopup(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(width = 32.dp, height = 4.dp)
+                            .size(width = 40.dp, height = 4.dp)
                     )
                 }
             },
@@ -49,7 +49,7 @@ fun CafePopup(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 750.dp)  // <-- limit max height here
+                    .heightIn(max = 900.dp)  // <-- limit max height here
             ) {
                 // NavHost inside the sheet
                 NavHost(
