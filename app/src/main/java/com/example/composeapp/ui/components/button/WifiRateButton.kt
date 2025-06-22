@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.button
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable

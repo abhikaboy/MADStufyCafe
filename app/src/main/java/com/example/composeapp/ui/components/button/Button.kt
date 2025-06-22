@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.button
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding

@@ -26,6 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composeapp.R
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.theme.Background
@@ -34,6 +36,7 @@ import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.LargeCardBackground
 
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
     Card(
@@ -50,14 +53,12 @@ fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Image(
-                painterResource(id = R.drawable.cafe), "Card Image", Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(9.dp)),
-                contentScale = ContentScale.Crop
+            GlideImage(
+                model = cafe.imageUrl,
+                contentDescription = "Cafe Photo",
+                modifier = Modifier.fillMaxSize().height(180.dp).clip(RoundedCornerShape(9.dp)),
+                contentScale = ContentScale.Crop,
             )
-
             Text(
                 text = cafe.name,
                 style = MaterialTheme.typography.titleLarge,

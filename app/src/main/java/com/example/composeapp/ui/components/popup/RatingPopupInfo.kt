@@ -1,9 +1,10 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.popup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +25,9 @@ import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.components.button.CustomButton
+import com.example.composeapp.ui.components.LightLabel
+import com.example.composeapp.ui.components.Tag
 
 @Composable
 fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
@@ -31,7 +35,6 @@ fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth(),
         //.padding(start = 23.dp, end = 16.dp, bottom = 23.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = CardBackground
         ),
@@ -42,8 +45,12 @@ fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                CustomButton(
+                    text = "Bookmark",
+                    onClick = { }
+                )
                 CustomButton(
                     text = "Leave a Review",
                     onClick = { onNext() }
@@ -231,24 +238,23 @@ fun PhotosSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.height(120.dp)
             ) {
-                imageUrls.take(3).forEach { imageUrl ->
+                val imagesToShow = imageUrls.take(4).take(if (imageUrls.size > 4) 4 else imageUrls.size)
+
+                imagesToShow.forEachIndexed { index, imageUrl ->
+                    val isLastItem = index == 3 && imageUrls.size > 4
+                    val remainingCount = if (imageUrls.size > 4) imageUrls.size - 4 else 0
+
                     PhotoCard(
                         imageUrl = imageUrl,
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
+                            .fillMaxHeight(),
+                        isLastItem = isLastItem,
+                        remainingCount = remainingCount
                     )
                 }
-
-                if (imageUrls.size > 3) {
-                    PhotoCard(
-                        imageUrl = imageUrls[3],
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        isLastItem = imageUrls.size > 4,
-                        remainingCount = if (imageUrls.size > 4) imageUrls.size - 4 else 0
-                    )
+                repeat(4 - imagesToShow.size) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         } else {
@@ -335,8 +341,9 @@ fun PreviewRatingPopupInfo() {
         wifiQuality = "Excellent",
         atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
         energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
-        studyFriendlyTags = "Study Haven,Good,Decent,Mixed,Fair",
-        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400,https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400,https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400,https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400",
+        studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+        imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
     )
 
     ComposeAppTheme {

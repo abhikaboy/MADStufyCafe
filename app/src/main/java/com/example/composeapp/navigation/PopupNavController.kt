@@ -1,19 +1,16 @@
-package com.example.composeapp.ui.screens
+package com.example.composeapp.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.screens.CafePopup
+import com.example.composeapp.ui.screens.HomeScreen
 
 @Composable
 fun MainContent(

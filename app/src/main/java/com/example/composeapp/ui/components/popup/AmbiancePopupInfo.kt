@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.popup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.components.button.CustomButton
+import com.example.composeapp.ui.components.Tag
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.TagBackground
@@ -47,9 +49,7 @@ fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () ->
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 25.dp, end = 25.dp, bottom = 25.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = CardBackground
         ),
@@ -177,7 +177,7 @@ fun SelectableTagSection(
     onTagToggle: (String) -> Unit
 ) {
     FlowRow(
-        modifier = Modifier.padding(start = (20.dp))
+        modifier = Modifier.padding(start = (20.dp), end = (20.dp))
     ) {
         tags.forEach { tag ->
             Tag(
@@ -195,12 +195,15 @@ fun SelectableTagSection(
 fun PreviewAmbiancePopupInfo() {
     val cafe = CafeEntity(
         name = "Bean & Brew",
-        address = "123 Main Street",
-        tags = "",
+        address = "123 Main Street, Boston, MA",
         studyRating = 4,
         powerOutlets = "Many",
         wifiQuality = "Excellent",
-        imageUrl = ""
+        atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+        energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+        studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+        imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
     )
     ComposeAppTheme {
         AmbiancePopupInfo(cafe, onBack = {}, toUploadPhoto = {})

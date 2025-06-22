@@ -33,7 +33,9 @@ import androidx.compose.ui.draw.clip
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.LargeCardBackground
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.ui.graphics.Color
 import com.example.composeapp.ui.theme.TextPrimary
+import kotlin.collections.listOf
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -44,7 +46,7 @@ fun ExpandableFilterBar() {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50.dp))
-            .background(color = CardBackground)
+            .background(color = Color.Transparent)
             .border(1.dp, TextPrimary, shape = RoundedCornerShape(50.dp))
             .padding(16.dp)
     ) {
@@ -79,17 +81,54 @@ fun ExpandableFilterBar() {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 maxItemsInEachRow = 5
             ) {
-                listOf("Cozy", "Rustic", "Traditional", "Warm",
-                    "Clean", "Quiet", "Low-Key", "Tranquil", "Moderate", "Average",
-                    "Study Haven", "Good", "Decent", "Mixed", "Fair").forEach { label ->
-                    FilterChip(
+                listOf(
+                    "Cozy",
+                    "Warm",
+                    "Rustic",
+                    "Traditional",
+                    "Modern",
+                    "Clean",
+                    "Minimalist",
+                    "Basic",
+                    "Industrial",
+                    "Plain",
+                    "Cold",
+                    "Sterile",
+                    "Tranquil",
+                    "Calm",
+                    "Quiet",
+                    "Low-key",
+                    "Moderate",
+                    "Average",
+                    "Lively",
+                    "Active",
+                    "Buzzing",
+                    "Loud",
+                    "Noisy",
+                    "Chaotic",
+                    "Laser Focus",
+                    "Study Haven",
+                    "Very Quiet",
+                    "Good",
+                    "Decent",
+                    "Okay",
+                    "Mixed",
+                    "Fair",
+                    "Social",
+                    "Poor",
+                    "Bad",
+                    "Distracting"
+                ).forEach { label ->
+                    Tag(
                         text = label,
                         isSelected = selectedLabels.contains(label),
-                        onClick = { selectedLabels = if (selectedLabels.contains(label)) {
-                            selectedLabels - label // remove from selection
-                        } else {
-                            selectedLabels + label // add to selection
-                        }}
+                        onClick = {
+                            selectedLabels = if (selectedLabels.contains(label)) {
+                                selectedLabels - label // remove from selection
+                            } else {
+                                selectedLabels + label // add to selection
+                            }
+                        }
                     )
                 }
             }
@@ -97,26 +136,26 @@ fun ExpandableFilterBar() {
     }
 }
 
-@Composable
-fun FilterChip(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Text(
-        text = text,
-        color = TextPrimary,
-        modifier = Modifier
-            .clip(RoundedCornerShape(50))
-            .background(
-                color = if (isSelected) MaterialTheme.colorScheme.primary else LargeCardBackground,
-                shape = RoundedCornerShape(40.dp)
-            )
-            .border(0.5.dp, TextPrimary, shape = RoundedCornerShape(50.dp))
-            .clickable { onClick() }
-            .padding(horizontal = 12.dp, vertical = 8.dp)
-    )
-}
+//@Composable
+//fun FilterChip(
+//    text: String,
+//    isSelected: Boolean,
+//    onClick: () -> Unit
+//) {
+//    Text(
+//        text = text,
+//        color = TextPrimary,
+//        modifier = Modifier
+//            .clip(RoundedCornerShape(50))
+//            .background(
+//                color = if (isSelected) MaterialTheme.colorScheme.primary else LargeCardBackground,
+//                shape = RoundedCornerShape(40.dp)
+//            )
+//            .border(0.5.dp, TextPrimary, shape = RoundedCornerShape(50.dp))
+//            .clickable { onClick() }
+//            .padding(horizontal = 12.dp, vertical = 8.dp)
+//    )
+//}
 
 @Preview()
 @Composable

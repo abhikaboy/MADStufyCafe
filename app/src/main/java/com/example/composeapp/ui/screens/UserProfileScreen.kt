@@ -1,25 +1,31 @@
 package com.example.composeapp.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.composeapp.R
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.CafeList
-import com.example.composeapp.ui.components.ExpandableFilterBar
-import com.example.composeapp.ui.components.SearchBar
+import com.example.composeapp.ui.components.RatingOverviewCard
 import com.example.composeapp.ui.theme.TextPrimary
 
 @Composable
-fun BookMarkScreen(cafeList: List<CafeEntity>) {
+fun UserProfile(cafeList: List<CafeEntity>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -28,23 +34,35 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
     ) {
         Spacer(modifier = Modifier.height(15.dp))
         Text(
-            text = "Bookmarks",
+            text = "Profile",
             style = MaterialTheme.typography.titleSmall,
             color = TextPrimary
         )
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+        Image(
+            painterResource(id = R.drawable.cafe), "Card Image", Modifier
+                .width(100.dp)
+                .height(100.dp)
+                .clip(RoundedCornerShape(100.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
         Text(
-            text = "Monkey D Luffy's Bookmarks",
+            text = "Monkey D Luffy",
             style = MaterialTheme.typography.headlineSmall,
             color = TextPrimary
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        SearchBar()
-        Spacer(modifier = Modifier.height(10.dp))
-        ExpandableFilterBar()
         Spacer(modifier = Modifier.height(15.dp))
+        RatingOverviewCard(
+            cafesVisited = cafeList.size,
+            averageRating = cafeList.map { it.studyRating }.average().toFloat(),
+            bookmarks = cafeList.size,
+            exploredPercentage = 23
+        )
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Showing ${cafeList.size} bookmarked cafes",
+            text = "Recent Reviews",
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
@@ -63,44 +81,35 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBookMarkScreen() {
+fun PreviewUserProfile() {
     val cafesList = listOf(
         CafeEntity(
             name = "Bean & Brew",
-            address = "123 Main Street, Boston, MA",
+            address = "123 Main Street",
+            tags = "",
             studyRating = 4,
             powerOutlets = "Many",
             wifiQuality = "Excellent",
-            atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
-            energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
-            studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
-            imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
-            ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
+            imageUrl = ""
         ),
         CafeEntity(
             name = "Study Spot",
-            address = "45 College Ave, Cambridge, MA",
+            address = "45 College Ave",
+            tags = "",
             studyRating = 3,
             powerOutlets = "Some",
             wifiQuality = "Good",
-            atmosphereTags = "Modern,Clean,Minimalist,Bright",
-            energyLevelTags = "Calm,Focused,Productive,Moderate",
-            studyFriendlyTags = "Study-Haven,Good,Decent,Quiet",
-            imageUrl = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
-            ratingImageUrls = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400"
+            imageUrl = ""
         ),
         CafeEntity(
             name = "Java House",
-            address = "88 Coffee Blvd, Somerville, MA",
+            address = "88 Coffee Blvd",
+            tags = "",
             studyRating = 5,
             powerOutlets = "Few",
             wifiQuality = "Fair",
-            atmosphereTags = "Cozy,Traditional,Warm,Industrial",
-            energyLevelTags = "Moderate,Average,Social,Lively",
-            studyFriendlyTags = "Mixed,Fair,Decent,Social",
-            imageUrl = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-            ratingImageUrls = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400,https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400"
+            imageUrl = ""
         )
     )
-    BookMarkScreen(cafesList)
+    UserProfile(cafesList)
 }
