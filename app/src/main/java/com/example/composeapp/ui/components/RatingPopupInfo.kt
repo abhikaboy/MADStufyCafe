@@ -132,7 +132,7 @@ fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
                                 contentDescription = "Outlet Icon",
                                 modifier = Modifier.size(20.dp)
                             )
-                            LightLabel(text = cafe.outletInfo)
+                            LightLabel(text = cafe.powerOutlets)
                         }
                     }
                     Column(
@@ -331,7 +331,7 @@ fun PreviewRatingPopupInfo() {
         name = "Caffe Bene",
         address = "14 Massachusetts Ave, Boston, MA",
         studyRating = 3,
-        outletInfo = "Some",
+        powerOutlets = "Some",
         wifiQuality = "Excellent",
         atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
         energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",

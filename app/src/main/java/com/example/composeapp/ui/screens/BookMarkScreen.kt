@@ -63,7 +63,7 @@ fun PreviewBookMarks() {
             address = "123 Main Street",
             tags = "",
             studyRating = 4,
-            outletInfo = "Many",
+            powerOutlets = "Many",
             wifiQuality = "Excellent",
             imageUrl = ""
         ),
@@ -72,7 +72,7 @@ fun PreviewBookMarks() {
             address = "45 College Ave",
             tags = "",
             studyRating = 3,
-            outletInfo = "Some",
+            powerOutlets = "Some",
             wifiQuality = "Good",
             imageUrl = ""
         ),
@@ -81,7 +81,7 @@ fun PreviewBookMarks() {
             address = "88 Coffee Blvd",
             tags = "",
             studyRating = 5,
-            outletInfo = "Few",
+            powerOutlets = "Few",
             wifiQuality = "Fair",
             imageUrl = ""
         )

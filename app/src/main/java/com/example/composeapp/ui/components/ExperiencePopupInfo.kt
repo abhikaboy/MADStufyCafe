@@ -201,7 +201,7 @@ fun PreviewExperiencePopupInfo() {
         address = "123 Main Street",
         tags = "",
         studyRating = 4,
-        outletInfo = "Many",
+        powerOutlets = "Many",
         wifiQuality = "Excellent",
         imageUrl = ""
     )

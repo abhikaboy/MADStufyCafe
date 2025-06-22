@@ -24,13 +24,20 @@ import com.example.composeapp.ui.components.CafeList
 import com.example.composeapp.ui.theme.TextPrimary
 
 @Composable
-fun HomeScreen(cafeList: List<CafeEntity>, onCafeClick: (CafeEntity) -> Unit) {
+fun HomeScreen(
+    cafeList: List<CafeEntity>, 
+    onCafeClick: (CafeEntity) -> Unit,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
+    onBookmarkClick: (CafeEntity) -> Unit = {},
+    onSearch: (String) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        SearchBar()
+        SearchBar(onSearch = onSearch)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,7 +56,13 @@ fun HomeScreen(cafeList: List<CafeEntity>, onCafeClick: (CafeEntity) -> Unit) {
                 Modifier.padding(top = 6.dp, bottom = 5.dp)
             )
         }
-        CafeList(cafeList, onCafeClick)
+        CafeList(
+            cafeList = cafeList, 
+            onCafeClick = onCafeClick,
+            onBookmarkClick = onBookmarkClick,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh
+        )
         Spacer(Modifier.padding(bottom = 10.dp))
     }
 }
@@ -66,7 +79,7 @@ fun PreviewHomeScreen() {
             address = "123 Main Street",
             tags = "",
             studyRating = 4,
-            outletInfo = "Many",
+            powerOutlets = "Many",
             wifiQuality = "Excellent",
             imageUrl = "",
         ),
@@ -75,7 +88,7 @@ fun PreviewHomeScreen() {
             address = "45 College Ave",
             tags = "",
             studyRating = 3,
-            outletInfo = "Some",
+            powerOutlets = "Some",
             wifiQuality = "Good",
             imageUrl = "",
         ),
@@ -84,7 +97,7 @@ fun PreviewHomeScreen() {
             address = "88 Coffee Blvd",
             tags = "",
             studyRating = 5,
-            outletInfo = "Few",
+            powerOutlets = "Few",
             wifiQuality = "Fair",
             imageUrl = ""
         )

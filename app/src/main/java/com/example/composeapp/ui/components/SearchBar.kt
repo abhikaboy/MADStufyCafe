@@ -21,11 +21,14 @@ import com.example.composeapp.ui.theme.TextPrimary
 import androidx.compose.material3.OutlinedTextFieldDefaults
 
 @Composable
-fun SearchBar() {
+fun SearchBar(onSearch: (String) -> Unit = {}) {
     var text by remember { mutableStateOf("") }
     OutlinedTextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = { 
+            text = it
+            onSearch(it)
+        },
         label = { Text("Search for a Cafe Rating") },
         shape = RoundedCornerShape(50.dp),
         colors = OutlinedTextFieldDefaults.colors(
