@@ -49,8 +49,8 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
+        //CafeList(cafeList, onNavigate = {})
         Spacer(modifier = Modifier.height(15.dp))
-        CafeList(cafeList)
     }
 }
 

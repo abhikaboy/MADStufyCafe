@@ -26,11 +26,11 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composeapp.data.database.CafeEntity
 
 @Composable
-fun RatingPopupInfo(cafe: CafeEntity) {
+fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 23.dp, end = 16.dp, bottom = 23.dp),
+            .fillMaxWidth(),
+        //.padding(start = 23.dp, end = 16.dp, bottom = 23.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = CardBackground
@@ -46,7 +46,7 @@ fun RatingPopupInfo(cafe: CafeEntity) {
             ) {
                 CustomButton(
                     text = "Leave a Review",
-                    onClick = { /* Handle leave Review */ }
+                    onClick = { onNext() }
                 )
             }
 
@@ -255,7 +255,7 @@ fun PhotosSection(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f),
+                    .height(120.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFF5F5F5)
                 ),
@@ -323,7 +323,7 @@ fun String.stringToList(): List<String> {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun PreviewRatingPopupInfo() {
     val cafe = CafeEntity(
@@ -340,6 +340,6 @@ fun PreviewRatingPopupInfo() {
     )
 
     ComposeAppTheme {
-        RatingPopupInfo(cafe)
+        RatingPopupInfo(cafe, onNext = {})
     }
 }

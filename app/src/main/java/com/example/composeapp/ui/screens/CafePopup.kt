@@ -1,0 +1,104 @@
+package com.example.composeapp.ui.screens
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.compose.composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.components.AmbiancePopupInfo
+import com.example.composeapp.ui.components.ExperiencePopupInfo
+import com.example.composeapp.ui.components.RatingPopupInfo
+import com.example.composeapp.ui.theme.ComposeAppTheme
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CafePopup(
+    cafe: CafeEntity,
+    isVisible: Boolean,
+    onDismiss: () -> Unit,
+    navController: NavHostController
+) {
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    if (isVisible) {
+        ModalBottomSheet(
+            sheetState = bottomSheetState,
+            onDismissRequest = onDismiss,
+            dragHandle = {
+                Surface(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    color = Color.Gray.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(width = 32.dp, height = 4.dp)
+                    )
+                }
+            },
+            windowInsets = WindowInsets(0)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 750.dp)  // <-- limit max height here
+            ) {
+                // NavHost inside the sheet
+                NavHost(
+                    navController = navController,
+                    startDestination = "stats"
+                ) {
+                    composable("stats") {
+                        RatingPopupInfo(
+                            cafe = cafe,
+                            onNext = {
+                                navController.navigate("experience")
+                            }
+                        )
+                    }
+                    composable("experience") {
+                        ExperiencePopupInfo(
+                            cafe = cafe,
+                            onBack = {
+                                navController.popBackStack()
+                            },
+                            toShareMoreDetails = {
+                                navController.navigate("ambiance")
+                            }
+                        )
+                    }
+                    composable("ambiance") {
+                        AmbiancePopupInfo(
+                            cafe = cafe,
+                            onBack = {
+                                navController.popBackStack()
+                            },
+                            toUploadPhoto = {
+                                /* Add navController.navigate("photoUpload") */
+                            }
+                        )
+                    }
+                }
+            }
+        }
+//        ComposeAppTheme {
+//            Box(
+//                modifier = Modifier.padding(
+//                    start = 0.dp,
+//                    end = 0.dp,
+//                    bottom = 0.dp
+//                )
+//            ) {
+//                AmbiancePopupInfo()
+//            }
+//        }
+    }
+}

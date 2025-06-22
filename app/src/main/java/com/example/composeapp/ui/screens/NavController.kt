@@ -1,0 +1,93 @@
+package com.example.composeapp.ui.screens
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.composeapp.data.database.CafeEntity
+
+@Composable
+fun MainContent(cafeList: List<CafeEntity>, navController: NavHostController) {
+    //Created blank cafe since I don't want to deal with null CafeEntity
+    val blankCafe = CafeEntity(
+        id = 0,
+        name = "",
+        address = "",
+    )
+    var selectedCafe by remember { mutableStateOf<CafeEntity>(blankCafe) }
+    var isPopupVisible by remember { mutableStateOf(false) }
+
+    HomeScreen(
+        cafeList = cafeList,
+        onCafeClick = { cafe ->
+            selectedCafe = cafe
+            isPopupVisible = true
+        }
+    )
+
+    if (isPopupVisible && selectedCafe != blankCafe) {
+        CafePopup(
+            cafe = selectedCafe,
+            isVisible = isPopupVisible,
+            onDismiss = {
+                isPopupVisible = false
+                selectedCafe = blankCafe
+            },
+            navController = navController
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewNavController() {
+    val controller = rememberNavController()
+    val cafesList = listOf(
+        CafeEntity(
+            name = "Bean & Brew",
+            address = "123 Main Street",
+            tags = "",
+            studyRating = 4,
+            outletInfo = "Many",
+            wifiQuality = "Excellent",
+            atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+            energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+            studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+            imageUrl = "",
+        ),
+        CafeEntity(
+            name = "Study Spot",
+            address = "45 College Ave",
+            tags = "",
+            studyRating = 3,
+            outletInfo = "Some",
+            wifiQuality = "Good",
+            atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+            energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+            studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+            imageUrl = "",
+        ),
+        CafeEntity(
+            name = "Java House",
+            address = "88 Coffee Blvd",
+            tags = "",
+            studyRating = 5,
+            outletInfo = "Few",
+            wifiQuality = "Fair",
+            atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
+            energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
+            studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
+            imageUrl = ""
+        )
+    )
+    MainContent(cafesList, controller)
+}

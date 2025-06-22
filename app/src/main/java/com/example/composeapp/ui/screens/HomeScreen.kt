@@ -19,16 +19,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.SearchBar
-import com.example.composeapp.ui.components.CafeList
 import com.example.composeapp.R
+import com.example.composeapp.ui.components.CafeList
 import com.example.composeapp.ui.theme.TextPrimary
-import com.example.composeapp.ui.theme.TextSecondary
 
 @Composable
-fun HomeScreen(cafeList: List<CafeEntity>) {
+fun HomeScreen(cafeList: List<CafeEntity>, onCafeClick: (CafeEntity) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp)
     ) {
         SearchBar()
         Row(
@@ -43,15 +43,14 @@ fun HomeScreen(cafeList: List<CafeEntity>) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextPrimary
             )
-            Image (
+            Image(
                 painter = painterResource(id = R.drawable.phosphor2),
                 contentDescription = "phosphor",
-                Modifier.padding(top = 6.dp, bottom = 5.dp).size(22.dp)
+                Modifier.padding(top = 6.dp, bottom = 5.dp)
             )
         }
-        Spacer(Modifier.padding(bottom = 10.dp)
-        )
-        CafeList(cafeList)
+        CafeList(cafeList, onCafeClick)
+        Spacer(Modifier.padding(bottom = 10.dp))
     }
 }
 
@@ -90,5 +89,5 @@ fun PreviewHomeScreen() {
             imageUrl = ""
         )
     )
-    HomeScreen(cafesList)
+    HomeScreen(cafesList, onCafeClick = {})
 }
