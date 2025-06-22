@@ -76,7 +76,7 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
-
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // Core Android dependencies
     implementation("androidx.core:core-ktx:1.12.0")

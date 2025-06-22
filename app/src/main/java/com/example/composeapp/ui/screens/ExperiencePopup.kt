@@ -21,42 +21,42 @@ fun ExperiencePopup(
         skipPartiallyExpanded = true
     )
 
-        ModalBottomSheet(
-            sheetState = bottomSheetState,
-            onDismissRequest = onDismiss,
-            dragHandle = {
-                Surface(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    color = Color.Gray.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(width = 32.dp, height = 4.dp)
-                    )
-                }
-            },
-            windowInsets = WindowInsets(0)
-        ) {
-            ComposeAppTheme {
+    ModalBottomSheet(
+        sheetState = bottomSheetState,
+        onDismissRequest = onDismiss,
+        dragHandle = {
+            Surface(
+                modifier = Modifier.padding(vertical = 8.dp),
+                color = Color.Gray.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(16.dp)
+            ) {
                 Box(
-                    modifier = Modifier.padding(
-                        start = 0.dp,
-                        end = 0.dp,
-                        bottom = 0.dp
-                    )
-                ) {
-                    ExperiencePopupInfo()
-                }
+                    modifier = Modifier
+                        .size(width = 32.dp, height = 4.dp)
+                )
+            }
+        },
+        windowInsets = WindowInsets(0)
+    ) {
+        ComposeAppTheme {
+            Box(
+                modifier = Modifier.padding(
+                    start = 0.dp,
+                    end = 0.dp,
+                    bottom = 0.dp
+                )
+            ) {
+                //ExperiencePopupInfo()
             }
         }
     }
+}
 
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewExperiencePopup() {
     ComposeAppTheme {
-        ExperiencePopupInfo()
+        //ExperiencePopupInfo()
     }
 }

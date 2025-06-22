@@ -5,7 +5,13 @@
       <SelectionState runConfigName="MobileApplicationDevelopment2025.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PreviewExpandableFilterMenu">
+      <SelectionState runConfigName="MainActivity (1)">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="PreviewAmbiancePopup">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="PreviewNavController">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

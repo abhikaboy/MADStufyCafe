@@ -49,7 +49,7 @@ fun RatingPopup(
                         bottom = 0.dp
                     )
                 ) {
-                    RatingPopupInfo(cafe = cafe)
+                    //RatingPopupInfo(cafe = cafe)
                 }
             }
         }
@@ -73,6 +73,6 @@ fun PreviewRatingPopup() {
     )
 
     ComposeAppTheme {
-        RatingPopupInfo(cafe = cafe)
+        //RatingPopupInfo(cafe = cafe)
     }
 }

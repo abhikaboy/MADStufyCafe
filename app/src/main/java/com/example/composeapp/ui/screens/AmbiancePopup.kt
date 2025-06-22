@@ -46,7 +46,7 @@ fun AmbiancePopup(
                     bottom = 0.dp
                 )
             ) {
-                AmbiancePopupInfo()
+                //AmbiancePopupInfo()
             }
         }
     }
@@ -57,6 +57,6 @@ fun AmbiancePopup(
 @Composable
 fun PreviewAmbiancePopup() {
     ComposeAppTheme {
-        AmbiancePopupInfo()
+        //AmbiancePopupInfo()
     }
 }

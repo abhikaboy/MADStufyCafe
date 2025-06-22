@@ -18,13 +18,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.R
+import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.TagBackground
 
 
 @Composable
-fun ExperiencePopupInfo() {
+fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails:() -> Unit) {
     var selectedOutlet by remember { mutableStateOf("") }
     var selectedWifi by remember { mutableStateOf(-1) }
 
@@ -63,7 +64,7 @@ fun ExperiencePopupInfo() {
                 val studyRating = (0)
                 repeat(studyRating) {
                     Image(
-                        painter = painterResource(id = com.example.composeapp.R.drawable.filled_star),
+                        painter = painterResource(id = R.drawable.filled_star),
                         contentDescription = "Filled Star",
                         modifier = Modifier.size(28.dp)
                     )
@@ -181,11 +182,11 @@ fun ExperiencePopupInfo() {
             ) {
                 CustomButton(
                     text = "Back",
-                    onClick = { /* Handle leave Review */ }
+                    onClick = { onBack() }
                 )
                 CustomButton(
                     text = "Share More Details",
-                    onClick = { /* Handle leave Review */ }
+                    onClick = { toShareMoreDetails() }
                 )
             }
         }
@@ -196,6 +197,6 @@ fun ExperiencePopupInfo() {
 @Composable
 fun PreviewExperiencePopupInfo() {
     ComposeAppTheme {
-        ExperiencePopupInfo()
+        //ExperiencePopupInfo()
     }
 }

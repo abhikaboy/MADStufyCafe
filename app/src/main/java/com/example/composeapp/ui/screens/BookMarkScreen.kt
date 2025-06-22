@@ -43,7 +43,7 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
             text = "Showing 14 Bookmarked Cafes",
             modifier = Modifier.align(Alignment.Start)
         )
-        CafeList(cafeList)
+        //CafeList(cafeList, onNavigate = {})
     }
 }
 

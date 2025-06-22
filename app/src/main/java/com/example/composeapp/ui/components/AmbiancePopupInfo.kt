@@ -15,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.TagBackground
 
 
 @Composable
-fun AmbiancePopupInfo() {
+fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () -> Unit) {
     var selectedAtmosphere by remember { mutableStateOf(setOf<String>()) }
     var selectedEnergy by remember { mutableStateOf(setOf<String>()) }
     var selectedStudyFriendly by remember { mutableStateOf(setOf<String>()) }
@@ -90,7 +91,7 @@ fun AmbiancePopupInfo() {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start=20.dp, top=10.dp, bottom = 12.dp),
+                        .padding(start = 20.dp, top = 10.dp, bottom = 12.dp),
                     text = "Atmosphere",
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Left,
@@ -109,7 +110,7 @@ fun AmbiancePopupInfo() {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start=20.dp, top=20.dp, bottom = 12.dp),
+                        .padding(start = 20.dp, top = 20.dp, bottom = 12.dp),
                     text = "Energy Level",
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Left,
@@ -129,7 +130,7 @@ fun AmbiancePopupInfo() {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start=20.dp, top=20.dp, bottom = 12.dp),
+                        .padding(start = 20.dp, top = 20.dp, bottom = 12.dp),
                     text = "Study Friendly",
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Left,
@@ -157,11 +158,11 @@ fun AmbiancePopupInfo() {
             ) {
                 CustomButton(
                     text = "Back",
-                    onClick = { /* Handle leave Review */ }
+                    onClick = { onBack() }
                 )
                 CustomButton(
                     text = "Upload Photos",
-                    onClick = { /* Handle uploadgin */ }
+                    onClick = { toUploadPhoto() }
                 )
             }
         }
@@ -174,9 +175,9 @@ fun SelectableTagSection(
     tags: List<String>,
     selectedTags: Set<String>,
     onTagToggle: (String) -> Unit
-    ) {
+) {
     FlowRow(
-        modifier = Modifier.padding(start=(20.dp))
+        modifier = Modifier.padding(start = (20.dp))
     ) {
         tags.forEach { tag ->
             Tag(
@@ -192,7 +193,16 @@ fun SelectableTagSection(
 @Preview(showBackground = true)
 @Composable
 fun PreviewAmbiancePopupInfo() {
+    val cafe = CafeEntity(
+        name = "Bean & Brew",
+        address = "123 Main Street",
+        tags = "",
+        studyRating = 4,
+        outletInfo = "Many",
+        wifiQuality = "Excellent",
+        imageUrl = ""
+    )
     ComposeAppTheme {
-        AmbiancePopupInfo()
+        AmbiancePopupInfo(cafe, onBack = {}, toUploadPhoto = {})
     }
 }

@@ -7,10 +7,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun CafeList(cafeList: List<CafeEntity>) {
+fun CafeList(cafeList: List<CafeEntity>, onCafeClick: (CafeEntity) -> Unit) {
     LazyColumn() {
         items(cafeList) { cafe ->
-            CafeCard(cafe)
+            CafeCard(cafe, onClick = { onCafeClick(cafe) })
         }
     }
 }
@@ -47,5 +47,5 @@ fun PreviewRecycleView() {
             imageUrl = ""
         )
     )
-    CafeList(cafesList)
+    //CafeList(cafesList)
 }

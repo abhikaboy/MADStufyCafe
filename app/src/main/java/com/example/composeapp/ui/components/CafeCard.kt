@@ -36,7 +36,7 @@ import com.example.composeapp.ui.theme.LargeCardBackground
 
 
 @Composable
-fun CafeCard(cafe: CafeEntity) {
+fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,6 +45,7 @@ fun CafeCard(cafe: CafeEntity) {
         colors = CardDefaults.cardColors(
             containerColor = LargeCardBackground
         ),
+        onClick = onClick,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -229,6 +230,6 @@ fun PreviewCafeCard() {
         imageUrl = ""
     )
     ComposeAppTheme {
-        CafeCard(cafe)
+        //CafeCard(cafe)
     }
 }
