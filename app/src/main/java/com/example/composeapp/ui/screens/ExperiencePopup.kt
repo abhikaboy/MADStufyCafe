@@ -57,6 +57,6 @@ fun ExperiencePopup(
 @Composable
 fun PreviewExperiencePopup() {
     ComposeAppTheme {
-        booExperiencePopupInfo()
+        ExperiencePopupInfo()
     }
 }
