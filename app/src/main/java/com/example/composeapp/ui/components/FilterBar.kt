@@ -43,9 +43,9 @@ fun ExpandableFilterBar() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(50.dp))
             .background(color = CardBackground)
-            .border(2.dp, TextPrimary, shape = RoundedCornerShape(16.dp))
+            .border(1.dp, TextPrimary, shape = RoundedCornerShape(50.dp))
             .padding(16.dp)
     ) {
         Row(
@@ -55,11 +55,12 @@ fun ExpandableFilterBar() {
         ) {
             Text(
                 text = "Filters",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary,
                 modifier = Modifier.padding(start = 3.dp)
             )
             Icon(
-                painter = painterResource(id = if (expanded) R.drawable.star_icon else R.drawable.filled_star),
+                painter = painterResource(id = if (expanded) R.drawable.caret_down else R.drawable.caret_left),
                 contentDescription = "Expand",
                 modifier = Modifier.clickable { expanded = !expanded }
             )
@@ -104,14 +105,14 @@ fun FilterChip(
 ) {
     Text(
         text = text,
-        color = if (isSelected) MaterialTheme.colorScheme.onPrimary else TextPrimary,
+        color = TextPrimary,
         modifier = Modifier
-            .clip(RoundedCornerShape(30))
+            .clip(RoundedCornerShape(50))
             .background(
                 color = if (isSelected) MaterialTheme.colorScheme.primary else LargeCardBackground,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(40.dp)
             )
-            .border(1.dp, TextPrimary, shape = RoundedCornerShape(10.dp))
+            .border(0.5.dp, TextPrimary, shape = RoundedCornerShape(50.dp))
             .clickable { onClick() }
             .padding(horizontal = 12.dp, vertical = 8.dp)
     )
