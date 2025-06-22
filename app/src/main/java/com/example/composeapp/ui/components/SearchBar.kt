@@ -17,6 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.R
+import com.example.composeapp.ui.theme.TextPrimary
+import androidx.compose.material3.OutlinedTextFieldDefaults
 
 @Composable
 fun SearchBar() {
@@ -25,12 +27,18 @@ fun SearchBar() {
         value = text,
         onValueChange = { text = it },
         label = { Text("Search for a Cafe Rating") },
-        shape = RoundedCornerShape(25.dp),
+        shape = RoundedCornerShape(50.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = TextPrimary,
+            unfocusedBorderColor = TextPrimary,
+            focusedLabelColor = TextPrimary,
+            unfocusedLabelColor = TextPrimary,
+        ),
         leadingIcon = {
             Image(
                 painter = painterResource(id = R.drawable.search_icon),
                 contentDescription = "Search Icon",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(26.dp)
             )
         },
 
