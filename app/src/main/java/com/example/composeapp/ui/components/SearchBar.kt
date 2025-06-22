@@ -44,7 +44,8 @@ fun SearchBar() {
 
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 13.dp)   )
+            .padding(start = 16.dp, end = 16.dp, top = 13.dp)
+    )
 }
 
 @Preview
