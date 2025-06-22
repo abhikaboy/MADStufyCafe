@@ -196,7 +196,16 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
 @Preview(showBackground = true)
 @Composable
 fun PreviewExperiencePopupInfo() {
+    val cafe = CafeEntity(
+        name = "Bean & Brew",
+        address = "123 Main Street",
+        tags = "",
+        studyRating = 4,
+        outletInfo = "Many",
+        wifiQuality = "Excellent",
+        imageUrl = ""
+    )
     ComposeAppTheme {
-        //ExperiencePopupInfo()
+        ExperiencePopupInfo(cafe, onBack = {}, toShareMoreDetails = {})
     }
 }

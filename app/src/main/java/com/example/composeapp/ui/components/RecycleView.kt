@@ -47,5 +47,5 @@ fun PreviewRecycleView() {
             imageUrl = ""
         )
     )
-    //CafeList(cafesList)
+    CafeList(cafesList, onCafeClick = {})
 }
