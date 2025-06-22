@@ -197,7 +197,7 @@ fun PreviewAmbiancePopupInfo() {
         name = "Bean & Brew",
         address = "123 Main Street, Boston, MA",
         studyRating = 4,
-        outletInfo = "Many",
+        powerOutlets = "Many",
         wifiQuality = "Excellent",
         atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
         energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",

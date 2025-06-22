@@ -166,7 +166,7 @@ fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
                                 modifier = Modifier.size(20.dp)
                             )
                             LightLabel(
-                                text = cafe.outletInfo
+                                text = cafe.powerOutlets
                             )
                         }
                     }
@@ -220,15 +220,19 @@ fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
 @Composable
 fun PreviewCafeCard() {
     val cafe = CafeEntity(
-        name = "Cafe name",
-        address = "Location, location, location",
-        tags = "",
-        studyRating = 3,
-        outletInfo = "Many",
-        wifiQuality = "excellent",
-        imageUrl = ""
+        name = "Bean & Brew Cafe",
+        address = "123 Coffee Street, Downtown",
+        description = "A cozy study cafe",
+        tags = "study,wifi,coffee",
+        studyRating = 4,
+        powerOutlets = "Many",
+        wifiQuality = "Excellent",
+        imageUrl = "",
+        atmosphereTags = "Cozy,Modern",
+        energyLevelTags = "Medium",
+        studyFriendlyTags = "Very Good"
     )
     ComposeAppTheme {
-        //CafeCard(cafe)
+        CafeCard(cafe = cafe, onClick = {})
     }
 }

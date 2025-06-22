@@ -67,9 +67,13 @@ fun UserProfile(cafeList: List<CafeEntity>) {
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
-        CafeList(cafeList) { cafe ->
-            // Handle cafe click if needed
-        }
+        CafeList(
+            cafeList = cafeList,
+            onCafeClick = { cafe -> /* Handle cafe click */ },
+            onBookmarkClick = { cafe -> /* Handle bookmark */ },
+            isRefreshing = false,
+            onRefresh = { /* Handle refresh */ }
+        )
         //CafeList(cafeList, onNavigate = {})
         Spacer(modifier = Modifier.height(15.dp))
     }
@@ -84,7 +88,7 @@ fun PreviewUserProfile() {
             address = "123 Main Street",
             tags = "",
             studyRating = 4,
-            outletInfo = "Many",
+            powerOutlets = "Many",
             wifiQuality = "Excellent",
             imageUrl = ""
         ),
@@ -93,7 +97,7 @@ fun PreviewUserProfile() {
             address = "45 College Ave",
             tags = "",
             studyRating = 3,
-            outletInfo = "Some",
+            powerOutlets = "Some",
             wifiQuality = "Good",
             imageUrl = ""
         ),
@@ -102,7 +106,7 @@ fun PreviewUserProfile() {
             address = "88 Coffee Blvd",
             tags = "",
             studyRating = 5,
-            outletInfo = "Few",
+            powerOutlets = "Few",
             wifiQuality = "Fair",
             imageUrl = ""
         )

@@ -139,7 +139,7 @@ fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
                                 contentDescription = "Outlet Icon",
                                 modifier = Modifier.size(20.dp)
                             )
-                            LightLabel(text = cafe.outletInfo)
+                            LightLabel(text = cafe.powerOutlets)
                         }
                     }
                     Column(
@@ -333,10 +333,11 @@ fun String.stringToList(): List<String> {
 @Composable
 fun PreviewRatingPopupInfo() {
     val cafe = CafeEntity(
-        name = "Bean & Brew",
-        address = "123 Main Street, Boston, MA",
-        studyRating = 4,
-        outletInfo = "Many",
+        id = 1,
+        name = "Caffe Bene",
+        address = "14 Massachusetts Ave, Boston, MA",
+        studyRating = 3,
+        powerOutlets = "Some",
         wifiQuality = "Excellent",
         atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
         energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",

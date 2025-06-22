@@ -49,8 +49,13 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
-        CafeList(cafeList) { cafe ->
-        }
+        CafeList(
+            cafeList = cafeList,
+            onCafeClick = { cafe -> /* Handle cafe click */ },
+            onBookmarkClick = { cafe -> /* Handle bookmark */ },
+            isRefreshing = false,
+            onRefresh = { /* Handle refresh */ }
+        )
         //CafeList(cafeList, onNavigate = {})
         Spacer(modifier = Modifier.height(15.dp))
     }
@@ -64,7 +69,7 @@ fun PreviewBookMarkScreen() {
             name = "Bean & Brew",
             address = "123 Main Street, Boston, MA",
             studyRating = 4,
-            outletInfo = "Many",
+            powerOutlets = "Many",
             wifiQuality = "Excellent",
             atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
             energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
@@ -76,7 +81,7 @@ fun PreviewBookMarkScreen() {
             name = "Study Spot",
             address = "45 College Ave, Cambridge, MA",
             studyRating = 3,
-            outletInfo = "Some",
+            powerOutlets = "Some",
             wifiQuality = "Good",
             atmosphereTags = "Modern,Clean,Minimalist,Bright",
             energyLevelTags = "Calm,Focused,Productive,Moderate",
@@ -88,7 +93,7 @@ fun PreviewBookMarkScreen() {
             name = "Java House",
             address = "88 Coffee Blvd, Somerville, MA",
             studyRating = 5,
-            outletInfo = "Few",
+            powerOutlets = "Few",
             wifiQuality = "Fair",
             atmosphereTags = "Cozy,Traditional,Warm,Industrial",
             energyLevelTags = "Moderate,Average,Social,Lively",

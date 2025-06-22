@@ -2,6 +2,9 @@ package com.example.composeapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// Primary colors
+val Primary = Color(0xFF6B5353)
+
 // Text colors
 val TextPrimary = Color(0xFF594545)
 val TextSecondary = Color(0xFF6B5353)

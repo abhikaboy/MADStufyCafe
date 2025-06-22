@@ -13,18 +13,29 @@ import com.example.composeapp.ui.screens.CafePopup
 import com.example.composeapp.ui.screens.HomeScreen
 
 @Composable
-fun MainContent(cafeList: List<CafeEntity>, navController: NavHostController) {
+fun MainContent(
+    cafeList: List<CafeEntity>, 
+    navController: NavHostController,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
+    onBookmarkClick: (CafeEntity) -> Unit = {},
+    onSearch: (String) -> Unit = {}
+) {
     //Created blank cafe since I don't want to deal with null CafeEntity
     val blankCafe = CafeEntity(
         id = 0,
         name = "",
-        address = "",
+        address = ""
     )
     var selectedCafe by remember { mutableStateOf<CafeEntity>(blankCafe) }
     var isPopupVisible by remember { mutableStateOf(false) }
 
     HomeScreen(
         cafeList = cafeList,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+        onBookmarkClick = onBookmarkClick,
+        onSearch = onSearch,
         onCafeClick = { cafe ->
             selectedCafe = cafe
             isPopupVisible = true
@@ -54,31 +65,31 @@ fun PreviewNavController() {
             address = "123 Main Street",
             tags = "",
             studyRating = 4,
-            outletInfo = "Many",
+            powerOutlets = "Many",
             wifiQuality = "Excellent",
             atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
             energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
             studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
-            imageUrl = "",
+            imageUrl = ""
         ),
         CafeEntity(
             name = "Study Spot",
             address = "45 College Ave",
             tags = "",
             studyRating = 3,
-            outletInfo = "Some",
+            powerOutlets = "Some",
             wifiQuality = "Good",
             atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
             energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
             studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
-            imageUrl = "",
+            imageUrl = ""
         ),
         CafeEntity(
             name = "Java House",
             address = "88 Coffee Blvd",
             tags = "",
             studyRating = 5,
-            outletInfo = "Few",
+            powerOutlets = "Few",
             wifiQuality = "Fair",
             atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
             energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
