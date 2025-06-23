@@ -44,6 +44,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.compose.ui.graphics.Color
 
 class MainActivity : ComponentActivity() {
     
@@ -90,7 +91,7 @@ class MainActivity : ComponentActivity() {
             ComposeAppTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = Background
+                color = Color.Transparent
             ) {
                     AppNavigation(loginViewModel, cafeViewModel, reviewViewModel, userViewModel)
                 }
@@ -207,8 +208,8 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
     
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
-            containerColor = Background,
-            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            containerColor = Color.Transparent,
         ) { paddingValues ->
             Column(modifier = Modifier.fillMaxSize()) {
                 // Welcome message that disappears after 10 seconds
@@ -241,15 +242,15 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                             }
                             Row {
                                 OutlinedButton(
-                                    onClick = { showWelcomeMessage = false }
+                                    onClick = { showWelcomeMessage = false },
                                 ) {
-                                    Text("Dismiss")
+                                    Text(text = "Dismiss", color = TextPrimary)
                                 }
                                 Spacer(modifier = Modifier.width(8.dp))
                                 OutlinedButton(
                                     onClick = { loginViewModel.logout() }
                                 ) {
-                                    Text("Logout")
+                                    Text(text = "Logout", color = TextPrimary)
                                 }
                             }
                         }

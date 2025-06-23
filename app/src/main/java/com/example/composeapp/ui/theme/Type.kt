@@ -29,7 +29,7 @@ val Typography = Typography(
         lineHeight = 40.sp
     ),
     headlineSmall = TextStyle(
-        fontSize = 18.sp,
+        fontSize = 22.sp,
         fontFamily = LoraFont,
         fontWeight = FontWeight.Bold,
         color = TextPrimary,
@@ -53,7 +53,7 @@ val Typography = Typography(
     ),
 
     titleSmall = TextStyle(
-        fontSize = 10.sp,
+        fontSize = 15.sp,
         fontFamily = DmSansFont,
         fontWeight = FontWeight.Medium,
         color = TextPrimary,

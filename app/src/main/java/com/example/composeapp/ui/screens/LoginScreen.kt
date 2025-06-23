@@ -263,7 +263,8 @@ fun LoginScreen(
                             Text(
                                 text = "Sign In",
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White
                             )
                         }
                     }

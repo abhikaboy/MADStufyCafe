@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.example.composeapp.R
+import com.example.composeapp.data.network.Bookmark
 import com.example.composeapp.data.network.Review
 import com.example.composeapp.data.network.UserResponse
 import com.example.composeapp.ui.components.ReviewCard
@@ -35,6 +36,7 @@ import com.example.composeapp.ui.theme.TextPrimary
 fun UserProfile(
     currentUser: UserResponse?,
     userReviews: List<Review> = emptyList(),
+    userBookmarks: List<Bookmark> = emptyList(),
     getCafeName: (String) -> String = { "Unknown Cafe" },
     onReviewClick: (Review) -> Unit = {},
     onResume: () -> Unit = {}
@@ -91,8 +93,8 @@ fun UserProfile(
         RatingOverviewCard(
             cafesVisited = currentUser?.cafes_visited ?: 0,
             averageRating = currentUser?.average_rating?.toFloat() ?: 0f,
-            bookmarks = userReviews.size, // Show number of reviews instead of bookmarks
-            exploredPercentage = calculateExploredPercentage(currentUser?.cafes_visited ?: 0)
+            bookmarks = userBookmarks.size, // Show number of reviews instead of bookmarks
+            exploredPercentage = calculateExploredPercentage(currentUser?.cafes_visited ?: 0, userBookmarks.size)
         )
         Spacer(modifier = Modifier.height(12.dp))
         
@@ -132,11 +134,10 @@ fun UserProfile(
 }
 
 // Helper function to calculate explored percentage
-private fun calculateExploredPercentage(cafesVisited: Int): Int {
+private fun calculateExploredPercentage(cafesVisited: Int, cafesBookmarked: Int): Int {
     // Assuming there are roughly 100 cafes in the system
     // This could be made dynamic by passing total cafe count
-    val totalCafes = 100
-    return ((cafesVisited.toDouble() / totalCafes) * 100).toInt().coerceAtMost(100)
+    return ((cafesVisited.toDouble() / cafesBookmarked) * 100).toInt().coerceAtMost(100)
 }
 
 @Preview(showBackground = true)
