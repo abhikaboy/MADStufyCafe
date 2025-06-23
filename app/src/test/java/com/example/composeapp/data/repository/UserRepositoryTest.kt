@@ -1,4 +1,4 @@
-package mobileapplicationdevelopment2025
+package com.example.composeapp.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData

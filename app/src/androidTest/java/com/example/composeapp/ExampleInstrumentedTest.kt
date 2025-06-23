@@ -1,4 +1,4 @@
-package com.example.mobileapplicationdevelopment2025
+package com.example.composeapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

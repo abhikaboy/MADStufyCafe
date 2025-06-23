@@ -1,4 +1,4 @@
-package mobileapplicationdevelopment2025
+package com.example.composeapp.data.network
 
 import com.example.composeapp.data.network.ApiService
 import com.example.composeapp.data.network.FakeApiService

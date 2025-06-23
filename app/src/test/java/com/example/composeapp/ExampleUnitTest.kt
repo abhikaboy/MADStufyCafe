@@ -1,4 +1,4 @@
-package com.example.mobileapplicationdevelopment2025
+package com.example.composeapp
 
 import org.junit.Test
 
