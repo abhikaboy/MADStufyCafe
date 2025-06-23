@@ -265,9 +265,6 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                     NavHost(
                         navController = navController,
                         startDestination = Screen.Home.route,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = 80.dp)
                     ) {
                         composable(Screen.Home.route) {
                             when {
