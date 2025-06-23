@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,12 +66,7 @@ fun CafeCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Box {
-                GlideImage(
-                    model = cafe.imageUrl,
-                    contentDescription = "Cafe Photo",
-                    modifier = Modifier.fillMaxSize().height(180.dp).clip(RoundedCornerShape(9.dp)),
-                    contentScale = ContentScale.Crop,
-                )
+                CafeImage(cafe.imageUrl)
                 // Bookmark button overlaid on image
                 IconButton(
                     onClick = onBookmarkClick,
@@ -241,6 +237,36 @@ fun CafeCard(
                 }
             }
         }
+    }
+}
+
+//This makes image show in Preview
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun CafeImage(imageUrl: String) {
+    val isPreview = LocalInspectionMode.current
+    if (isPreview) {
+        // Show local placeholder drawable in preview
+        Image(
+            painter = painterResource(id = R.drawable.cafe),
+            contentDescription = "Cafe Preview",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+                .clip(RoundedCornerShape(9.dp)),
+            contentScale = ContentScale.Crop
+        )
+    } else {
+        // Actual image when running on device
+        GlideImage(
+            model = imageUrl,
+            contentDescription = "Cafe Photo",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+                .clip(RoundedCornerShape(9.dp)),
+            contentScale = ContentScale.Crop,
+        )
     }
 }
 
