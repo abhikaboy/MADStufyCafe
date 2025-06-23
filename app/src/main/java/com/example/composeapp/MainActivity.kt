@@ -45,6 +45,11 @@ import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.compose.ui.graphics.Color
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.composeapp.utils.CafeWorker
+import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
     
@@ -86,6 +91,18 @@ class MainActivity : ComponentActivity() {
         
         // Initialize ViewModel factory with all repositories
         viewModelFactory = ViewModelFactory(cafeRepository, userRepository, reviewRepository)
+
+        // Refresh cafes every 15 min
+        val workRequest = PeriodicWorkRequestBuilder<CafeWorker>(
+            15, TimeUnit.MINUTES
+        ).build()
+
+        // Queue the worker
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "CafeSyncWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
         
         setContent {
             ComposeAppTheme {
@@ -289,7 +306,7 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                 }
                                 displayedCafes is ApiResult.Success -> {
                                     val cafes = displayedCafes.data
-        if (cafes.isEmpty()) {
+                                    if (cafes.isEmpty()) {
                                         EmptyStateScreen(
                                             onRefresh = { 
                                                 if (isSearchActive) {
