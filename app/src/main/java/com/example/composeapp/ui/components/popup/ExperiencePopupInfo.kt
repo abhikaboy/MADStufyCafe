@@ -28,10 +28,16 @@ import com.example.composeapp.ui.components.button.WifiRateButton
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.TagBackground
+import com.example.composeapp.ui.viewmodel.ReviewViewModel
 
 
 @Composable
-fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails:() -> Unit, onRatingChanged: ((Float) -> Unit)? = null
+fun ExperiencePopupInfo(
+    cafe: CafeEntity, 
+    onBack: () -> Unit, 
+    toShareMoreDetails: () -> Unit, 
+    onRatingChanged: ((Float) -> Unit)? = null,
+    reviewViewModel: ReviewViewModel? = null
 ) {
     var selectedOutlet by remember { mutableStateOf("") }
     var selectedWifi by remember { mutableStateOf(-1) }
@@ -71,6 +77,7 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
                 rating = userRating,
                 onRatingChanged = { newRating ->
                     userRating = newRating
+                    reviewViewModel?.updateOverallRating(newRating.toDouble())
                     onRatingChanged?.invoke(newRating)
                 }
             )
@@ -113,22 +120,34 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
                     Tag(
                         text = "None",
                         isSelected = selectedOutlet == "None",
-                        onClick = { selectedOutlet = "None" }
+                        onClick = { 
+                            selectedOutlet = "None"
+                            reviewViewModel?.updateOutletAccessibility(0.0)
+                        }
                     )
                     Tag(
                         text = "Few",
                         isSelected = selectedOutlet == "Few",
-                        onClick = { selectedOutlet = "Few" }
+                        onClick = { 
+                            selectedOutlet = "Few"
+                            reviewViewModel?.updateOutletAccessibility(1.0)
+                        }
                     )
                     Tag(
                         text = "Some",
                         isSelected = selectedOutlet == "Some",
-                        onClick = { selectedOutlet = "Some" }
+                        onClick = { 
+                            selectedOutlet = "Some"
+                            reviewViewModel?.updateOutletAccessibility(2.0)
+                        }
                     )
                     Tag(
                         text = "Plenty",
                         isSelected = selectedOutlet == "Plenty",
-                        onClick = { selectedOutlet = "Plenty" }
+                        onClick = { 
+                            selectedOutlet = "Plenty"
+                            reviewViewModel?.updateOutletAccessibility(3.0)
+                        }
                     )
                 }
                 Text(
@@ -147,25 +166,37 @@ fun ExperiencePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toShareMoreDetails
                         rating = "0",
                         text = "None",
                         isSelected = selectedWifi == 0,
-                        onClick = { selectedWifi = 0 }
+                        onClick = { 
+                            selectedWifi = 0
+                            reviewViewModel?.updateWifiQuality(0.0)
+                        }
                     )
                     WifiRateButton(
                         rating = "1",
                         text = "Poor",
                         isSelected = selectedWifi == 1,
-                        onClick = { selectedWifi = 1 }
+                        onClick = { 
+                            selectedWifi = 1
+                            reviewViewModel?.updateWifiQuality(1.0)
+                        }
                     )
                     WifiRateButton(
                         rating = "2",
                         text = "Good",
                         isSelected = selectedWifi == 2,
-                        onClick = { selectedWifi = 2 }
+                        onClick = { 
+                            selectedWifi = 2
+                            reviewViewModel?.updateWifiQuality(2.0)
+                        }
                     )
                     WifiRateButton(
                         rating = "3",
                         text = "Great",
                         isSelected = selectedWifi == 3,
-                        onClick = { selectedWifi = 3 }
+                        onClick = { 
+                            selectedWifi = 3
+                            reviewViewModel?.updateWifiQuality(3.0)
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(24.dp))

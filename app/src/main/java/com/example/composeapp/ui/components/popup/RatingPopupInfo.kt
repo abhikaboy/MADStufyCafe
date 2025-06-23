@@ -1,5 +1,6 @@
 package com.example.composeapp.ui.components.popup
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,10 +11,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,9 +33,28 @@ import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.button.CustomButton
 import com.example.composeapp.ui.components.LightLabel
 import com.example.composeapp.ui.components.Tag
+import com.example.composeapp.ui.viewmodel.ReviewViewModel
+import com.example.composeapp.ui.viewmodel.UserViewModel
 
 @Composable
-fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
+fun RatingPopupInfo(
+    cafe: CafeEntity, 
+    onNext: () -> Unit,
+    reviewViewModel: ReviewViewModel? = null,
+    onBookmarkClick: ((CafeEntity) -> Unit)? = null,
+    userViewModel: UserViewModel? = null,
+    currentUserId: String? = null
+) {
+    val context = LocalContext.current
+    
+    // Observe bookmark action success to show toast
+    userViewModel?.bookmarkActionSuccess?.observeAsState()?.value?.let { message ->
+        LaunchedEffect(message) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            userViewModel.clearBookmarkSuccess()
+        }
+    }
+    
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -48,8 +72,17 @@ fun RatingPopupInfo(cafe: CafeEntity, onNext: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CustomButton(
-                    text = "Bookmark",
-                    onClick = { }
+                    text = if (cafe.isBookmarked) "Bookmarked" else "Bookmark",
+                    onClick = { 
+                        if (currentUserId != null && cafe.apiId.isNotEmpty()) {
+                            if (cafe.isBookmarked) {
+                                userViewModel?.deleteBookmark(currentUserId, cafe.apiId)
+                            } else {
+                                userViewModel?.createBookmark(currentUserId, cafe.apiId)
+                            }
+                        }
+                        onBookmarkClick?.invoke(cafe)
+                    }
                 )
                 CustomButton(
                     text = "Leave a Review",

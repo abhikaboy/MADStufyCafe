@@ -9,13 +9,15 @@ import com.example.composeapp.data.network.ApiResult
 import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.safeApiCall
 import com.example.composeapp.data.network.toEntity
+import com.example.composeapp.utils.LocationHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class CafeRepository(
     private val cafeDao: CafeDao,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val locationHelper: LocationHelper? = null
 ) {
     val allCafes: Flow<List<CafeEntity>> = cafeDao.getAllCafes()
 
@@ -29,11 +31,52 @@ class CafeRepository(
                 emit(ApiResult.Success(cachedCafes))
             }
             
-            // Then try to fetch from API
-            val apiResult = safeApiCall { apiService.getAllCafes() }
-            when (apiResult) {
+            // Try to get user's location and fetch nearby cafes first
+            var apiResult: ApiResult<List<Cafe>>? = null
+            
+            try {
+                var userLocation = locationHelper?.getCurrentLocation()
+                android.util.Log.d("CafeRepository", "LocationHelper result: $userLocation")
+                
+                // If no location helper, permission, or last known location, use default location
+                if (userLocation == null) {
+                    userLocation = LocationHelper.DEFAULT_LOCATION
+                    android.util.Log.d("CafeRepository", "Using default location: $userLocation")
+                } else {
+                    android.util.Log.d("CafeRepository", "Using actual location: $userLocation")
+                }
+                
+                // Try nearby cafes first
+                android.util.Log.d("CafeRepository", "Calling nearby cafes API with location: lat=${userLocation.latitude}, lng=${userLocation.longitude}")
+                apiResult = safeApiCall("Get Nearby Cafes") { 
+                    apiService.findNearbyCafes(
+                        longitude = userLocation.longitude,
+                        latitude = userLocation.latitude,
+                        maxDistance = 10000.0 // 10km radius
+                    )
+                }
+                
+                // If nearby API call fails, we'll fall back to generic call
+                if (apiResult is ApiResult.Error) {
+                    android.util.Log.w("CafeRepository", "Nearby API call failed, will fallback to generic: ${(apiResult as ApiResult.Error).message}")
+                    apiResult = null
+                }
+            } catch (e: Exception) {
+                // Location failed, will fallback to generic call
+                android.util.Log.e("CafeRepository", "Location/nearby call exception, will fallback to generic: ${e.message}")
+                apiResult = null
+            }
+            
+            // Fallback to generic get all cafes if location-based fetch failed or no location helper
+            if (apiResult == null) {
+                apiResult = safeApiCall("Get All Cafes") { apiService.getAllCafes() }
+            }
+            
+            // Use local variable to avoid smart cast issues
+            val finalApiResult = apiResult
+            when (finalApiResult) {
                 is ApiResult.Success -> {
-                    val entities = apiResult.data.map { it.toEntity() }
+                    val entities = finalApiResult.data.map { it.toEntity() }
                     withContext(Dispatchers.IO) {
                         cafeDao.deleteAllCafes()
                         cafeDao.insertCafes(entities)
@@ -42,9 +85,15 @@ class CafeRepository(
                 }
                 is ApiResult.Error -> {
                     if (cachedCafes.isEmpty()) {
-                        emit(apiResult)
+                        emit(finalApiResult)
                     }
                     // If we have cached data, we don't emit error, just continue with cached data
+                }
+                null -> {
+                    // This shouldn't happen, but handle it gracefully
+                    if (cachedCafes.isEmpty()) {
+                        emit(ApiResult.Error("Failed to fetch cafes"))
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -69,7 +118,7 @@ class CafeRepository(
             }
             
             // Convert long ID back to string for API call
-            val apiResult = safeApiCall { 
+            val apiResult = safeApiCall("Get Cafe by ID") { 
                 apiService.getCafeById(id.toString()) 
             }
             
@@ -137,7 +186,7 @@ class CafeRepository(
             }
             
             // Then search via API
-            val apiResult = safeApiCall { apiService.searchCafes(query) }
+            val apiResult = safeApiCall("Search Cafes") { apiService.searchCafes(query) }
             when (apiResult) {
                 is ApiResult.Success -> {
                     val entities = apiResult.data.map { it.toEntity() }
@@ -162,7 +211,47 @@ class CafeRepository(
 
     suspend fun refreshCafes(): ApiResult<List<CafeEntity>> {
         return try {
-            val apiResult = safeApiCall { apiService.getAllCafes() }
+            // Try to get user's location and fetch nearby cafes first
+            var apiResult: ApiResult<List<Cafe>>? = null
+            
+            try {
+                var userLocation = locationHelper?.getCurrentLocation()
+                android.util.Log.d("CafeRepository", "REFRESH - LocationHelper result: $userLocation")
+                
+                // If no location helper, permission, or last known location, use default location
+                if (userLocation == null) {
+                    userLocation = LocationHelper.DEFAULT_LOCATION
+                    android.util.Log.d("CafeRepository", "REFRESH - Using default location: $userLocation")
+                } else {
+                    android.util.Log.d("CafeRepository", "REFRESH - Using actual location: $userLocation")
+                }
+                
+                // Try nearby cafes first
+                android.util.Log.d("CafeRepository", "REFRESH - Calling nearby cafes API with location: lat=${userLocation.latitude}, lng=${userLocation.longitude}")
+                apiResult = safeApiCall("Refresh Nearby Cafes") { 
+                    apiService.findNearbyCafes(
+                        longitude = userLocation.longitude,
+                        latitude = userLocation.latitude,
+                        maxDistance = 10000.0 // 10km radius
+                    )
+                }
+                
+                // If nearby API call fails, we'll fall back to generic call
+                if (apiResult is ApiResult.Error) {
+                    android.util.Log.w("CafeRepository", "REFRESH - Nearby API call failed, will fallback to generic: ${(apiResult as ApiResult.Error).message}")
+                    apiResult = null
+                }
+            } catch (e: Exception) {
+                // Location failed, will fallback to generic call
+                android.util.Log.e("CafeRepository", "REFRESH - Location/nearby call exception, will fallback to generic: ${e.message}")
+                apiResult = null
+            }
+            
+            // Fallback to generic get all cafes if location-based fetch failed or no location helper
+            if (apiResult == null) {
+                apiResult = safeApiCall("Refresh All Cafes") { apiService.getAllCafes() }
+            }
+            
             when (apiResult) {
                 is ApiResult.Success -> {
                     val entities = apiResult.data.map { it.toEntity() }
@@ -173,6 +262,7 @@ class CafeRepository(
                     ApiResult.Success(entities)
                 }
                 is ApiResult.Error -> apiResult
+                null -> ApiResult.Error("Failed to refresh cafes")
             }
         } catch (e: Exception) {
             ApiResult.Error(e.localizedMessage ?: "Refresh failed")
@@ -197,7 +287,7 @@ class CafeRepository(
         latitude: Double, 
         maxDistance: Double = 5000.0
     ): LiveData<ApiResult<List<CafeEntity>>> = liveData {
-        val apiResult = safeApiCall { 
+        val apiResult = safeApiCall("Find Nearby Cafes") { 
             apiService.findNearbyCafes(longitude, latitude, maxDistance) 
         }
         when (apiResult) {
@@ -218,7 +308,7 @@ class CafeRepository(
     }
 
     fun findCafesByRatingLiveData(minRating: Double): LiveData<ApiResult<List<CafeEntity>>> = liveData {
-        val apiResult = safeApiCall { apiService.findCafesByRating(minRating) }
+        val apiResult = safeApiCall("Find Cafes by Rating") { apiService.findCafesByRating(minRating) }
         when (apiResult) {
             is ApiResult.Success -> {
                 val entities = apiResult.data.map { it.toEntity() }
@@ -236,7 +326,7 @@ class CafeRepository(
     }
 
     fun findCafesByAmenitiesLiveData(amenities: List<String>): LiveData<ApiResult<List<CafeEntity>>> = liveData {
-        val apiResult = safeApiCall { apiService.findCafesByAmenities(amenities) }
+        val apiResult = safeApiCall("Find Cafes by Amenities") { apiService.findCafesByAmenities(amenities) }
         when (apiResult) {
             is ApiResult.Success -> {
                 val entities = apiResult.data.map { it.toEntity() }

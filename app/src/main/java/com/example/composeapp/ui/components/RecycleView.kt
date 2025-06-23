@@ -18,9 +18,13 @@ fun CafeList(
     isRefreshing: Boolean = false,
     onRefresh: () -> Unit = {}
 ) {
-    LazyColumn() {
+    LazyColumn {
         items(cafeList) { cafe ->
-            CafeCard(cafe, onClick = { onCafeClick(cafe) })
+            CafeCard(
+                cafe = cafe, 
+                onClick = { onCafeClick(cafe) },
+                onBookmarkClick = { onBookmarkClick(cafe) }
+            )
             Spacer(modifier = Modifier.padding(bottom = 15.dp))
         }
     }

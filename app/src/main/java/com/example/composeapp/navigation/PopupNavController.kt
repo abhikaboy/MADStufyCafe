@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.screens.CafePopup
 import com.example.composeapp.ui.screens.HomeScreen
+import com.example.composeapp.ui.viewmodel.ReviewViewModel
+import com.example.composeapp.ui.viewmodel.UserViewModel
 
 @Composable
 fun MainContent(
@@ -19,7 +21,11 @@ fun MainContent(
     isRefreshing: Boolean = false,
     onRefresh: () -> Unit = {},
     onBookmarkClick: (CafeEntity) -> Unit = {},
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    reviewViewModel: ReviewViewModel? = null,
+    currentUserId: String? = null,
+    userViewModel: UserViewModel? = null,
+    onResume: () -> Unit = {}
 ) {
     //Created blank cafe since I don't want to deal with null CafeEntity
     val blankCafe = CafeEntity(
@@ -36,9 +42,17 @@ fun MainContent(
         onRefresh = onRefresh,
         onBookmarkClick = onBookmarkClick,
         onSearch = onSearch,
+        onResume = onResume,
         onCafeClick = { cafe ->
+            // Reset all previous review state before starting new review
+            reviewViewModel?.resetAllStates()
             selectedCafe = cafe
             isPopupVisible = true
+            // Initialize review for this cafe and user
+            reviewViewModel?.startReview(
+                cafeId = cafe.apiId,
+                userId = currentUserId ?: ""
+            )
         }
     )
 
@@ -49,8 +63,14 @@ fun MainContent(
             onDismiss = {
                 isPopupVisible = false
                 selectedCafe = blankCafe
+                // Reset all review state when closing popup
+                reviewViewModel?.resetAllStates()
             },
-            navController = navController
+            navController = navController,
+            reviewViewModel = reviewViewModel,
+            onBookmarkClick = onBookmarkClick,
+            userViewModel = userViewModel,
+            currentUserId = currentUserId
         )
     }
 }

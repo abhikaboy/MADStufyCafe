@@ -7,9 +7,13 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.*
 import com.example.composeapp.data.repository.UserRepository
+import com.example.composeapp.data.repository.ReviewRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
+class UserViewModel(
+    private val userRepository: UserRepository,
+    private val reviewRepository: ReviewRepository
+) : ViewModel() {
     
     // Current user state
     private val _currentUser = MutableLiveData<UserResponse?>()
@@ -35,7 +39,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     
     // User bookmarks
     private val _userId = MutableLiveData<String>()
-    val userBookmarks: LiveData<ApiResult<List<BookmarkWithCafe>>> = _userId.switchMap { userId ->
+    val userBookmarks: LiveData<ApiResult<List<Cafe>>> = _userId.switchMap { userId ->
         userRepository.getUserBookmarks(userId)
     }
     
@@ -55,6 +59,14 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     // Authentication state
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> = _isLoggedIn
+    
+    // User reviews
+    private val _userReviews = MutableLiveData<ApiResult<List<Review>>>()
+    val userReviews: LiveData<ApiResult<List<Review>>> = _userReviews
+    
+    // Bookmark operation success
+    private val _bookmarkActionSuccess = MutableLiveData<String?>()
+    val bookmarkActionSuccess: LiveData<String?> = _bookmarkActionSuccess
     
     init {
         _isLoggedIn.value = false
@@ -144,6 +156,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                     is ApiResult.Success -> {
                         // Refresh bookmarks
                         loadUserBookmarks(userId)
+                        _bookmarkActionSuccess.value = "Bookmark created successfully"
                     }
                     is ApiResult.Error -> {
                         _errorMessage.value = "Failed to create bookmark: ${result.message}"
@@ -163,6 +176,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                     is ApiResult.Success -> {
                         // Refresh bookmarks
                         loadUserBookmarks(userId)
+                        _bookmarkActionSuccess.value = "Bookmark deleted successfully"
                     }
                     is ApiResult.Error -> {
                         _errorMessage.value = "Failed to delete bookmark: ${result.message}"
@@ -204,6 +218,10 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         _errorMessage.value = null
     }
     
+    fun clearBookmarkSuccess() {
+        _bookmarkActionSuccess.value = null
+    }
+    
     // Handle login result
     fun handleLoginResult(result: ApiResult<LoginResponse>) {
         when (result) {
@@ -232,6 +250,16 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
             }
         }
         _isLoading.value = false
+    }
+    
+    fun getUserReviews(userId: String) {
+        reviewRepository.getReviewsByUser(userId).observeForever { result ->
+            _userReviews.value = result
+            when (result) {
+                is ApiResult.Error -> _errorMessage.value = result.message
+                else -> _errorMessage.value = null
+            }
+        }
     }
 }
 

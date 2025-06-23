@@ -2,6 +2,7 @@ package com.example.composeapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,11 +40,16 @@ import com.example.composeapp.ui.theme.Background
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.LargeCardBackground
+import com.example.composeapp.ui.theme.Primary
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
+fun CafeCard(
+    cafe: CafeEntity, 
+    onClick: () -> Unit,
+    onBookmarkClick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -53,12 +64,29 @@ fun CafeCard(cafe: CafeEntity, onClick: () -> Unit) {
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            GlideImage(
-                model = cafe.imageUrl,
-                contentDescription = "Cafe Photo",
-                modifier = Modifier.fillMaxSize().height(180.dp).clip(RoundedCornerShape(9.dp)),
-                contentScale = ContentScale.Crop,
-            )
+            Box {
+                GlideImage(
+                    model = cafe.imageUrl,
+                    contentDescription = "Cafe Photo",
+                    modifier = Modifier.fillMaxSize().height(180.dp).clip(RoundedCornerShape(9.dp)),
+                    contentScale = ContentScale.Crop,
+                )
+                // Bookmark button overlaid on image
+                IconButton(
+                    onClick = onBookmarkClick,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        imageVector = if (cafe.isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
+                        contentDescription = if (cafe.isBookmarked) "Remove bookmark" else "Add bookmark",
+                        tint = if (cafe.isBookmarked) Primary else androidx.compose.ui.graphics.Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+            
             Text(
                 text = cafe.name,
                 style = MaterialTheme.typography.titleLarge,

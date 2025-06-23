@@ -50,9 +50,9 @@ data class Location(
 // Cafe models
 data class Cafe(
     @SerializedName("_id") val id: String,
-    val name: String,
-    val address: Address,
-    val location: Location,
+    val name: String?,
+    val address: Address?,
+    val location: Location?,
     val phone: String? = null,
     val website: String? = null,
     val opening_hours: Map<String, String>? = null,
@@ -66,9 +66,9 @@ data class Cafe(
 )
 
 data class CafeCreate(
-    val name: String,
-    val address: Address,
-    val location: Location,
+    val name: String?,
+    val address: Address?,
+    val location: Location?,
     val phone: String? = null,
     val website: String? = null,
     val opening_hours: Map<String, String>? = null,
@@ -130,7 +130,25 @@ data class BookmarkWithCafe(
     val user_id: String,
     val cafe_id: String,
     val bookmarked_at: String,
-    val cafe: Cafe? = null
+    val cafe: CafeInBookmark? = null
+)
+
+// Cafe model as it appears in bookmark responses (has 'id' instead of '_id')
+data class CafeInBookmark(
+    val id: String,
+    val name: String?,
+    val address: Address?,
+    val location: Location?,
+    val phone: String? = null,
+    val website: String? = null,
+    val opening_hours: Map<String, String>? = null,
+    val amenities: List<String>? = null,
+    val thumbnail_url: String? = null,
+    val wifi_access: Int = 0,
+    val outlet_accessibility: Int = 0,
+    val average_rating: Int = 1,
+    val created_at: String? = null,
+    val updated_at: String? = null
 )
 
 // File upload response
@@ -143,11 +161,12 @@ data class FileUploadResponse(
 fun Cafe.toEntity(): CafeEntity {
     return CafeEntity(
         id = id.hashCode().toLong(), // Convert string ID to long for Room
-        name = name,
-        address = "${address.street}, ${address.city}, ${address.state} ${address.zip_code}",
+        apiId = id, // Store original MongoDB ObjectId
+        name = name ?: "Unknown Cafe",
+        address = address?.let { "${it.street}, ${it.city}, ${it.state} ${it.zip_code}" } ?: "Address not available",
         description = "",
-        latitude = if (location.coordinates.size >= 2) location.coordinates[1] else null,
-        longitude = if (location.coordinates.size >= 2) location.coordinates[0] else null,
+        latitude = location?.coordinates?.getOrNull(1),
+        longitude = location?.coordinates?.getOrNull(0),
         phone = phone,
         website = website,
         hours = opening_hours?.entries?.joinToString(", ") { "${it.key}: ${it.value}" },
@@ -184,5 +203,25 @@ fun Cafe.toEntity(): CafeEntity {
         createdAt = created_at,
         updatedAt = updated_at,
         isBookmarked = false
+    )
+}
+
+// Extension function to convert CafeInBookmark to Cafe
+fun CafeInBookmark.toCafe(): Cafe {
+    return Cafe(
+        id = id,
+        name = name,
+        address = address,
+        location = location,
+        phone = phone,
+        website = website,
+        opening_hours = opening_hours,
+        amenities = amenities,
+        thumbnail_url = thumbnail_url,
+        wifi_access = wifi_access,
+        outlet_accessibility = outlet_accessibility,
+        average_rating = average_rating,
+        created_at = created_at,
+        updated_at = updated_at
     )
 } 

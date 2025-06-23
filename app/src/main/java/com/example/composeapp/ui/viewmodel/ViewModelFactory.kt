@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.composeapp.data.repository.CafeRepository
 import com.example.composeapp.data.repository.UserRepository
+import com.example.composeapp.data.repository.ReviewRepository
 
 class ViewModelFactory(
     private val cafeRepository: CafeRepository,
-    private val userRepository: UserRepository? = null
+    private val userRepository: UserRepository,
+    private val reviewRepository: ReviewRepository
 ) : ViewModelProvider.Factory {
     
     @Suppress("UNCHECKED_CAST")
@@ -17,8 +19,13 @@ class ViewModelFactory(
                 CafeViewModel(cafeRepository) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
-                requireNotNull(userRepository) { "UserRepository is required for UserViewModel" }
-                UserViewModel(userRepository) as T
+                UserViewModel(userRepository, reviewRepository) as T
+            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(userRepository) as T
+            }
+            modelClass.isAssignableFrom(ReviewViewModel::class.java) -> {
+                ReviewViewModel(reviewRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

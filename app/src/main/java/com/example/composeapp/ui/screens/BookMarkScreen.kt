@@ -1,5 +1,6 @@
 package com.example.composeapp.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,19 +8,55 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.data.network.Cafe
+import com.example.composeapp.data.network.Address
+import com.example.composeapp.data.network.Location
+import com.example.composeapp.data.network.toEntity
 import com.example.composeapp.ui.components.CafeList
 import com.example.composeapp.ui.components.ExpandableFilterBar
 import com.example.composeapp.ui.components.SearchBar
 import com.example.composeapp.ui.theme.TextPrimary
 
 @Composable
-fun BookMarkScreen(cafeList: List<CafeEntity>) {
+fun BookMarkScreen(
+    cafeList: List<Cafe>,
+    onCafeClick: (CafeEntity) -> Unit = {},
+    onBookmarkClick: (CafeEntity) -> Unit = {},
+    onSearch: (String) -> Unit = {},
+    onResume: () -> Unit = {}
+) {
+    val context = LocalContext.current
+    var filteredList by remember(cafeList) { mutableStateOf(cafeList) }
+    
+    // Convert Cafe objects to CafeEntity for display
+    val cafeEntities = remember(filteredList) {
+        filteredList.map { it.toEntity() }
+    }
+    
+    // Handle onResume lifecycle event
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                onResume()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,29 +71,48 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
         )
         Spacer(modifier = Modifier.height(30.dp))
         Text(
-            text = "Monkey D Luffy's Bookmarks",
+            text = "Your Bookmarked Cafes",
             style = MaterialTheme.typography.headlineSmall,
             color = TextPrimary
         )
         Spacer(modifier = Modifier.height(10.dp))
-        SearchBar()
+        SearchBar(
+            onSearch = { query ->
+                filteredList = if (query.isBlank()) {
+                    cafeList
+                } else {
+                    cafeList.filter { cafe ->
+                        val fullAddress = cafe.address?.let { 
+                            "${it.street}, ${it.city}, ${it.state} ${it.zip_code}" 
+                        } ?: "Address not available"
+                        val cafeName = cafe.name ?: "Unknown Cafe"
+                        cafeName.contains(query, ignoreCase = true) ||
+                        fullAddress.contains(query, ignoreCase = true)
+                    }
+                }
+                onSearch(query)
+            }
+        )
         Spacer(modifier = Modifier.height(10.dp))
         ExpandableFilterBar()
         Spacer(modifier = Modifier.height(15.dp))
         Text(
-            text = "Showing ${cafeList.size} bookmarked cafes",
+            text = "Showing ${filteredList.size} bookmarked cafes",
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
         CafeList(
-            cafeList = cafeList,
-            onCafeClick = { cafe -> /* Handle cafe click */ },
-            onBookmarkClick = { cafe -> /* Handle bookmark */ },
+            cafeList = cafeEntities,
+            onCafeClick = onCafeClick,
+            onBookmarkClick = { cafe ->
+                onBookmarkClick(cafe)
+                // Show toast when bookmark action is performed
+                Toast.makeText(context, "Bookmark updated!", Toast.LENGTH_SHORT).show()
+            },
             isRefreshing = false,
-            onRefresh = { /* Handle refresh */ }
+            onRefresh = onResume
         )
-        //CafeList(cafeList, onNavigate = {})
         Spacer(modifier = Modifier.height(15.dp))
     }
 }
@@ -65,41 +121,33 @@ fun BookMarkScreen(cafeList: List<CafeEntity>) {
 @Composable
 fun PreviewBookMarkScreen() {
     val cafesList = listOf(
-        CafeEntity(
+        Cafe(
+            id = "1",
             name = "Bean & Brew",
-            address = "123 Main Street, Boston, MA",
-            studyRating = 4,
-            powerOutlets = "Many",
-            wifiQuality = "Excellent",
-            atmosphereTags = "Cozy,Rustic,Traditional,Warm,Clean",
-            energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
-            studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
-            imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
-            ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
+            address = Address(
+                street = "123 Main Street",
+                city = "Boston",
+                state = "MA",
+                zip_code = "02101"
+            ),
+            location = Location(coordinates = listOf(-71.0589, 42.3601)),
+            average_rating = 4,
+            outlet_accessibility = 3,
+            wifi_access = 3
         ),
-        CafeEntity(
+        Cafe(
+            id = "2",
             name = "Study Spot",
-            address = "45 College Ave, Cambridge, MA",
-            studyRating = 3,
-            powerOutlets = "Some",
-            wifiQuality = "Good",
-            atmosphereTags = "Modern,Clean,Minimalist,Bright",
-            energyLevelTags = "Calm,Focused,Productive,Moderate",
-            studyFriendlyTags = "Study-Haven,Good,Decent,Quiet",
-            imageUrl = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400",
-            ratingImageUrls = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400"
-        ),
-        CafeEntity(
-            name = "Java House",
-            address = "88 Coffee Blvd, Somerville, MA",
-            studyRating = 5,
-            powerOutlets = "Few",
-            wifiQuality = "Fair",
-            atmosphereTags = "Cozy,Traditional,Warm,Industrial",
-            energyLevelTags = "Moderate,Average,Social,Lively",
-            studyFriendlyTags = "Mixed,Fair,Decent,Social",
-            imageUrl = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-            ratingImageUrls = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400,https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400"
+            address = Address(
+                street = "45 College Ave",
+                city = "Cambridge",
+                state = "MA",
+                zip_code = "02139"
+            ),
+            location = Location(coordinates = listOf(-71.1097, 42.3736)),
+            average_rating = 3,
+            outlet_accessibility = 2,
+            wifi_access = 2
         )
     )
     BookMarkScreen(cafesList)

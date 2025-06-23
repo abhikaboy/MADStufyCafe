@@ -88,6 +88,9 @@ interface ApiService {
     @GET("api/v1/reviews/by-spot/{study_spot_id}")
     suspend fun getReviewsByStudySpot(@Path("study_spot_id") studySpotId: String): List<Review>
     
+    @GET("api/v1/reviews/by-user/{user_id}")
+    suspend fun getReviewsByUser(@Path("user_id") userId: String): List<Review>
+    
     @POST("api/v1/reviews/{review_id}/photos")
     suspend fun addPhotoToReview(@Path("review_id") reviewId: String, @Body photo: PhotoCreate): Review
     
@@ -107,7 +110,10 @@ interface ApiService {
     suspend fun getBookmarkById(@Path("bookmark_id") bookmarkId: String): Bookmark
     
     @DELETE("api/v1/bookmarks/{bookmark_id}")
-    suspend fun deleteBookmark(@Path("bookmark_id") bookmarkId: String): Map<String, String>
+    suspend fun deleteBookmarkById(@Path("bookmark_id") bookmarkId: String): Map<String, String>
+    
+    @DELETE("api/v1/users/{user_id}/bookmarks/{study_spot_id}")
+    suspend fun deleteUserBookmark(@Path("user_id") userId: String, @Path("study_spot_id") studySpotId: String): Map<String, String>
     
     @GET("api/v1/users/{user_id}/bookmarks")
     suspend fun getUserBookmarks(@Path("user_id") userId: String): List<BookmarkWithCafe>

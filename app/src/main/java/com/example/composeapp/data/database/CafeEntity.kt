@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class CafeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val apiId: String = "",
     val name: String,
     val address: String,
     val description: String = "",

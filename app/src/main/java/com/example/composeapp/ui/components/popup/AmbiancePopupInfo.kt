@@ -21,10 +21,16 @@ import com.example.composeapp.ui.components.Tag
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.ui.theme.TagBackground
+import com.example.composeapp.ui.viewmodel.ReviewViewModel
 
 
 @Composable
-fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () -> Unit) {
+fun AmbiancePopupInfo(
+    cafe: CafeEntity, 
+    onBack: () -> Unit, 
+    toUploadPhoto: () -> Unit,
+    reviewViewModel: ReviewViewModel? = null
+) {
     var selectedAtmosphere by remember { mutableStateOf(setOf<String>()) }
     var selectedEnergy by remember { mutableStateOf(setOf<String>()) }
     var selectedStudyFriendly by remember { mutableStateOf(setOf<String>()) }
@@ -105,6 +111,7 @@ fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () ->
                         } else {
                             selectedAtmosphere + tag
                         }
+                        reviewViewModel?.updateAtmosphere(selectedAtmosphere.joinToString(","))
                     }
                 )
                 Text(
@@ -125,6 +132,7 @@ fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () ->
                         } else {
                             selectedEnergy + tag
                         }
+                        reviewViewModel?.updateEnergyLevel(selectedEnergy.joinToString(","))
                     }
                 )
                 Text(
@@ -144,6 +152,7 @@ fun AmbiancePopupInfo(cafe: CafeEntity, onBack: () -> Unit, toUploadPhoto: () ->
                         } else {
                             selectedStudyFriendly + tag
                         }
+                        reviewViewModel?.updateStudyFriendly(selectedStudyFriendly.joinToString(","))
                     }
                 )
 
