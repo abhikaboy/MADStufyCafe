@@ -39,9 +39,8 @@ import kotlin.collections.listOf
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ExpandableFilterBar() {
+fun ExpandableFilterBar(selectedLabels: Set<String>, onLabelToggle: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedLabels by remember { mutableStateOf(setOf<String>()) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,11 +122,7 @@ fun ExpandableFilterBar() {
                         text = label,
                         isSelected = selectedLabels.contains(label),
                         onClick = {
-                            selectedLabels = if (selectedLabels.contains(label)) {
-                                selectedLabels - label // remove from selection
-                            } else {
-                                selectedLabels + label // add to selection
-                            }
+                            onLabelToggle(label)
                         }
                     )
                 }
@@ -160,5 +155,5 @@ fun ExpandableFilterBar() {
 @Preview()
 @Composable
 fun PreviewExpandableFilterMenu() {
-    ExpandableFilterBar()
+    ExpandableFilterBar(selectedLabels = setOf(""), onLabelToggle = {})
 }
