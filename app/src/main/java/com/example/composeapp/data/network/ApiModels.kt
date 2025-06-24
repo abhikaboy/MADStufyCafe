@@ -167,13 +167,12 @@ fun Cafe.toEntity(): CafeEntity {
         description = "",
         latitude = location?.coordinates?.getOrNull(1),
         longitude = location?.coordinates?.getOrNull(0),
-        phone = phone,
-        website = website,
-        hours = opening_hours?.entries?.joinToString(", ") { "${it.key}: ${it.value}" },
-        priceRange = null,
         tags = amenities?.joinToString(",") ?: "",
-        studyRating = average_rating,
-        ambianceRating = average_rating,
+        studyRating = average_rating.coerceIn(1, 5),
+        ambianceRating = average_rating.coerceIn(1, 5),
+        averageRating = average_rating.coerceIn(1, 5),
+        wifiAccess = wifi_access.coerceIn(0, 3),
+        outletAccessibility = outlet_accessibility.coerceIn(0, 3),
         wifiQuality = when (wifi_access) {
             0 -> "None"
             1 -> "Poor"
@@ -190,10 +189,17 @@ fun Cafe.toEntity(): CafeEntity {
         },
         noiseLevel = "Medium",
         seatingCapacity = null,
-        hasParking = amenities?.any { it.contains("parking", ignoreCase = true) } ?: false,
+        hasParking = amenities?.any {
+            it.contains("parking", ignoreCase = true)
+        } ?: false,
         hasFood = true,
         hasCoffee = true,
-        hasStudyArea = true,
+        hasStudyArea = amenities?.any { amenity ->
+            amenity.contains("study", ignoreCase = true) ||
+                    amenity.contains("meeting", ignoreCase = true) ||
+                    amenity.contains("quiet", ignoreCase = true) ||
+                    amenity.contains("work", ignoreCase = true)
+        } ?: true,
         imageUrl = thumbnail_url ?: "",
         thumbnailUrl = thumbnail_url ?: "",
         atmosphereTags = "",

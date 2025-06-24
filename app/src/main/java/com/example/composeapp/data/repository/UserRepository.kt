@@ -7,21 +7,21 @@ import com.example.composeapp.data.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UserRepository(private val apiService: ApiService) {
+class UserRepository(private val apiService: ApiService) : UserRepositoryInterface {
     
     // Login user
-    fun loginUser(username: String, password: String): LiveData<ApiResult<LoginResponse>> = liveData {
+    override fun loginUser(username: String, password: String): LiveData<ApiResult<LoginResponse>> = liveData {
         emit(safeApiCall("User Login") { 
             apiService.login(UserLogin(username, password))
         })
     }
     
     // Create new user
-    fun createUser(
-        name: String, 
-        password: String, 
-        cafesVisited: Int = 0, 
-        averageRating: Double = 0.0
+    override fun createUser(
+        name: String,
+        password: String,
+        cafesVisited: Int,
+        averageRating: Double
     ): LiveData<ApiResult<UserResponse>> = liveData {
         emit(safeApiCall("Create User") {
             apiService.createUser(
@@ -36,36 +36,36 @@ class UserRepository(private val apiService: ApiService) {
     }
     
     // Get user by ID
-    fun getUserById(userId: String): LiveData<ApiResult<UserResponse>> = liveData {
+    override fun getUserById(userId: String): LiveData<ApiResult<UserResponse>> = liveData {
         emit(safeApiCall("Get User by ID") { apiService.getUserById(userId) })
     }
     
     // Update user
-    suspend fun updateUser(userId: String, userUpdate: UserUpdate): ApiResult<UserResponse> {
+    override suspend fun updateUser(userId: String, userUpdate: UserUpdate): ApiResult<UserResponse> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Update User") { apiService.updateUser(userId, userUpdate) }
         }
     }
     
     // Search users
-    fun searchUsers(query: String): LiveData<ApiResult<List<UserResponse>>> = liveData {
+    override fun searchUsers(query: String): LiveData<ApiResult<List<UserResponse>>> = liveData {
         emit(safeApiCall("Search Users") { apiService.searchUsers(query) })
     }
     
     // Get all users
-    fun getAllUsers(skip: Int = 0, limit: Int = 100): LiveData<ApiResult<List<UserResponse>>> = liveData {
+    override fun getAllUsers(skip: Int, limit: Int): LiveData<ApiResult<List<UserResponse>>> = liveData {
         emit(safeApiCall("Get All Users") { apiService.getAllUsers(skip, limit) })
     }
     
     // Delete user
-    suspend fun deleteUser(userId: String): ApiResult<Map<String, String>> {
+    override suspend fun deleteUser(userId: String): ApiResult<Map<String, String>> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Delete User") { apiService.deleteUser(userId) }
         }
     }
     
     // Get user bookmarks
-    fun getUserBookmarks(userId: String): LiveData<ApiResult<List<Cafe>>> = liveData {
+    override fun getUserBookmarks(userId: String): LiveData<ApiResult<List<Cafe>>> = liveData {
         val result = safeApiCall("Get User Bookmarks") { apiService.getUserBookmarks(userId) }
         when (result) {
             is ApiResult.Success -> {
@@ -82,7 +82,7 @@ class UserRepository(private val apiService: ApiService) {
     }
     
     // Create bookmark
-    suspend fun createBookmark(userId: String, cafeId: String): ApiResult<Bookmark> {
+    override suspend fun createBookmark(userId: String, cafeId: String): ApiResult<Bookmark> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Create Bookmark") { 
                 apiService.createBookmark(BookmarkCreate(userId, cafeId))
@@ -91,7 +91,7 @@ class UserRepository(private val apiService: ApiService) {
     }
     
     // Delete bookmark
-    suspend fun deleteBookmark(userId: String, cafeId: String): ApiResult<Map<String, String>> {
+    override suspend fun deleteBookmark(userId: String, cafeId: String): ApiResult<Map<String, String>> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Delete Bookmark") { 
                 apiService.deleteUserCafeBookmark(userId, cafeId)
@@ -100,7 +100,7 @@ class UserRepository(private val apiService: ApiService) {
     }
     
     // Check if bookmark exists
-    suspend fun checkBookmarkExists(userId: String, cafeId: String): ApiResult<Map<String, Boolean>> {
+    override suspend fun checkBookmarkExists(userId: String, cafeId: String): ApiResult<Map<String, Boolean>> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Check Bookmark Exists") { 
                 apiService.checkBookmarkExists(userId, cafeId)

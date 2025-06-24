@@ -6,10 +6,10 @@ import com.example.composeapp.data.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ReviewRepository(private val apiService: ApiService) {
+class ReviewRepository(private val apiService: ApiService) : ReviewRepositoryInterface {
     
     // Create a new review
-    suspend fun createReview(review: ReviewCreate): ApiResult<Review> {
+    override suspend fun createReview(review: ReviewCreate): ApiResult<Review> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Create Review") { 
                 apiService.createReview(review)
@@ -18,14 +18,14 @@ class ReviewRepository(private val apiService: ApiService) {
     }
     
     // Get review by ID
-    fun getReviewById(reviewId: String): LiveData<ApiResult<Review>> = liveData {
+    override fun getReviewById(reviewId: String): LiveData<ApiResult<Review>> = liveData {
         emit(safeApiCall("Get Review by ID") { 
             apiService.getReviewById(reviewId) 
         })
     }
     
     // Update review
-    suspend fun updateReview(reviewId: String, review: ReviewUpdate): ApiResult<Review> {
+    override suspend fun updateReview(reviewId: String, review: ReviewUpdate): ApiResult<Review> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Update Review") { 
                 apiService.updateReview(reviewId, review)
@@ -34,7 +34,7 @@ class ReviewRepository(private val apiService: ApiService) {
     }
     
     // Delete review
-    suspend fun deleteReview(reviewId: String): ApiResult<Map<String, String>> {
+    override suspend fun deleteReview(reviewId: String): ApiResult<Map<String, String>> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Delete Review") { 
                 apiService.deleteReview(reviewId)
@@ -43,21 +43,21 @@ class ReviewRepository(private val apiService: ApiService) {
     }
     
     // Get reviews for a specific study spot/cafe
-    fun getReviewsByStudySpot(studySpotId: String): LiveData<ApiResult<List<Review>>> = liveData {
+    override fun getReviewsByStudySpot(studySpotId: String): LiveData<ApiResult<List<Review>>> = liveData {
         emit(safeApiCall("Get Reviews by Study Spot") { 
             apiService.getReviewsByStudySpot(studySpotId) 
         })
     }
     
     // Get reviews for a specific user
-    fun getReviewsByUser(userId: String): LiveData<ApiResult<List<Review>>> = liveData {
+    override fun getReviewsByUser(userId: String): LiveData<ApiResult<List<Review>>> = liveData {
         emit(safeApiCall("Get Reviews by User") { 
             apiService.getReviewsByUser(userId) 
         })
     }
     
     // Add photo to review
-    suspend fun addPhotoToReview(reviewId: String, photo: PhotoCreate): ApiResult<Review> {
+    override suspend fun addPhotoToReview(reviewId: String, photo: PhotoCreate): ApiResult<Review> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Add Photo to Review") { 
                 apiService.addPhotoToReview(reviewId, photo)
@@ -66,10 +66,10 @@ class ReviewRepository(private val apiService: ApiService) {
     }
     
     // Upload photo to review (with file upload)
-    suspend fun uploadPhotoToReview(
+    override suspend fun uploadPhotoToReview(
         reviewId: String, 
         file: okhttp3.MultipartBody.Part, 
-        caption: String = ""
+        caption: String
     ): ApiResult<Review> {
         return withContext(Dispatchers.IO) {
             safeApiCall("Upload Photo to Review") { 

@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.*
 import com.example.composeapp.data.repository.ReviewRepository
+import com.example.composeapp.data.repository.ReviewRepositoryInterface
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
-class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewModel() {
+class ReviewViewModel(private val reviewRepository: ReviewRepositoryInterface) : ViewModel() {
     
     // Current review being created
     private val _currentReview = MutableLiveData<ReviewCreate?>()

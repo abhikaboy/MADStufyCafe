@@ -87,15 +87,21 @@ class FakeCafeDao : CafeDao {
         minLng: Double,
         maxLng: Double
     ): List<CafeEntity> {
-        TODO("Not yet implemented")
+        return cafes.filter { cafe ->
+            cafe.latitude != null && cafe.longitude != null &&
+                    cafe.latitude >= minLat && cafe.latitude <= maxLat &&
+                    cafe.longitude >= minLng && cafe.longitude <= maxLng
+        }
     }
 
     override suspend fun getCafesByMinRating(minRating: Int): List<CafeEntity> {
-        TODO("Not yet implemented")
+        return cafes.filter { it.studyRating >= minRating }
     }
 
     override suspend fun getCafesByAmenity(amenity: String): List<CafeEntity> {
-        TODO("Not yet implemented")
+        return cafes.filter { cafe ->
+            cafe.tags.contains(amenity, ignoreCase = true)
+        }
     }
 
     override suspend fun getCafeCount(): Int {

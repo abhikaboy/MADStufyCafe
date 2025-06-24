@@ -8,9 +8,10 @@ import com.example.composeapp.data.network.ApiResult
 import com.example.composeapp.data.network.LoginResponse
 import com.example.composeapp.data.network.UserResponse
 import com.example.composeapp.data.repository.UserRepository
+import com.example.composeapp.data.repository.UserRepositoryInterface
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
+class LoginViewModel(private val userRepository: UserRepositoryInterface) : ViewModel() {
     
     // UI State
     private val _isLoading = MutableLiveData(false)
