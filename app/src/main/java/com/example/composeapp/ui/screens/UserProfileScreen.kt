@@ -1,19 +1,31 @@
 package com.example.composeapp.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,13 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.example.composeapp.R
-import com.example.composeapp.data.network.Bookmark
 import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.Review
 import com.example.composeapp.data.network.UserResponse
 import com.example.composeapp.ui.components.ReviewCard
 import com.example.composeapp.ui.components.RatingOverviewCard
 import com.example.composeapp.ui.theme.TextPrimary
+import com.example.composeapp.ui.viewmodel.LoginViewModel
 
 @Composable
 fun UserProfile(
@@ -40,8 +52,12 @@ fun UserProfile(
     userBookmarks: List<Cafe> = emptyList(),
     getCafeName: (String) -> String = { "Unknown Cafe" },
     onReviewClick: (Review) -> Unit = {},
-    onResume: () -> Unit = {}
+    onResume: () -> Unit = {},
+    onLogout: () -> Unit = {},
+    loginViewModel: LoginViewModel? = null // Pass as parameter instead of creating inside
 ) {
+    var showDropdownMenu by remember { mutableStateOf(false) }
+
     // Handle onResume lifecycle event
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -55,25 +71,68 @@ fun UserProfile(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp, start = 16.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Box {
+                Image(
+                    painterResource(id = R.drawable.hamburger),
+                    contentDescription = "Hamburger Menu",
+                    modifier = Modifier
+                        .width(25.dp)
+                        .height(25.dp)
+                        .clickable { showDropdownMenu = true }
+                )
+
+                DropdownMenu(
+                    expanded = showDropdownMenu,
+                    onDismissRequest = { showDropdownMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            OutlinedButton(
+                                onClick = {
+                                    loginViewModel?.logout()
+                                    onLogout()
+                                    showDropdownMenu = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(text = "Logout", color = TextPrimary)
+                            }
+                        },
+                        onClick = {
+                            showDropdownMenu = false
+                        }
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(15.dp))
         Text(
             text = "Profile",
             style = MaterialTheme.typography.titleSmall,
             color = TextPrimary
         )
+
         Spacer(modifier = Modifier.height(20.dp))
-        
+
         // Profile picture placeholder
         Image(
-            painterResource(id = R.drawable.cafe), 
-            contentDescription = "Profile Picture", 
+            painterResource(id = R.drawable.cafe),
+            contentDescription = "Profile Picture",
             modifier = Modifier
                 .width(100.dp)
                 .height(100.dp)
@@ -89,34 +148,34 @@ fun UserProfile(
             color = TextPrimary
         )
         Spacer(modifier = Modifier.height(15.dp))
-        
+
         // User statistics
         RatingOverviewCard(
             cafesVisited = currentUser?.cafes_visited ?: 0,
             averageRating = currentUser?.average_rating?.toFloat() ?: 0f,
-            bookmarks = userBookmarks.size, // Show number of reviews instead of bookmarks
+            bookmarks = userBookmarks.size,
             exploredPercentage = calculateExploredPercentage(currentUser?.cafes_visited ?: 0, userBookmarks.size)
         )
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         // Recent reviews section
         Text(
-            text = "Recent Reviews",
+            text = "RECENT REVIEWS",
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         if (userReviews.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
-                items(userReviews.take(5)) { review -> // Show only 5 recent reviews
+                items(userReviews.take(5)) { review ->
                     ReviewCard(
                         review = review,
                         cafeName = getCafeName(review.study_spot_id),
-                        modifier = Modifier.padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = 6.dp)
                     )
                 }
             }
@@ -129,16 +188,16 @@ fun UserProfile(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
-        
-        Spacer(modifier = Modifier.height(15.dp))
     }
 }
 
 // Helper function to calculate explored percentage
 private fun calculateExploredPercentage(cafesVisited: Int, cafesBookmarked: Int): Int {
-    // Assuming there are roughly 100 cafes in the system
-    // This could be made dynamic by passing total cafe count
-    return ((cafesVisited.toDouble() / cafesBookmarked) * 100).toInt().coerceAtMost(100)
+    return if (cafesBookmarked > 0) {
+        ((cafesVisited.toDouble() / cafesBookmarked) * 100).toInt().coerceAtMost(100)
+    } else {
+        0
+    }
 }
 
 @Preview(showBackground = true)
@@ -153,7 +212,7 @@ fun PreviewUserProfile() {
         created_at = null,
         updated_at = null
     )
-    
+
     val mockReviews = listOf(
         Review(
             id = "1",
@@ -182,11 +241,11 @@ fun PreviewUserProfile() {
             created_at = "2024-01-10T14:20:00Z"
         )
     )
-    
+
     UserProfile(
         currentUser = mockUser,
         userReviews = mockReviews,
-        getCafeName = { cafeId -> 
+        getCafeName = { cafeId ->
             when (cafeId) {
                 "cafe1" -> "Bean & Brew"
                 "cafe2" -> "Study Spot"

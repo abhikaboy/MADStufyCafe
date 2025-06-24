@@ -47,16 +47,16 @@ fun ReviewCard(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 Text(
                     text = formatDate(review.created_at),
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Rating stars
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -66,52 +66,47 @@ fun ReviewCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary
                 )
-                
+
                 repeat(5) { index ->
                     Image(
                         painter = painterResource(
-                            id = if (index < review.overall_rating.toInt()) 
-                                R.drawable.filled_star 
-                            else 
+                            id = if (index < review.overall_rating.toInt())
+                                R.drawable.filled_star
+                            else
                                 R.drawable.star_icon
                         ),
                         contentDescription = "Star",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(1.dp)
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.width(8.dp))
-                
+
                 Text(
                     text = "(${review.overall_rating}/5.0)",
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
-            // Review details
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "WiFi: ${review.wifi_quality}/5",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Outlets: ${review.outlet_accessibility}/5",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-                }
-            }
-            
+
+
+            Text(
+                text = "WiFi: ${review.wifi_quality}/5",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary
+            )
+
+            Text(
+                text = "Outlets: ${review.outlet_accessibility}/5",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary
+            )
+
+
             // Atmosphere tags if available
             if (!review.atmosphere.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -123,7 +118,7 @@ fun ReviewCard(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            
+
             // Study friendly tags if available
             if (!review.study_friendly.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -141,7 +136,7 @@ fun ReviewCard(
 
 private fun formatDate(dateString: String?): String {
     if (dateString.isNullOrBlank()) return "Recently"
-    
+
     return try {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
         val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
@@ -150,4 +145,4 @@ private fun formatDate(dateString: String?): String {
     } catch (e: Exception) {
         "Recently"
     }
-} 
+}

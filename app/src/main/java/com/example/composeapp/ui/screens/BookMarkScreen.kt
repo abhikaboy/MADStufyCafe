@@ -27,6 +27,7 @@ import com.example.composeapp.ui.components.CafeList
 import com.example.composeapp.ui.components.ExpandableFilterBar
 import com.example.composeapp.ui.components.SearchBar
 import com.example.composeapp.ui.theme.TextPrimary
+import com.example.composeapp.data.network.toEntity
 
 @Composable
 fun BookMarkScreen(
@@ -148,11 +149,13 @@ fun BookMarkScreen(
         )
         Spacer(modifier = Modifier.height(15.dp))
         Text(
-            text = "Showing ${filteredList.size} bookmarked cafes",
+            text = "SHOWING ${filteredList.size} BOOKMARKED CAFES",
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)
         )
+        Spacer(modifier = Modifier.height(10.dp))
+
         CafeList(
             cafeList = filteredCafeEntity,
             onCafeClick = onCafeClick,
@@ -164,7 +167,6 @@ fun BookMarkScreen(
             isRefreshing = false,
             onRefresh = onResume
         )
-        Spacer(modifier = Modifier.height(15.dp))
     }
 }
 

@@ -52,7 +52,7 @@ import com.example.composeapp.utils.CafeWorker
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
-    
+
     private lateinit var cafeRepository: CafeRepository
     private lateinit var userRepository: UserRepository
     private lateinit var reviewRepository: ReviewRepository
@@ -61,34 +61,34 @@ class MainActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels { viewModelFactory }
     private val reviewViewModel: ReviewViewModel by viewModels { viewModelFactory }
     private val userViewModel: UserViewModel by viewModels { viewModelFactory }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Request location permissions if not granted
         requestLocationPermissions()
-        
+
         // Initialize database
         val database = AppDatabase.getDatabase(applicationContext)
-        
+
         // Initialize location helper
         val locationHelper = LocationHelper(applicationContext)
-        
+
         // Initialize repositories
         cafeRepository = CafeRepository(
             cafeDao = database.cafeDao(),
             apiService = NetworkModule.apiService,
             locationHelper = locationHelper
         )
-        
+
         userRepository = UserRepository(
             apiService = NetworkModule.apiService
         )
-        
+
         reviewRepository = ReviewRepository(
             apiService = NetworkModule.apiService
         )
-        
+
         // Initialize ViewModel factory with all repositories
         viewModelFactory = ViewModelFactory(cafeRepository, userRepository, reviewRepository)
 
@@ -103,59 +103,69 @@ class MainActivity : ComponentActivity() {
             ExistingPeriodicWorkPolicy.KEEP,
             workRequest
         )
-        
+
         setContent {
             ComposeAppTheme {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = Color.Transparent
-            ) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color.Transparent
+                ) {
                     AppNavigation(loginViewModel, cafeViewModel, reviewViewModel, userViewModel)
                 }
             }
         }
     }
-    
+
     private fun requestLocationPermissions() {
         val permissions = mutableListOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
-        
+
         // Add photo permissions for Android 13+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
         } else {
             permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        
+
         val permissionsNeeded = permissions.filter {
             ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (permissionsNeeded.isNotEmpty()) {
-            android.util.Log.d("MainActivity", "Requesting location permissions: $permissionsNeeded")
+            android.util.Log.d(
+                "MainActivity",
+                "Requesting location permissions: $permissionsNeeded"
+            )
             ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), 1001)
         } else {
             android.util.Log.d("MainActivity", "Location permissions already granted")
         }
     }
-    
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
+
         if (requestCode == 1001) {
-            val granted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+            val granted =
+                grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
             android.util.Log.d("MainActivity", "Location permissions result: granted=$granted")
-            
+
             if (granted) {
-                android.util.Log.d("MainActivity", "Location permissions granted, app can now use location services")
+                android.util.Log.d(
+                    "MainActivity",
+                    "Location permissions granted, app can now use location services"
+                )
             } else {
-                android.util.Log.d("MainActivity", "Location permissions denied, app will use default location")
+                android.util.Log.d(
+                    "MainActivity",
+                    "Location permissions denied, app will use default location"
+                )
             }
         }
     }
@@ -170,7 +180,7 @@ fun AppNavigation(
 ) {
     val isLoggedIn by loginViewModel.isLoggedIn.observeAsState(false)
     val currentUser by loginViewModel.currentUser.observeAsState()
-    
+
     if (isLoggedIn && currentUser != null) {
         // User is logged in, show main app content
         MainAppContent(cafeViewModel, loginViewModel, reviewViewModel, userViewModel)
@@ -187,30 +197,35 @@ fun AppNavigation(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, reviewViewModel: ReviewViewModel, userViewModel: UserViewModel) {
+fun MainAppContent(
+    viewModel: CafeViewModel,
+    loginViewModel: LoginViewModel,
+    reviewViewModel: ReviewViewModel,
+    userViewModel: UserViewModel
+) {
     val navController = rememberNavController()
     val currentUser by loginViewModel.currentUser.observeAsState()
-    
+
     // State for welcome message visibility
     var showWelcomeMessage by remember { mutableStateOf(true) }
-    
+
     // Hide welcome message after 10 seconds
     LaunchedEffect(Unit) {
         delay(10000) // 10 seconds
         showWelcomeMessage = false
     }
-    
+
     // Observe cafes from ViewModel using LiveData
     val cafesResult by viewModel.allCafes.observeAsState()
     val searchResults by viewModel.searchResults.observeAsState()
     val isLoading by viewModel.isLoading.observeAsState(false)
     val isRefreshing by viewModel.isRefreshing.observeAsState(false)
     val errorMessage by viewModel.errorMessage.observeAsState()
-    
+
     // Observe user reviews and bookmarks
     val userReviews by userViewModel.userReviews.observeAsState()
     val userBookmarks by userViewModel.userBookmarks.observeAsState()
-    
+
     // Fetch user reviews and bookmarks when user is available
     LaunchedEffect(currentUser?.id) {
         currentUser?.id?.let { userId ->
@@ -218,11 +233,11 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
             userViewModel.loadUserBookmarks(userId)
         }
     }
-    
+
     // State to track if we're showing search results or all cafes
     var isSearchActive by remember { mutableStateOf(false) }
     val displayedCafes = if (isSearchActive) searchResults else cafesResult
-    
+
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -273,7 +288,7 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                         }
                     }
                 }
-                
+
                 // Main navigation content
                 Box(
                     modifier = Modifier
@@ -289,13 +304,15 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                 isLoading && displayedCafes == null -> {
                                     LoadingScreen()
                                 }
+
                                 displayedCafes is ApiResult.Error && errorMessage != null -> {
                                     ErrorScreen(
                                         message = errorMessage ?: "Unknown error",
-                                        onRetry = { 
+                                        onRetry = {
                                             if (isSearchActive) {
                                                 // Re-run the last search
-                                                viewModel.searchCafes(viewModel.searchResults.value?.let { "" } ?: "")
+                                                viewModel.searchCafes(viewModel.searchResults.value?.let { "" }
+                                                    ?: "")
                                             } else {
                                                 viewModel.refreshCafes()
                                             }
@@ -304,16 +321,17 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                         onLogout = { loginViewModel.logout() }
                                     )
                                 }
+
                                 displayedCafes is ApiResult.Success -> {
                                     val cafes = displayedCafes.data
                                     if (cafes.isEmpty()) {
                                         EmptyStateScreen(
-                                            onRefresh = { 
+                                            onRefresh = {
                                                 if (isSearchActive) {
                                                     isSearchActive = false
                                                     viewModel.clearSearch()
                                                 }
-                                                viewModel.refreshCafes() 
+                                                viewModel.refreshCafes()
                                             },
                                             onLogout = { loginViewModel.logout() }
                                         )
@@ -325,10 +343,10 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                             navController = popupNavController,
                                             isRefreshing = isRefreshing,
                                             onRefresh = { viewModel.refreshCafes() },
-                                            onBookmarkClick = { cafe -> 
+                                            onBookmarkClick = { cafe ->
                                                 viewModel.bookmarkCafe(cafe.id, !cafe.isBookmarked)
                                             },
-                                            onSearch = { query -> 
+                                            onSearch = { query ->
                                                 if (query.isNotBlank()) {
                                                     isSearchActive = true
                                                     viewModel.searchCafes(query)
@@ -347,27 +365,32 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                         )
                                     }
                                 }
+
                                 else -> {
                                     LoadingScreen()
                                 }
                             }
                         }
-                        
+
                         composable(Screen.Bookmarks.route) {
                             when (userBookmarks) {
                                 is ApiResult.Success -> {
-                                    val bookmarkedCafes = (userBookmarks as ApiResult.Success<List<Cafe>>).data
+                                    val bookmarkedCafes =
+                                        (userBookmarks as ApiResult.Success<List<Cafe>>).data
                                     // Create a separate NavController for popup navigation
                                     val popupNavController = rememberNavController()
                                     BookmarkContent(
                                         cafeList = bookmarkedCafes,
                                         navController = popupNavController,
-                                        onBookmarkClick = { cafe -> 
+                                        onBookmarkClick = { cafe ->
                                             currentUser?.id?.let { userId ->
-                                                userViewModel.deleteBookmark(userId, cafe.apiId ?: cafe.id.toString())
+                                                userViewModel.deleteBookmark(
+                                                    userId,
+                                                    cafe.apiId ?: cafe.id.toString()
+                                                )
                                             }
                                         },
-                                        onSearch = { query -> 
+                                        onSearch = { query ->
                                             // Search is handled within BookMarkScreen now
                                         },
                                         onResume = {
@@ -381,6 +404,7 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                         userViewModel = userViewModel
                                     )
                                 }
+
                                 else -> {
                                     BookMarkScreen(
                                         cafeList = emptyList(),
@@ -393,7 +417,7 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                 }
                             }
                         }
-                        
+
                         composable(Screen.Profile.route) {
                             val reviewsData = when (val reviews = userReviews) {
                                 is ApiResult.Success -> reviews.data
@@ -413,12 +437,14 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                     // Try to find cafe name from current cafe list
                                     when (displayedCafes) {
                                         is ApiResult.Success -> {
-                                            (displayedCafes as ApiResult.Success<List<CafeEntity>>).data.find { it.apiId == cafeId }?.name ?: "Unknown Cafe"
+                                            (displayedCafes as ApiResult.Success<List<CafeEntity>>).data.find { it.apiId == cafeId }?.name
+                                                ?: "Unknown Cafe"
                                         }
+
                                         else -> "Unknown Cafe"
                                     }
                                 },
-                                onReviewClick = { review -> 
+                                onReviewClick = { review ->
                                     // TODO: Add review detail functionality if needed
                                 },
                                 onResume = {
@@ -426,14 +452,16 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                     currentUser?.id?.let { userId ->
                                         userViewModel.getUserReviews(userId)
                                     }
-                                }
+                                },
+                                onLogout = { loginViewModel.logout() },
+                                loginViewModel = loginViewModel
                             )
                         }
                     }
                 }
             }
         }
-        
+
         // Bottom Navigation Bar as overlay
         BottomNavigationBar(
             navController = navController,
@@ -442,16 +470,16 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                 .navigationBarsPadding()
         )
     }
-    
+
     // Handle error messages with Snackbar
     errorMessage?.let { message ->
         LaunchedEffect(message) {
             // You can show a snackbar here if needed
             // For now, we'll clear the error after showing it
             viewModel.clearError()
-            }
         }
     }
+}
 
 @Composable
 fun BookmarkContent(
@@ -512,10 +540,10 @@ fun BookmarkContent(
 
 @Composable
 fun LoadingScreen() {
-        Box(
-            modifier = Modifier.fillMaxSize(),
+    Box(
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
-        ) {
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -631,4 +659,4 @@ fun EmptyStateScreen(
             }
         }
     }
-} 
+}

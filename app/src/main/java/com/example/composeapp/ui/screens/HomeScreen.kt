@@ -1,5 +1,6 @@
 package com.example.composeapp.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,12 +8,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -24,12 +31,15 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.SearchBar
 import com.example.composeapp.R
+import com.example.composeapp.data.network.toEntity
 import com.example.composeapp.ui.components.CafeList
+import com.example.composeapp.ui.components.ExpandableFilterBar
 import com.example.composeapp.ui.theme.TextPrimary
+
 
 @Composable
 fun HomeScreen(
-    cafeList: List<CafeEntity>, 
+    cafeList: List<CafeEntity>,
     onCafeClick: (CafeEntity) -> Unit,
     isRefreshing: Boolean = false,
     onRefresh: () -> Unit = {},
@@ -37,6 +47,25 @@ fun HomeScreen(
     onSearch: (String) -> Unit = {},
     onResume: () -> Unit = {}
 ) {
+    var filteredList by remember(cafeList) { mutableStateOf(cafeList) }
+    val selectedLabels = remember { mutableStateOf(mutableSetOf<String>()) }
+
+    // Remove the toEntity() conversion since filteredList is already List<CafeEntity>
+    val cafeEntities = remember(filteredList) {
+        filteredList
+    }
+
+    //Logging to see if cafe has tags
+    LaunchedEffect(cafeEntities) {
+        cafeEntities.forEach { cafe ->
+            Log.d(
+                "CafeEntities", "Cafe: ${cafe.name}, " +
+                        "Atmosphere: ${cafe.atmosphereTags}, " +
+                        "EnergyLevel: ${cafe.energyLevelTags}" +
+                        "StudyFriendly: ${cafe.studyFriendlyTags}"
+            )
+        }
+    }
     // Handle onResume lifecycle event
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -50,17 +79,47 @@ fun HomeScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-    
+
+    val filteredCafeEntity = remember(selectedLabels.value, cafeEntities) {
+        if (selectedLabels.value.isEmpty()) {
+            cafeEntities
+        } else {
+            cafeEntities.filter { cafe ->
+                val allTags = listOf(
+                    cafe.tags,
+                    cafe.atmosphereTags,
+                    cafe.energyLevelTags,
+                    cafe.studyFriendlyTags
+                )
+                    .filter { it.isNotBlank() }
+                    .flatMap { it.split(",").map { tag -> tag.trim() } }
+
+                selectedLabels.value.any { label ->
+                    allTags.any { tag -> tag.equals(label, ignoreCase = true) }
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         SearchBar(onSearch = onSearch)
+        Spacer(modifier = Modifier.height(10.dp))
+        ExpandableFilterBar(
+            selectedLabels = selectedLabels.value,
+            onLabelToggle = { label ->
+                selectedLabels.value = selectedLabels.value.toMutableSet().apply {
+                    if (!add(label)) remove(label) // Toggle
+                }
+            }
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, start = 16.dp, end = 16.dp),
+                .padding(top = 20.dp, end = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -69,20 +128,15 @@ fun HomeScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextPrimary
             )
-            Image(
-                painter = painterResource(id = R.drawable.phosphor2),
-                contentDescription = "phosphor",
-                Modifier.padding(top = 6.dp, bottom = 5.dp)
-            )
         }
+        Spacer(modifier = Modifier.height(10.dp))
         CafeList(
-            cafeList = cafeList, 
+            cafeList = filteredCafeEntity, // Use filtered results instead of original cafeList
             onCafeClick = onCafeClick,
             onBookmarkClick = onBookmarkClick,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh
         )
-        Spacer(Modifier.padding(bottom = 10.dp))
     }
 }
 

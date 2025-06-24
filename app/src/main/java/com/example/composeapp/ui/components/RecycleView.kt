@@ -25,7 +25,7 @@ fun CafeList(
                 onClick = { onCafeClick(cafe) },
                 onBookmarkClick = { onBookmarkClick(cafe) }
             )
-            Spacer(modifier = Modifier.padding(bottom = 15.dp))
+            Spacer(modifier = Modifier.padding(bottom = 12.dp))
         }
     }
 }

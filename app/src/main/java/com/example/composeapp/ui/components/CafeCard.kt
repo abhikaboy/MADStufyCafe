@@ -59,7 +59,7 @@ fun CafeCard(
             containerColor = LargeCardBackground
         ),
         onClick = onClick,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
