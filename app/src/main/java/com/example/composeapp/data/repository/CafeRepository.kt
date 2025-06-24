@@ -10,6 +10,7 @@ import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.safeApiCall
 import com.example.composeapp.data.network.toEntity
 import com.example.composeapp.utils.LocationHelper
+import com.example.composeapp.utils.LocationHelperInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -17,7 +18,7 @@ import kotlinx.coroutines.withContext
 class CafeRepository (
     private val cafeDao: CafeDao,
     private val apiService: ApiService,
-    private val locationHelper: LocationHelper? = null
+    private val locationHelper: LocationHelperInterface? = null
 ) : CafeRepositoryInterface {
     override val allCafes: Flow<List<CafeEntity>> = cafeDao.getAllCafes()
 
@@ -40,7 +41,7 @@ class CafeRepository (
 
                 // If no location helper, permission, or last known location, use default location
                 if (userLocation == null) {
-                    userLocation = LocationHelper.DEFAULT_LOCATION
+                    userLocation = LocationHelperInterface.DEFAULT_LOCATION
                     android.util.Log.d("CafeRepository", "Using default location: $userLocation")
                 } else {
                     android.util.Log.d("CafeRepository", "Using actual location: $userLocation")
@@ -56,9 +57,12 @@ class CafeRepository (
                     )
                 }
 
-                // If nearby API call fails, we'll fall back to generic call
+                // If nearby API call fails or returns no results, we'll fall back to generic call
                 if (apiResult is ApiResult.Error) {
                     android.util.Log.w("CafeRepository", "Nearby API call failed, will fallback to generic: ${(apiResult as ApiResult.Error).message}")
+                    apiResult = null
+                } else if (apiResult is ApiResult.Success && apiResult.data.isEmpty()) {
+                    android.util.Log.w("CafeRepository", "Nearby API call returned no results, will fallback to generic")
                     apiResult = null
                 }
             } catch (e: Exception) {
@@ -220,7 +224,7 @@ class CafeRepository (
 
                 // If no location helper, permission, or last known location, use default location
                 if (userLocation == null) {
-                    userLocation = LocationHelper.DEFAULT_LOCATION
+                    userLocation = LocationHelperInterface.DEFAULT_LOCATION
                     android.util.Log.d("CafeRepository", "REFRESH - Using default location: $userLocation")
                 } else {
                     android.util.Log.d("CafeRepository", "REFRESH - Using actual location: $userLocation")
@@ -236,9 +240,12 @@ class CafeRepository (
                     )
                 }
 
-                // If nearby API call fails, we'll fall back to generic call
+                // If nearby API call fails or returns no results, we'll fall back to generic call
                 if (apiResult is ApiResult.Error) {
                     android.util.Log.w("CafeRepository", "REFRESH - Nearby API call failed, will fallback to generic: ${(apiResult as ApiResult.Error).message}")
+                    apiResult = null
+                } else if (apiResult is ApiResult.Success && apiResult.data.isEmpty()) {
+                    android.util.Log.w("CafeRepository", "REFRESH - Nearby API call returned no results, will fallback to generic")
                     apiResult = null
                 }
             } catch (e: Exception) {

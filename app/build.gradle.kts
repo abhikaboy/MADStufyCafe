@@ -21,6 +21,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-kapt")
+    id("jacoco")
 }
 
 android {
@@ -145,6 +146,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // Added for coroutine testing
     testImplementation("androidx.arch.core:core-testing:2.2.0") // Added for ViewModel testing
     testImplementation("androidx.test:core:1.5.0")
+    testImplementation("org.robolectric:robolectric:4.10.3") // For Android dependencies in unit tests
 
     // UI Testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

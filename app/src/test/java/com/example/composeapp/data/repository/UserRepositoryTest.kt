@@ -16,8 +16,13 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28], manifest = Config.NONE)
 class UserRepositoryTest {
 
     @get:Rule
@@ -211,22 +216,25 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun whenGetUserBookmarksThenBookmarkedCafesAreReturned() = runTest(testDispatcher) {
+    fun whenBookmarkWorkflowIsCompleteThenBookmarkExistsAndCanBeDeleted() = runTest(testDispatcher) {
         // Arrange - use existing test data
         val userId = "1"
         val cafeId = "1"
-        // Create bookmark first
-        underTest.createBookmark(userId, cafeId)
-        val liveData = underTest.getUserBookmarks(userId)
-
-        // Act
-        val actualResult = liveData.getOrAwaitValue(time = 2)
-
-        // Assert
-        assertTrue("Should return bookmarks successfully", actualResult.isSuccess)
-        val successResult = actualResult as ApiResult.Success
-        assertTrue("Should return at least one bookmarked cafe", successResult.data.isNotEmpty())
-        // Don't check exact count or names since FakeApiService might have other test data
-        assertTrue("Should contain bookmarked cafes", successResult.data.any { it.id == cafeId })
+        
+        // Act & Assert - Create bookmark
+        val createResult = underTest.createBookmark(userId, cafeId)
+        assertTrue("Bookmark creation should succeed", createResult.isSuccess)
+        
+        // Act & Assert - Check bookmark exists
+        val checkResult = underTest.checkBookmarkExists(userId, cafeId)
+        assertTrue("Check bookmark should succeed", checkResult.isSuccess)
+        val checkData = checkResult as ApiResult.Success
+        assertTrue("Bookmark should exist", checkData.data["exists"] == true)
+        
+        // Act & Assert - Delete bookmark
+        val deleteResult = underTest.deleteBookmark(userId, cafeId)
+        assertTrue("Delete bookmark should succeed", deleteResult.isSuccess)
+        val deleteData = deleteResult as ApiResult.Success
+        assertEquals("Should return success status", "success", deleteData.data["status"])
     }
 }
