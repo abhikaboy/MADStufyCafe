@@ -46,7 +46,8 @@ class CafeViewModelTest {
         // Act
         underTest.searchCafes(searchQuery)
 
-        // Assert
+        // Assert - trigger the switchMap by observing searchResults
+        val searchResults = underTest.searchResults.getOrAwaitValue()
         assertEquals("Search query should be updated", searchQuery,
             fakeCafeRepository.lastSearchQuery)
     }
@@ -59,7 +60,8 @@ class CafeViewModelTest {
         // Act
         underTest.selectCafe(cafeId)
 
-        // Assert
+        // Assert - trigger the switchMap by observing selectedCafe
+        val selectedCafe = underTest.selectedCafe.getOrAwaitValue()
         assertEquals("Selected cafe ID should be updated", cafeId,
             fakeCafeRepository.lastSelectedCafeId)
     }
@@ -74,7 +76,8 @@ class CafeViewModelTest {
         // Act
         underTest.findNearbyCafes(longitude, latitude, maxDistance)
 
-        // Assert
+        // Assert - trigger the switchMap by observing nearbyCafes
+        val nearbyCafes = underTest.nearbyCafes.getOrAwaitValue()
         assertTrue("Nearby search should have been called",
             fakeCafeRepository.findNearbyCafesWasCalled)
         assertEquals("Should use correct longitude", longitude,
@@ -93,7 +96,8 @@ class CafeViewModelTest {
         // Act
         underTest.findCafesByRating(minRating)
 
-        // Assert
+        // Assert - trigger the switchMap by observing cafesByRating
+        val cafesByRating = underTest.cafesByRating.getOrAwaitValue()
         assertTrue("Rating search should have been called",
             fakeCafeRepository.findCafesByRatingWasCalled)
         assertEquals("Should use correct min rating", minRating,
@@ -108,7 +112,8 @@ class CafeViewModelTest {
         // Act
         underTest.findCafesByAmenities(amenities)
 
-        // Assert
+        // Assert - trigger the switchMap by observing cafesByAmenities
+        val cafesByAmenities = underTest.cafesByAmenities.getOrAwaitValue()
         assertTrue("Amenities search should have been called",
             fakeCafeRepository.findCafesByAmenitiesWasCalled)
         assertEquals("Should use correct amenities", amenities,

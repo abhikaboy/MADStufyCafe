@@ -21,13 +21,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-kapt")
-    id("jacoco")
 }
 
 android {
     namespace = "com.example.composeapp"
     compileSdk = 34
-
 
     defaultConfig {
         applicationId = "com.example.composeapp"
@@ -58,8 +56,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-
     buildFeatures {
         compose = true
         viewBinding = true

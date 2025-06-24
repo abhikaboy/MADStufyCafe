@@ -9,10 +9,10 @@ class FakeApiService : ApiService {
     private val reviews = mutableListOf<Review>()
     private val bookmarks = mutableListOf<Bookmark>()
 
-    private val userIdGenerator = AtomicInteger(1)
-    private val cafeIdGenerator = AtomicInteger(1)
-    private val reviewIdGenerator = AtomicInteger(1)
-    private val bookmarkIdGenerator = AtomicInteger(1)
+    private val userIdGenerator = AtomicInteger(100) // Start after test data
+    private val cafeIdGenerator = AtomicInteger(100) // Start after test data
+    private val reviewIdGenerator = AtomicInteger(100)
+    private val bookmarkIdGenerator = AtomicInteger(100)
 
     init {
         populateTestData()

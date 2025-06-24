@@ -59,10 +59,9 @@ class UserViewModelTest {
         // Act
         underTest.login(username, password)
 
-        // Assert
+        // Assert - trigger the switchMap by observing loginResult
+        val loginResult = underTest.loginResult.getOrAwaitValue()
         assertTrue("Login should have been called", fakeUserRepository.loginWasCalled)
-        // Note: lastPassword might not be tracked in FakeUserRepository - remove this line if it doesn't exist
-        // assertEquals("Should use correct password", password, fakeUserRepository.lastPassword)
     }
 
     @Test
@@ -76,11 +75,9 @@ class UserViewModelTest {
         // Act
         underTest.createUser(name, password, cafesVisited, averageRating)
 
-        // Assert
+        // Assert - trigger the switchMap by observing userCreateResult
+        val userCreateResult = underTest.userCreateResult.getOrAwaitValue()
         assertTrue("Create user should have been called", fakeUserRepository.createUserWasCalled)
-        // Note: These tracking properties might not exist - remove if they don't
-        // assertEquals("Should use correct name", name, fakeUserRepository.lastCreateName)
-        // assertEquals("Should use correct password", password, fakeUserRepository.lastCreatePassword)
     }
 
     @Test
@@ -197,10 +194,10 @@ class UserViewModelTest {
         // Act
         underTest.searchUsers(query)
 
-        // Assert
+        // Assert - trigger the switchMap by observing searchResults
+        val searchResults = underTest.searchResults.getOrAwaitValue()
         assertTrue("Search users should have been called", fakeUserRepository.searchUsersWasCalled)
-        // Note: lastSearchQuery might not be tracked - remove this line if it doesn't exist
-        // assertEquals("Should use correct query", query, fakeUserRepository.lastSearchQuery)
+        assertEquals("Should use correct query", query, fakeUserRepository.lastSearchQuery)
     }
 
     @Test
