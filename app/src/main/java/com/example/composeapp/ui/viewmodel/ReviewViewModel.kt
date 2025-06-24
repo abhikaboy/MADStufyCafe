@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.*
 import com.example.composeapp.data.repository.ReviewRepository
+import com.example.composeapp.data.repository.ReviewRepositoryInterface
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
-class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewModel() {
+class ReviewViewModel(private val reviewRepository: ReviewRepositoryInterface) : ViewModel() {
     
     // Current review being created
     private val _currentReview = MutableLiveData<ReviewCreate?>()
@@ -55,7 +56,6 @@ class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewMode
     val photoUploadSuccess: LiveData<Boolean?> = _photoUploadSuccess
     
     fun startReview(cafeId: String, userId: String) {
-        android.util.Log.d("ReviewViewModel", "startReview() called for cafeId: $cafeId, userId: $userId")
         _currentReview.value = ReviewCreate(
             study_spot_id = cafeId,
             user_id = userId,
@@ -111,21 +111,17 @@ class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewMode
     
     fun submitReview() {
         val review = _currentReview.value
-        android.util.Log.d("ReviewViewModel", "submitReview() called with review: $review")
-        
+
         if (review == null) {
-            android.util.Log.e("ReviewViewModel", "No review data to submit")
             _errorMessage.value = "No review data to submit"
             return
         }
         
         if (review.overall_rating <= 0) {
-            android.util.Log.e("ReviewViewModel", "No overall rating provided: ${review.overall_rating}")
             _errorMessage.value = "Please provide an overall rating"
             return
         }
         
-        android.util.Log.d("ReviewViewModel", "Submitting review: $review")
         _isLoading.value = true
         _errorMessage.value = null
         
@@ -134,13 +130,11 @@ class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewMode
                 val result = reviewRepository.createReview(review)
                 when (result) {
                     is ApiResult.Success -> {
-                        android.util.Log.d("ReviewViewModel", "Review created successfully: ${result.data}")
                         _reviewCreated.value = result.data
                         _errorMessage.value = null
                         // Don't clear form here - wait until popup is closed
                     }
                     is ApiResult.Error -> {
-                        android.util.Log.e("ReviewViewModel", "Review creation failed: ${result.message}")
                         _errorMessage.value = result.message
                     }
                 }
@@ -175,7 +169,6 @@ class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewMode
     }
     
     fun resetAllStates() {
-        android.util.Log.d("ReviewViewModel", "resetAllStates() called - clearing all review data")
         clearForm()
         _reviewCreated.value = null
         _photoUploadSuccess.value = null
@@ -188,7 +181,6 @@ class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewMode
     }
     
     fun uploadPhotoToReview(reviewId: String, photoPart: MultipartBody.Part, caption: String = "") {
-        android.util.Log.d("ReviewViewModel", "uploadPhotoToReview() called with reviewId: $reviewId")
         _isUploadingPhoto.value = true
         _photoUploadSuccess.value = null
         _errorMessage.value = null
@@ -198,13 +190,11 @@ class ReviewViewModel(private val reviewRepository: ReviewRepository) : ViewMode
                 val result = reviewRepository.uploadPhotoToReview(reviewId, photoPart, caption)
                 when (result) {
                     is ApiResult.Success -> {
-                        android.util.Log.d("ReviewViewModel", "Photo upload successful: ${result.data}")
                         _photoUploadSuccess.value = true
                         // Update the review data with the new photo
                         _reviewCreated.value = result.data
                     }
                     is ApiResult.Error -> {
-                        android.util.Log.e("ReviewViewModel", "Photo upload failed: ${result.message}")
                         _photoUploadSuccess.value = false
                         _errorMessage.value = result.message
                     }

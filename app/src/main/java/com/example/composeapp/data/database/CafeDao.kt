@@ -52,4 +52,5 @@ interface CafeDao {
 
     @Query("SELECT COUNT(*) FROM cafes")
     suspend fun getCafeCount(): Int
+
 } 

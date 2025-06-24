@@ -8,9 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiResult
 import com.example.composeapp.data.repository.CafeRepository
+import com.example.composeapp.data.repository.CafeRepositoryInterface
 import kotlinx.coroutines.launch
 
-class CafeViewModel(private val repository: CafeRepository) : ViewModel() {
+class CafeViewModel(private val repository: CafeRepositoryInterface) : ViewModel() {
     
     // LiveData for all cafes
     val allCafes: LiveData<ApiResult<List<CafeEntity>>> = repository.getAllCafesLiveData()

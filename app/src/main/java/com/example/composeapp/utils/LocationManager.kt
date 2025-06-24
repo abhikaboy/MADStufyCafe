@@ -14,11 +14,11 @@ data class UserLocation(
     val longitude: Double
 )
 
-class LocationHelper(private val context: Context) {
+class LocationHelper(private val context: Context) : LocationHelperInterface {
     
     private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     
-    fun hasLocationPermission(): Boolean {
+    override fun hasLocationPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -28,7 +28,7 @@ class LocationHelper(private val context: Context) {
         ) == PackageManager.PERMISSION_GRANTED
     }
     
-    suspend fun getCurrentLocation(): UserLocation? {
+    override suspend fun getCurrentLocation(): UserLocation? {
         android.util.Log.d("LocationHelper", "getCurrentLocation() called")
         
         if (!hasLocationPermission()) {

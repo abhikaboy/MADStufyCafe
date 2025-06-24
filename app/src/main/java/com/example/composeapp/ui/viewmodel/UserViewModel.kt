@@ -8,11 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.*
 import com.example.composeapp.data.repository.UserRepository
 import com.example.composeapp.data.repository.ReviewRepository
+import com.example.composeapp.data.repository.ReviewRepositoryInterface
+import com.example.composeapp.data.repository.UserRepositoryInterface
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val userRepository: UserRepository,
-    private val reviewRepository: ReviewRepository
+    private val userRepository: UserRepositoryInterface,
+    private val reviewRepository: ReviewRepositoryInterface
 ) : ViewModel() {
     
     // Current user state
