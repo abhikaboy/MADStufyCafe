@@ -28,6 +28,7 @@ android {
     namespace = "com.example.composeapp"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.composeapp"
         minSdk = 24
@@ -57,6 +58,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
     buildFeatures {
         compose = true
         viewBinding = true
