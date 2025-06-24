@@ -44,6 +44,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -222,6 +223,37 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
     // State to track if we're showing search results or all cafes
     var isSearchActive by remember { mutableStateOf(false) }
     val displayedCafes = if (isSearchActive) searchResults else cafesResult
+
+    LaunchedEffect(displayedCafes) {
+        val cafes = (displayedCafes as? ApiResult.Success)?.data
+        cafes?.forEach { cafe ->
+            Log.d("DisplayedCafe", "Cafe: ${cafe.name}, ID: ${cafe.imageUrl}")
+        }
+    }
+
+    val imageUrls = listOf("https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FmZXxlbnwwfHwwfHx8MA%3D%3D",
+        "https://images.unsplash.com/photo-1511081692775-05d0f180a065?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FmZXxlbnwwfHwwfHx8MA%3D%3D",
+        "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGNhZmV8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhZmV8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhZmV8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGNhZmV8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1542181961-9590d0c79dab?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzZ8fGNhZmV8ZW58MHx8MHx8fDA%3D")
+
+    fun applyImageUrlsToEntities(entities: List<CafeEntity>, imageUrls: List<String>): List<CafeEntity> {
+        return entities.mapIndexed { index, cafe ->
+            cafe.copy(imageUrl = imageUrls.getOrNull(index) ?: cafe.imageUrl)
+        }
+    }
+
+    LaunchedEffect(displayedCafes) {
+        val cafes = (displayedCafes as? ApiResult.Success)?.data
+        cafes?.forEachIndexed { index, cafe ->
+            if (index < imageUrls.size) {
+                cafe.imageUrl = imageUrls[index]  // This works only if `imageUrl` is a `var`
+                Log.d("UpdatedCafe", "Cafe: ${cafe.name}, New Image URL: ${cafe.imageUrl}")
+            }
+        }
+    }
     
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -357,6 +389,7 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                             when (userBookmarks) {
                                 is ApiResult.Success -> {
                                     val bookmarkedCafes = (userBookmarks as ApiResult.Success<List<Cafe>>).data
+
                                     // Create a separate NavController for popup navigation
                                     val popupNavController = rememberNavController()
                                     BookmarkContent(

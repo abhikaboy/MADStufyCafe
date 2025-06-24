@@ -116,7 +116,8 @@ fun ExpandableFilterBar(selectedLabels: Set<String>, onLabelToggle: (String) -> 
                     "Social",
                     "Poor",
                     "Bad",
-                    "Distracting"
+                    "Distracting",
+                    "Pet friendly"
                 ).forEach { label ->
                     Tag(
                         text = label,

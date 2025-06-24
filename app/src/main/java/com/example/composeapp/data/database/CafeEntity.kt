@@ -28,7 +28,7 @@ data class CafeEntity(
     val hasFood: Boolean = true,
     val hasCoffee: Boolean = true,
     val hasStudyArea: Boolean = true,
-    val imageUrl: String = "",
+    var imageUrl: String = "",
     val thumbnailUrl: String = "",
     val atmosphereTags: String = "",
     val energyLevelTags: String = "",

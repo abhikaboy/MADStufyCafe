@@ -83,7 +83,7 @@ fun BookMarkScreen(
     LaunchedEffect(filteredCafeEntity) {
         Log.d("FilteredCafes", "Count: ${filteredCafeEntity.size}")
         filteredCafeEntity.forEach {
-            Log.d("FilteredCafes", it.name)
+            Log.d("FilteredCafes", it.tags)
         }
     }
 
@@ -148,7 +148,7 @@ fun BookMarkScreen(
         )
         Spacer(modifier = Modifier.height(15.dp))
         Text(
-            text = "Showing ${filteredList.size} bookmarked cafes",
+            text = "Showing ${filteredCafeEntity.size} bookmarked cafes",
             style = MaterialTheme.typography.bodyMedium,
             color = TextPrimary,
             modifier = Modifier.align(Alignment.Start)

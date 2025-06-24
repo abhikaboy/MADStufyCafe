@@ -72,7 +72,7 @@ fun UserProfile(
         
         // Profile picture placeholder
         Image(
-            painterResource(id = R.drawable.cafe), 
+            painterResource(id = R.drawable.luffy),
             contentDescription = "Profile Picture", 
             modifier = Modifier
                 .width(100.dp)
