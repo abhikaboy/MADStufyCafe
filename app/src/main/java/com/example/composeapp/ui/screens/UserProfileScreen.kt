@@ -26,6 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.example.composeapp.R
 import com.example.composeapp.data.network.Bookmark
+import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.Review
 import com.example.composeapp.data.network.UserResponse
 import com.example.composeapp.ui.components.ReviewCard
@@ -36,7 +37,7 @@ import com.example.composeapp.ui.theme.TextPrimary
 fun UserProfile(
     currentUser: UserResponse?,
     userReviews: List<Review> = emptyList(),
-    userBookmarks: List<Bookmark> = emptyList(),
+    userBookmarks: List<Cafe> = emptyList(),
     getCafeName: (String) -> String = { "Unknown Cafe" },
     onReviewClick: (Review) -> Unit = {},
     onResume: () -> Unit = {}

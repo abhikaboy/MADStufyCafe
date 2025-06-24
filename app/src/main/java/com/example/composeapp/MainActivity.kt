@@ -399,10 +399,16 @@ fun MainAppContent(viewModel: CafeViewModel, loginViewModel: LoginViewModel, rev
                                 is ApiResult.Success -> reviews.data
                                 else -> emptyList()
                             }
-                            
+
+                            val bookmarks = when (val bookmarks = userBookmarks) {
+                                is ApiResult.Success -> bookmarks.data
+                                else -> emptyList()
+                            }
+
                             UserProfile(
                                 currentUser = currentUser,
                                 userReviews = reviewsData,
+                                userBookmarks = bookmarks,
                                 getCafeName = { cafeId ->
                                     // Try to find cafe name from current cafe list
                                     when (displayedCafes) {

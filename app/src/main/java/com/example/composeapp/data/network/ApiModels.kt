@@ -206,6 +206,50 @@ fun Cafe.toEntity(): CafeEntity {
     )
 }
 
+fun CafeEntity.toCafe(): Cafe {
+    return Cafe(
+        id = apiId ?: id.toString(),
+        name = name,
+        address = address?.let {
+            val parts = it.split(",").map { part -> part.trim() }
+            if (parts.size >= 5) {
+                Address(
+                    street = parts[0],
+                    city = parts[1],
+                    state = parts[2].split(" ")[0],
+                    zip_code = parts[2].split(" ")[1]
+                )
+            } else null
+        },
+        location = if (latitude != null && longitude != null) {
+            Location(coordinates = listOf(longitude, latitude))
+        } else null,
+        phone = phone,
+        website = website,
+        opening_hours = hours?.split(",")?.associate {
+            val pair = it.split(":")
+            pair[0].trim() to pair.getOrNull(1)?.trim().orEmpty()
+        },
+        amenities = tags?.split(",")?.map { it.trim() },
+        thumbnail_url = thumbnailUrl,
+        wifi_access = when (wifiQuality) {
+            "Poor" -> 1
+            "Good" -> 2
+            "Excellent" -> 3
+            else -> 0
+        },
+        outlet_accessibility = when (powerOutlets) {
+            "Limited" -> 1
+            "Some" -> 2
+            "Many" -> 3
+            else -> 0
+        },
+        average_rating = studyRating,
+        created_at = createdAt,
+        updated_at = updatedAt
+    )
+}
+
 // Extension function to convert CafeInBookmark to Cafe
 fun CafeInBookmark.toCafe(): Cafe {
     return Cafe(

@@ -5,6 +5,12 @@
       <SelectionState runConfigName="MobileApplicationDevelopment2025.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="userProfile_displayAndInteractionFlow()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="searchBar_displaysCorrectly()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
