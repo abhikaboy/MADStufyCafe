@@ -56,16 +56,16 @@ class FakeReviewRepository : ReviewRepositoryInterface {
         return _uploadPhotoResult ?: ApiResult.Error("Not configured")
     }
 
-    // Setter functions that modify the private backing properties
-    fun setCreateReviewResult(result: ApiResult<Review>) {
+    // Fixed: Changed method names from set... to configure... to avoid platform declaration clash
+    fun configureCreateReviewResult(result: ApiResult<Review>?) {
         _createReviewResult = result
     }
 
-    fun setUpdateReviewResult(result: ApiResult<Review>) {
+    fun configureUpdateReviewResult(result: ApiResult<Review>?) {
         _updateReviewResult = result
     }
 
-    fun setUploadPhotoResult(result: ApiResult<Review>) {
+    fun configureUploadPhotoResult(result: ApiResult<Review>?) {
         _uploadPhotoResult = result
     }
 

@@ -21,6 +21,7 @@ class FakeUserRepository : UserRepositoryInterface {
     var lastDeleteUserId: String? = null
     var lastGetAllUsersSkip: Int? = null
     var lastGetAllUsersLimit: Int? = null
+    var lastSearchQuery: String? = null
 
 
 
@@ -68,6 +69,7 @@ class FakeUserRepository : UserRepositoryInterface {
 
     override fun searchUsers(query: String): LiveData<ApiResult<List<UserResponse>>> {
         searchUsersWasCalled = true
+        lastSearchQuery = query
         return MutableLiveData(ApiResult.Success(emptyList()))
     }
 
