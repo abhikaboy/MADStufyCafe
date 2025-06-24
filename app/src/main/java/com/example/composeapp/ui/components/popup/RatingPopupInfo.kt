@@ -30,8 +30,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.button.CustomButton
-import com.example.composeapp.ui.components.LightLabel
-import com.example.composeapp.ui.components.Tag
+import com.example.composeapp.ui.components.tag.LightLabel
+import com.example.composeapp.ui.components.tag.Tag
 import com.example.composeapp.ui.viewmodel.ReviewViewModel
 import com.example.composeapp.ui.viewmodel.UserViewModel
 

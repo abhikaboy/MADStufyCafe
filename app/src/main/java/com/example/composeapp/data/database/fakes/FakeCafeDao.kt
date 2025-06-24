@@ -1,5 +1,7 @@
-package com.example.composeapp.data.database
+package com.example.composeapp.data.database.fakes
 
+import com.example.composeapp.data.database.CafeDao
+import com.example.composeapp.data.database.CafeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow

@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.network.ApiResult
 import com.example.composeapp.data.network.LoginResponse
 import com.example.composeapp.data.network.UserResponse
-import com.example.composeapp.data.repository.FakeUserRepository
+import com.example.composeapp.data.repository.fakes.FakeUserRepository
 import com.example.composeapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -92,10 +92,8 @@ class LoginViewModelTest {
         // Arrange
         val username = ""
         val password = "password123"
-
         // Act
         underTest.login(username, password)
-
         // Assert
         val errorMessage = underTest.errorMessage.getOrAwaitValue()
         assertEquals("Should show username validation error",
@@ -108,10 +106,8 @@ class LoginViewModelTest {
         // Arrange
         val username = "testuser"
         val password = ""
-
         // Act
         underTest.login(username, password)
-
         // Assert
         val errorMessage = underTest.errorMessage.getOrAwaitValue()
         assertEquals("Should show password validation error",
@@ -137,7 +133,7 @@ class LoginViewModelTest {
 
     @Test
     fun whenLogoutThenUserStateIsCleared() {
-        // Arrange - first login
+        // Arrange
         val username = "testuser"
         fakeUserRepository.configureLoginResult(ApiResult.Success(  // Fixed: method name
             LoginResponse("Login successful", "user123", username)
@@ -146,7 +142,6 @@ class LoginViewModelTest {
             UserResponse("user123", username, 5, 4.2)
         ))
         underTest.login(username, "password123")
-
         // Act
         underTest.logout()
 
@@ -193,7 +188,7 @@ class LoginViewModelTest {
 
     @Test
     fun whenCheckLoginStatusWithoutCurrentUserThenIsLoggedInIsFalse() {
-        // Arrange - no login performed
+        // Arrange
 
         // Act
         underTest.checkLoginStatus()

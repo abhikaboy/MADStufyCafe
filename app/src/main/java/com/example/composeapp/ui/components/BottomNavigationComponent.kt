@@ -136,7 +136,7 @@ fun PreviewNav() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color.LightGray) // Simulating background content
+                .background(Color.LightGray)
         ) {
             BottomNavigationBar(
                 navController = rememberNavController(),

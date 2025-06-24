@@ -24,10 +24,9 @@ import com.example.composeapp.data.network.Address
 import com.example.composeapp.data.network.Location
 import com.example.composeapp.data.network.toEntity
 import com.example.composeapp.ui.components.CafeList
-import com.example.composeapp.ui.components.ExpandableFilterBar
-import com.example.composeapp.ui.components.SearchBar
+import com.example.composeapp.ui.components.bar.ExpandableFilterBar
+import com.example.composeapp.ui.components.bar.SearchBar
 import com.example.composeapp.ui.theme.TextPrimary
-import com.example.composeapp.data.network.toEntity
 
 @Composable
 fun BookMarkScreen(
@@ -41,7 +40,7 @@ fun BookMarkScreen(
     var filteredList by remember(cafeList) { mutableStateOf(cafeList) }
     val selectedLabels = remember { mutableStateOf(mutableSetOf<String>()) }
 
-    // Convert Cafe objects to CafeEntity for display
+    // Convert Cafe objects to CafeEntity
     val cafeEntities = remember(filteredList) {
         filteredList.map { it.toEntity() }
     }

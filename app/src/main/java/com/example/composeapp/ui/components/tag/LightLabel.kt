@@ -1,6 +1,5 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.tag
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,9 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.ui.theme.CardBackground
-import com.example.composeapp.ui.theme.LargeCardBackground
 import com.example.composeapp.ui.theme.TagBackground
-import com.example.composeapp.ui.theme.TextBackground
 import com.example.composeapp.ui.theme.TextPrimary
 
 object LightLabelColors {

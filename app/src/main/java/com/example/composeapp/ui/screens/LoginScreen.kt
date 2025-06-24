@@ -42,7 +42,6 @@ fun LoginScreen(
     var isPasswordVisible by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     
-    // Observe ViewModel state
     val isLoading by loginViewModel.isLoading.observeAsState(false)
     val errorMessage by loginViewModel.errorMessage.observeAsState()
     val isLoggedIn by loginViewModel.isLoggedIn.observeAsState(false)
@@ -66,8 +65,6 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            
-            // App Logo/Icon
             Card(
                 modifier = Modifier.size(100.dp),
                 shape = RoundedCornerShape(20.dp),
@@ -88,8 +85,6 @@ fun LoginScreen(
             }
             
             Spacer(modifier = Modifier.height(24.dp))
-            
-            // App Title
             Text(
                 text = "StudyCafe",
                 style = MaterialTheme.typography.headlineLarge,
@@ -105,8 +100,6 @@ fun LoginScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
             )
-            
-            // Login Form
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -289,8 +282,5 @@ fun LoginScreen(
 @Composable
 fun PreviewLoginScreen() {
     ComposeAppTheme {
-        // Mock LoginViewModel for preview
-        // Note: This won't work in actual preview, but shows the UI structure
-        // LoginScreen(loginViewModel = LoginViewModel(...), onLoginSuccess = {})
     }
 } 

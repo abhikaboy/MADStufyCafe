@@ -2,6 +2,7 @@ package com.example.composeapp.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.network.*
+import com.example.composeapp.data.network.fakes.FakeApiService
 import com.example.composeapp.utils.TestDataFactory
 import com.example.composeapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
@@ -86,10 +87,8 @@ class UserRepositoryTest {
         val cafesVisited = 3
         val averageRating = 4.2
         val liveData = underTest.createUser(name, password, cafesVisited, averageRating)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("User creation should be successful", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -106,7 +105,6 @@ class UserRepositoryTest {
 
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Should return user successfully", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -119,10 +117,8 @@ class UserRepositoryTest {
         // Arrange
         val nonExistentUserId = "999"
         val liveData = underTest.getUserById(nonExistentUserId)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Should return error", actualResult.isError)
         val errorResult = actualResult as ApiResult.Error
@@ -167,10 +163,9 @@ class UserRepositoryTest {
 
     @Test
     fun whenCreateBookmarkThenBookmarkIsCreatedSuccessfully() = runTest(testDispatcher) {
-        // Arrange - use existing test data from FakeApiService
+        // Arrange
         val userId = "1" // User that already exists in FakeApiService
         val cafeId = "1" // Cafe that already exists in FakeApiService
-
         // Act
         val actualResult = underTest.createBookmark(userId, cafeId)
 
@@ -183,7 +178,7 @@ class UserRepositoryTest {
 
     @Test
     fun whenDeleteBookmarkThenBookmarkIsDeletedSuccessfully() = runTest(testDispatcher) {
-        // Arrange - use existing test data
+        // Arrange
         val userId = "1"
         val cafeId = "1"
         // Create bookmark first
@@ -200,7 +195,7 @@ class UserRepositoryTest {
 
     @Test
     fun whenCheckBookmarkExistsForExistingBookmarkThenTrueIsReturned() = runTest(testDispatcher) {
-        // Arrange - use existing test data
+        // Arrange
         val userId = "1"
         val cafeId = "1"
         // Create bookmark first
@@ -217,21 +212,20 @@ class UserRepositoryTest {
 
     @Test
     fun whenBookmarkWorkflowIsCompleteThenBookmarkExistsAndCanBeDeleted() = runTest(testDispatcher) {
-        // Arrange - use existing test data
+        // Arrange
         val userId = "1"
         val cafeId = "1"
         
-        // Act & Assert - Create bookmark
+        // Act & Assert
         val createResult = underTest.createBookmark(userId, cafeId)
         assertTrue("Bookmark creation should succeed", createResult.isSuccess)
         
-        // Act & Assert - Check bookmark exists
+        // Act & Assert
         val checkResult = underTest.checkBookmarkExists(userId, cafeId)
         assertTrue("Check bookmark should succeed", checkResult.isSuccess)
         val checkData = checkResult as ApiResult.Success
         assertTrue("Bookmark should exist", checkData.data["exists"] == true)
-        
-        // Act & Assert - Delete bookmark
+        // Act & Assert
         val deleteResult = underTest.deleteBookmark(userId, cafeId)
         assertTrue("Delete bookmark should succeed", deleteResult.isSuccess)
         val deleteData = deleteResult as ApiResult.Success

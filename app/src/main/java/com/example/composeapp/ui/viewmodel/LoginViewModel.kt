@@ -3,13 +3,9 @@ package com.example.composeapp.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.ApiResult
-import com.example.composeapp.data.network.LoginResponse
 import com.example.composeapp.data.network.UserResponse
-import com.example.composeapp.data.repository.UserRepository
-import com.example.composeapp.data.repository.UserRepositoryInterface
-import kotlinx.coroutines.launch
+import com.example.composeapp.data.repository.interfaces.UserRepositoryInterface
 
 class LoginViewModel(private val userRepository: UserRepositoryInterface) : ViewModel() {
     
@@ -55,7 +51,6 @@ class LoginViewModel(private val userRepository: UserRepositoryInterface) : View
                     _errorMessage.value = result.message
                     _isLoggedIn.value = false
                     _currentUser.value = null
-                    // Remove observer after error
                     loginLiveData.removeObserver { }
                 }
             }
@@ -78,7 +73,6 @@ class LoginViewModel(private val userRepository: UserRepositoryInterface) : View
                     _currentUser.value = null
                 }
             }
-            // Remove observer after handling result
             userDetailsLiveData.removeObserver { }
         }
     }
@@ -93,10 +87,7 @@ class LoginViewModel(private val userRepository: UserRepositoryInterface) : View
         _errorMessage.value = null
     }
     
-    // Check if user is logged in (you might want to persist this in SharedPreferences)
     fun checkLoginStatus() {
-        // For now, we'll just check if we have a current user
-        // In a real app, you'd check saved authentication tokens
         _isLoggedIn.value = _currentUser.value != null
     }
 } 

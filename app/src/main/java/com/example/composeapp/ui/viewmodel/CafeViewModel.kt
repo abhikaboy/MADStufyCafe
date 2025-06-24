@@ -7,8 +7,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiResult
-import com.example.composeapp.data.repository.CafeRepository
-import com.example.composeapp.data.repository.CafeRepositoryInterface
+import com.example.composeapp.data.repository.interfaces.CafeRepositoryInterface
 import kotlinx.coroutines.launch
 
 class CafeViewModel(private val repository: CafeRepositoryInterface) : ViewModel() {

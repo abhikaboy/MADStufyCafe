@@ -6,10 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.*
-import com.example.composeapp.data.repository.UserRepository
-import com.example.composeapp.data.repository.ReviewRepository
-import com.example.composeapp.data.repository.ReviewRepositoryInterface
-import com.example.composeapp.data.repository.UserRepositoryInterface
+import com.example.composeapp.data.repository.interfaces.ReviewRepositoryInterface
+import com.example.composeapp.data.repository.interfaces.UserRepositoryInterface
 import kotlinx.coroutines.launch
 
 class UserViewModel(

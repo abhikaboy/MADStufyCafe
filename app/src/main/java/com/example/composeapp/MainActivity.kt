@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
 
-        // Add photo permissions for Android 13+
+        // Add photo permissions
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
         } else {
@@ -244,7 +244,7 @@ fun MainAppContent(
             containerColor = Color.Transparent,
         ) { paddingValues ->
             Column(modifier = Modifier.fillMaxSize()) {
-                // Welcome message that disappears after 10 seconds
+                // Welcome message
                 if (showWelcomeMessage) {
                     Card(
                         modifier = Modifier
@@ -359,7 +359,6 @@ fun MainAppContent(
                                             currentUserId = currentUser?.id,
                                             userViewModel = userViewModel,
                                             onResume = {
-                                                // Refresh cafes when home screen resumes
                                                 viewModel.refreshCafes()
                                             }
                                         )
@@ -377,7 +376,6 @@ fun MainAppContent(
                                 is ApiResult.Success -> {
                                     val bookmarkedCafes =
                                         (userBookmarks as ApiResult.Success<List<Cafe>>).data
-                                    // Create a separate NavController for popup navigation
                                     val popupNavController = rememberNavController()
                                     BookmarkContent(
                                         cafeList = bookmarkedCafes,
@@ -390,11 +388,7 @@ fun MainAppContent(
                                                 )
                                             }
                                         },
-                                        onSearch = { query ->
-                                            // Search is handled within BookMarkScreen now
-                                        },
                                         onResume = {
-                                            // Refresh bookmarks when screen resumes
                                             currentUser?.id?.let { userId ->
                                                 userViewModel.loadUserBookmarks(userId)
                                             }
@@ -444,11 +438,7 @@ fun MainAppContent(
                                         else -> "Unknown Cafe"
                                     }
                                 },
-                                onReviewClick = { review ->
-                                    // TODO: Add review detail functionality if needed
-                                },
                                 onResume = {
-                                    // Refresh user reviews when profile screen resumes
                                     currentUser?.id?.let { userId ->
                                         userViewModel.getUserReviews(userId)
                                     }
@@ -462,7 +452,6 @@ fun MainAppContent(
             }
         }
 
-        // Bottom Navigation Bar as overlay
         BottomNavigationBar(
             navController = navController,
             modifier = Modifier
@@ -471,11 +460,8 @@ fun MainAppContent(
         )
     }
 
-    // Handle error messages with Snackbar
     errorMessage?.let { message ->
         LaunchedEffect(message) {
-            // You can show a snackbar here if needed
-            // For now, we'll clear the error after showing it
             viewModel.clearError()
         }
     }
@@ -492,7 +478,6 @@ fun BookmarkContent(
     currentUserId: String? = null,
     userViewModel: UserViewModel? = null
 ) {
-    // Created blank cafe since I don't want to deal with null CafeEntity
     val blankCafe = CafeEntity(
         id = 0,
         name = "",
@@ -504,11 +489,9 @@ fun BookmarkContent(
     BookMarkScreen(
         cafeList = cafeList,
         onCafeClick = { cafe ->
-            // Reset all previous review state before starting new review
             reviewViewModel?.resetAllStates()
             selectedCafe = cafe
             isPopupVisible = true
-            // Initialize review for this cafe and user
             reviewViewModel?.startReview(
                 cafeId = cafe.apiId,
                 userId = currentUserId ?: ""
@@ -578,7 +561,7 @@ fun ErrorScreen(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Oops! Something went wrong",
+                text = "Something went wrong",
                 style = Typography.headlineSmall,
                 color = TextPrimary
             )

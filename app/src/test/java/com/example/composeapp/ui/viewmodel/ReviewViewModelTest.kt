@@ -2,7 +2,7 @@ package com.example.composeapp.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.network.*
-import com.example.composeapp.data.repository.FakeReviewRepository
+import com.example.composeapp.data.repository.fakes.FakeReviewRepository
 import com.example.composeapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

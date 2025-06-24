@@ -2,7 +2,7 @@ package com.example.composeapp.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.database.CafeEntity
-import com.example.composeapp.data.repository.FakeCafeRepository
+import com.example.composeapp.data.repository.fakes.FakeCafeRepository
 import com.example.composeapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,11 +42,10 @@ class CafeViewModelTest {
     fun whenSearchCafesWithQueryThenSearchQueryIsUpdated() {
         // Arrange
         val searchQuery = "coffee shop"
-
         // Act
         underTest.searchCafes(searchQuery)
 
-        // Assert - trigger the switchMap by observing searchResults
+        // Assert
         val searchResults = underTest.searchResults.getOrAwaitValue()
         assertEquals("Search query should be updated", searchQuery,
             fakeCafeRepository.lastSearchQuery)
@@ -56,11 +55,10 @@ class CafeViewModelTest {
     fun whenSelectCafeWithIdThenSelectedCafeIdIsUpdated() {
         // Arrange
         val cafeId = 123L
-
         // Act
         underTest.selectCafe(cafeId)
 
-        // Assert - trigger the switchMap by observing selectedCafe
+        // Assert
         val selectedCafe = underTest.selectedCafe.getOrAwaitValue()
         assertEquals("Selected cafe ID should be updated", cafeId,
             fakeCafeRepository.lastSelectedCafeId)
@@ -75,8 +73,7 @@ class CafeViewModelTest {
 
         // Act
         underTest.findNearbyCafes(longitude, latitude, maxDistance)
-
-        // Assert - trigger the switchMap by observing nearbyCafes
+        // Assert
         val nearbyCafes = underTest.nearbyCafes.getOrAwaitValue()
         assertTrue("Nearby search should have been called",
             fakeCafeRepository.findNearbyCafesWasCalled)
@@ -95,8 +92,7 @@ class CafeViewModelTest {
 
         // Act
         underTest.findCafesByRating(minRating)
-
-        // Assert - trigger the switchMap by observing cafesByRating
+        // Assert
         val cafesByRating = underTest.cafesByRating.getOrAwaitValue()
         assertTrue("Rating search should have been called",
             fakeCafeRepository.findCafesByRatingWasCalled)
@@ -112,7 +108,7 @@ class CafeViewModelTest {
         // Act
         underTest.findCafesByAmenities(amenities)
 
-        // Assert - trigger the switchMap by observing cafesByAmenities
+        // Assert
         val cafesByAmenities = underTest.cafesByAmenities.getOrAwaitValue()
         assertTrue("Amenities search should have been called",
             fakeCafeRepository.findCafesByAmenitiesWasCalled)
@@ -128,7 +124,6 @@ class CafeViewModelTest {
 
         // Act
         underTest.bookmarkCafe(cafeId, isBookmarked)
-
         // Assert
         assertTrue("Bookmark should have been updated",
             fakeCafeRepository.bookmarkCafeWasCalled)
@@ -145,7 +140,6 @@ class CafeViewModelTest {
 
         // Act
         underTest.refreshCafes()
-
         // Assert
         val isRefreshing = underTest.isRefreshing.getOrAwaitValue()
         val isLoading = underTest.isLoading.getOrAwaitValue()
@@ -161,10 +155,8 @@ class CafeViewModelTest {
         // Arrange
         fakeCafeRepository.shouldReturnError = true
         fakeCafeRepository.errorMessage = "Network error"
-
         // Act
         underTest.refreshCafes()
-
         // Assert
         val errorMessage = underTest.errorMessage.getOrAwaitValue()
         assertEquals("Should show error message", "Network error", errorMessage)
@@ -175,10 +167,8 @@ class CafeViewModelTest {
         // Arrange
         fakeCafeRepository.shouldReturnError = true
         underTest.refreshCafes()
-
         // Act
         underTest.clearError()
-
         // Assert
         val errorMessage = underTest.errorMessage.getOrAwaitValue()
         assertNull("Error message should be cleared", errorMessage)
@@ -191,7 +181,6 @@ class CafeViewModelTest {
 
         // Act
         underTest.clearSearch()
-
         // Assert
         assertEquals("Search query should be cleared", "",
             fakeCafeRepository.lastSearchQuery)
@@ -208,7 +197,6 @@ class CafeViewModelTest {
 
         // Act
         val count = underTest.getCafeCount()
-
         // Assert
         assertEquals("Should return correct cafe count", 3, count)
     }
@@ -217,7 +205,6 @@ class CafeViewModelTest {
     fun whenIsCafesLoadedWithLoadedCafesThenReturnsTrue() {
         // Arrange
         fakeCafeRepository.setCafes(listOf(createTestCafeEntity(1, "Cafe 1")))
-
         // Act
         val isLoaded = underTest.isCafesLoaded()
 

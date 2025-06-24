@@ -29,36 +29,26 @@ class LocationHelper(private val context: Context) : LocationHelperInterface {
     }
     
     override suspend fun getCurrentLocation(): UserLocation? {
-        android.util.Log.d("LocationHelper", "getCurrentLocation() called")
-        
+
         if (!hasLocationPermission()) {
-            android.util.Log.d("LocationHelper", "No location permission granted")
             return null
         }
-        
-        android.util.Log.d("LocationHelper", "Location permission granted, trying to get location")
-        
+
         return try {
             suspendCancellableCoroutine { continuation ->
                 try {
-                    // Try to get last known location first (faster)
                     val lastKnownLocation = getLastKnownLocation()
                     if (lastKnownLocation != null) {
-                        android.util.Log.d("LocationHelper", "Found last known location: lat=${lastKnownLocation.latitude}, lng=${lastKnownLocation.longitude}")
                         continuation.resume(UserLocation(lastKnownLocation.latitude, lastKnownLocation.longitude))
                         return@suspendCancellableCoroutine
                     }
                     
-                    // If no last known location, return null (we could implement active location requests here)
-                    android.util.Log.d("LocationHelper", "No last known location available")
                     continuation.resume(null)
                 } catch (e: SecurityException) {
-                    android.util.Log.e("LocationHelper", "SecurityException: ${e.message}")
                     continuation.resume(null)
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("LocationHelper", "Exception getting location: ${e.message}")
             null
         }
     }

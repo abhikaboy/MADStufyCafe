@@ -1,17 +1,20 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.data.repository.fakes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.composeapp.data.network.*
+import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.PhotoCreate
+import com.example.composeapp.data.network.Review
+import com.example.composeapp.data.network.ReviewCreate
+import com.example.composeapp.data.network.ReviewUpdate
+import com.example.composeapp.data.repository.interfaces.ReviewRepositoryInterface
+import okhttp3.MultipartBody
 
 class FakeReviewRepository : ReviewRepositoryInterface {
-    // Tracking flags
     var createReviewWasCalled = false
     var updateReviewWasCalled = false
     var deleteReviewWasCalled = false
     var uploadPhotoWasCalled = false
-
-    // Private backing properties to avoid conflicts
     private var _createReviewResult: ApiResult<Review>? = null
     private var _updateReviewResult: ApiResult<Review>? = null
     private var _uploadPhotoResult: ApiResult<Review>? = null
@@ -49,14 +52,13 @@ class FakeReviewRepository : ReviewRepositoryInterface {
 
     override suspend fun uploadPhotoToReview(
         reviewId: String,
-        file: okhttp3.MultipartBody.Part,
+        file: MultipartBody.Part,
         caption: String
     ): ApiResult<Review> {
         uploadPhotoWasCalled = true
         return _uploadPhotoResult ?: ApiResult.Error("Not configured")
     }
 
-    // Fixed: Changed method names from set... to configure... to avoid platform declaration clash
     fun configureCreateReviewResult(result: ApiResult<Review>?) {
         _createReviewResult = result
     }
@@ -67,12 +69,5 @@ class FakeReviewRepository : ReviewRepositoryInterface {
 
     fun configureUploadPhotoResult(result: ApiResult<Review>?) {
         _uploadPhotoResult = result
-    }
-
-    fun resetTrackingFlags() {
-        createReviewWasCalled = false
-        updateReviewWasCalled = false
-        deleteReviewWasCalled = false
-        uploadPhotoWasCalled = false
     }
 }

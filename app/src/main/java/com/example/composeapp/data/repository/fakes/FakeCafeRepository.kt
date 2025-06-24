@@ -1,21 +1,19 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.data.repository.fakes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.repository.interfaces.CafeRepositoryInterface
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeCafeRepository : CafeRepositoryInterface {
-    // Tracking flags
     var refreshCafesWasCalled = false
     var bookmarkCafeWasCalled = false
     var findNearbyCafesWasCalled = false
     var findCafesByRatingWasCalled = false
     var findCafesByAmenitiesWasCalled = false
-
-    // Last parameters
     var lastSearchQuery = ""
     var lastSelectedCafeId = 0L
     var lastBookmarkCafeId = 0L
@@ -25,8 +23,6 @@ class FakeCafeRepository : CafeRepositoryInterface {
     var lastMaxDistance = 0.0
     var lastMinRating = 0.0
     var lastAmenities = emptyList<String>()
-
-    // Test configuration
     var shouldReturnError = false
     var errorMessage = "Test error"
 
@@ -102,24 +98,6 @@ class FakeCafeRepository : CafeRepositoryInterface {
         _allCafes.value = ApiResult.Success(_cafes)
     }
 
-    fun resetTrackingFlags() {
-        refreshCafesWasCalled = false
-        bookmarkCafeWasCalled = false
-        findNearbyCafesWasCalled = false
-        findCafesByRatingWasCalled = false
-        findCafesByAmenitiesWasCalled = false
-        lastSearchQuery = ""
-        lastSelectedCafeId = 0L
-        lastBookmarkCafeId = 0L
-        lastBookmarkStatus = false
-        lastLongitude = 0.0
-        lastLatitude = 0.0
-        lastMaxDistance = 0.0
-        lastMinRating = 0.0
-        lastAmenities = emptyList()
-    }
-
-    // Implement other required methods with minimal functionality
      override suspend fun getCafeById(id: Long): CafeEntity? = _cafes.find { it.id == id }
      override suspend fun insertCafe(cafe: CafeEntity): Long = cafe.id
      override suspend fun insertCafes(cafes: List<CafeEntity>) { _cafes.addAll(cafes) }

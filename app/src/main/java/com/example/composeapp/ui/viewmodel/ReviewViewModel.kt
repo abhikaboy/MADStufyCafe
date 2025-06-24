@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.network.*
-import com.example.composeapp.data.repository.ReviewRepository
-import com.example.composeapp.data.repository.ReviewRepositoryInterface
+import com.example.composeapp.data.repository.interfaces.ReviewRepositoryInterface
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
@@ -132,7 +131,6 @@ class ReviewViewModel(private val reviewRepository: ReviewRepositoryInterface) :
                     is ApiResult.Success -> {
                         _reviewCreated.value = result.data
                         _errorMessage.value = null
-                        // Don't clear form here - wait until popup is closed
                     }
                     is ApiResult.Error -> {
                         _errorMessage.value = result.message
@@ -165,7 +163,6 @@ class ReviewViewModel(private val reviewRepository: ReviewRepositoryInterface) :
         _studyFriendly.value = ""
         _uploadedPhotos.value = emptyList()
         _errorMessage.value = null
-        // Don't clear _reviewCreated here - we need it for photo upload
     }
     
     fun resetAllStates() {

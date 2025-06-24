@@ -1,21 +1,14 @@
 package com.example.composeapp.data.network
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.composeapp.data.network.fakes.FakeApiService
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.Assert.*
 
-/**
- * Tests for FakeApiService following best practices:
- * - Test one thing at a time
- * - Use descriptive names
- * - Arrange, Act, Assert pattern
- * - Use fakes instead of mocks
- * - Test edge cases and boundary conditions
- */
-class FakeApiServiceTest { // FIXED: Proper class name
+class FakeApiServiceTest {
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -27,7 +20,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
         underTest = FakeApiService()
     }
 
-    // USER TESTS
 
     @Test
     fun whenCreateUserCalledThenUserIsCreatedSuccessfully() = runTest {
@@ -54,13 +46,11 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenGetAllUsersCalledThenReturnsAllUsers() = runTest {
         // Arrange
         val initialCount = underTest.getAllUsers().size
-
         // Act
         val result = underTest.getAllUsers()
-
         // Assert
         assertEquals(initialCount, result.size)
-        assertTrue(result.isNotEmpty()) // Should have pre-populated test data
+        assertTrue(result.isNotEmpty())
     }
 
     @Test
@@ -68,10 +58,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
         // Arrange
         val newUser = underTest.createUser(UserCreate("Test User", "password"))
         val userId = newUser.id
-
         // Act
         val result = underTest.getUserById(userId)
-
         // Assert
         assertEquals(userId, result.id)
         assertEquals("Test User", result.name)
@@ -81,7 +69,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenGetUserByInvalidIdThenThrowsException() = runTest {
         // Arrange
         val invalidId = "999999"
-
         // Act & Assert
         try {
             underTest.getUserById(invalidId)
@@ -100,15 +87,13 @@ class FakeApiServiceTest { // FIXED: Proper class name
             cafes_visited = 10,
             average_rating = 4.8
         )
-
         // Act
         val result = underTest.updateUser(user.id, update)
-
         // Assert
         assertEquals("Updated Name", result.name)
         assertEquals(10, result.cafes_visited)
         assertEquals(4.8, result.average_rating, 0.01)
-        assertEquals(user.id, result.id) // ID should remain the same
+        assertEquals(user.id, result.id)
     }
 
     @Test
@@ -116,14 +101,10 @@ class FakeApiServiceTest { // FIXED: Proper class name
         // Arrange
         val user = underTest.createUser(UserCreate("User To Delete", "password"))
         val userId = user.id
-
         // Act
         val result = underTest.deleteUser(userId)
-
         // Assert
         assertEquals("success", result["status"])
-
-        // Verify user is actually deleted
         try {
             underTest.getUserById(userId)
             fail("User should have been deleted")
@@ -138,10 +119,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
         underTest.createUser(UserCreate("John Coffee", "password"))
         underTest.createUser(UserCreate("Jane Tea", "password"))
         underTest.createUser(UserCreate("Bob Coffee", "password"))
-
         // Act
         val results = underTest.searchUsers("Coffee")
-
         // Assert
         assertEquals(2, results.size)
         assertTrue(results.all { it.name.contains("Coffee") })
@@ -152,10 +131,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
         // Arrange
         val user = underTest.createUser(UserCreate("LoginUser", "password"))
         val credentials = UserLogin("LoginUser", "password")
-
         // Act
         val result = underTest.login(credentials)
-
         // Assert
         assertEquals("Login successful", result.message)
         assertEquals(user.id, result.user_id)
@@ -166,7 +143,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenLoginWithInvalidCredentialsThenThrowsException() = runTest {
         // Arrange
         val credentials = UserLogin("NonExistentUser", "password")
-
         // Act & Assert
         try {
             underTest.login(credentials)
@@ -176,16 +152,13 @@ class FakeApiServiceTest { // FIXED: Proper class name
         }
     }
 
-    // CAFE TESTS
 
     @Test
     fun whenGetAllCafesCalledThenReturnsAllCafes() = runTest {
         // Arrange
         val initialCount = underTest.getAllCafes().size
-
         // Act
         val result = underTest.getAllCafes()
-
         // Assert
         assertEquals(initialCount, result.size)
         assertTrue(result.isNotEmpty()) // Should have pre-populated test data
@@ -207,10 +180,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
             outlet_accessibility = 2,
             average_rating = 4
         )
-
         // Act
         val result = underTest.createCafe(cafeCreate)
-
         // Assert
         assertEquals("New Test Cafe", result.name)
         assertEquals(3, result.wifi_access)
@@ -236,10 +207,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
             average_rating = 1
         ))
         val cafeId = cafe.id
-
         // Act
         val result = underTest.getCafeById(cafeId)
-
         // Assert
         assertEquals(cafeId, result.id)
         assertEquals("Test Cafe", result.name)
@@ -249,7 +218,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenGetCafeByInvalidIdThenThrowsException() = runTest {
         // Arrange
         val invalidId = "999999"
-
         // Act & Assert
         try {
             underTest.getCafeById(invalidId)
@@ -314,10 +282,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenSearchCafesWithEmptyQueryThenReturnsAllCafes() = runTest {
         // Arrange
         val totalCafes = underTest.getAllCafes().size
-
         // Act
         val results = underTest.searchCafes("")
-
         // Assert
         assertEquals(totalCafes, results.size)
     }
@@ -430,15 +396,13 @@ class FakeApiServiceTest { // FIXED: Proper class name
             average_rating = 1
         ))
 
-        // Act - Search near the close cafe
+        // Act
         val results = underTest.findNearbyCafes(-122.0, 37.0, 1000.0)
-
         // Assert
         assertTrue(results.isNotEmpty())
         assertTrue(results.any { it.name == "Close Cafe" })
     }
 
-    // REVIEW TESTS
 
     @Test
     fun whenCreateReviewCalledThenReviewIsCreatedSuccessfully() = runTest {
@@ -453,10 +417,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
             energy_level = "Moderate",
             study_friendly = "Very friendly"
         )
-
         // Act
         val result = underTest.createReview(reviewCreate)
-
         // Assert
         assertEquals("1", result.study_spot_id)
         assertEquals("1", result.user_id)
@@ -493,7 +455,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
 
         // Act
         val results = underTest.getReviewsByStudySpot(studySpotId)
-
         // Assert
         assertEquals(2, results.size)
         assertTrue(results.all { it.study_spot_id == studySpotId })
@@ -524,10 +485,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
             outlet_accessibility = 2.0,
             wifi_quality = 3.0
         ))
-
         // Act
         val results = underTest.getReviewsByUser(userId)
-
         // Assert
         assertEquals(2, results.size)
         assertTrue(results.all { it.user_id == userId })
@@ -548,18 +507,14 @@ class FakeApiServiceTest { // FIXED: Proper class name
             overall_rating = 5.0,
             atmosphere = "Updated Atmosphere"
         )
-
         // Act
         val result = underTest.updateReview(review.id, update)
-
         // Assert
         assertEquals(5.0, result.overall_rating, 0.01)
         assertEquals("Updated Atmosphere", result.atmosphere)
         assertEquals(review.id, result.id)
         assertEquals(2.0, result.outlet_accessibility, 0.01) // Should remain unchanged
     }
-
-    // BOOKMARK TESTS
 
     @Test
     fun whenCreateBookmarkCalledThenBookmarkIsCreatedSuccessfully() = runTest {
@@ -568,10 +523,8 @@ class FakeApiServiceTest { // FIXED: Proper class name
             user_id = "user123",
             cafe_id = "cafe456"
         )
-
         // Act
         val result = underTest.createBookmark(bookmarkCreate)
-
         // Assert
         assertEquals("user123", result.user_id)
         assertEquals("cafe456", result.cafe_id)
@@ -585,11 +538,9 @@ class FakeApiServiceTest { // FIXED: Proper class name
         val userId = "user123"
         val cafeId = "cafe456"
         underTest.createBookmark(BookmarkCreate(userId, cafeId))
-
         // Act
         val existsResult = underTest.checkBookmarkExists(userId, cafeId)
         val notExistsResult = underTest.checkBookmarkExists(userId, "nonexistent")
-
         // Assert
         assertEquals(true, existsResult["exists"])
         assertEquals(false, notExistsResult["exists"])
@@ -601,14 +552,10 @@ class FakeApiServiceTest { // FIXED: Proper class name
         val userId = "user123"
         val cafeId = "cafe456"
         underTest.createBookmark(BookmarkCreate(userId, cafeId))
-
         // Act
         val result = underTest.deleteUserCafeBookmark(userId, cafeId)
-
         // Assert
         assertEquals("success", result["status"])
-
-        // Verify bookmark is deleted
         val checkResult = underTest.checkBookmarkExists(userId, cafeId)
         assertEquals(false, checkResult["exists"])
     }
@@ -646,7 +593,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenSearchUsersWithNonExistentQueryThenReturnsEmptyList() = runTest {
         // Arrange
         val query = "NonExistentUserName12345"
-
         // Act
         val results = underTest.searchUsers(query)
 
@@ -659,7 +605,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
         // Arrange
         val invalidId = "999999"
         val update = UserUpdate(name = "Updated Name")
-
         // Act & Assert
         try {
             underTest.updateUser(invalidId, update)
@@ -676,7 +621,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
 
         // Act
         val result = underTest.deleteUser(invalidId)
-
         // Assert
         assertEquals("not_found", result["status"])
     }
@@ -701,7 +645,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
 
         // Act
         underTest.clearAllData()
-
         // Assert
         assertEquals(0, underTest.getUsersCount())
         assertEquals(0, underTest.getCafesCount())
@@ -709,7 +652,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
         assertEquals(0, underTest.getBookmarksCount())
     }
 
-    // HEALTH CHECK TESTS
 
     @Test
     fun whenHealthCheckCalledThenReturnsHealthyStatus() = runTest {
@@ -737,12 +679,6 @@ class FakeApiServiceTest { // FIXED: Proper class name
     fun whenUploadProfilePictureCalledThenReturnsSuccessResponse() = runTest {
         // Arrange
         val userId = "123"
-        // Note: We can't create actual MultipartBody.Part in unit tests without mocks
-        // Since we're using fakes only, we'll test the method signature exists
-        // and skip the actual file upload test (would be tested in integration tests)
-
-        // Act & Assert - Just verify the method signature exists
-        // File upload functionality would be tested in integration tests
         assertNotNull(underTest::uploadProfilePicture)
     }
 

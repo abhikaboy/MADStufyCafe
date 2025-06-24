@@ -2,11 +2,11 @@ package com.example.composeapp.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.database.CafeEntity
-import com.example.composeapp.data.database.FakeCafeDao
+import com.example.composeapp.data.database.fakes.FakeCafeDao
 import com.example.composeapp.data.network.ApiResult
-import com.example.composeapp.data.network.FakeApiService
+import com.example.composeapp.data.network.fakes.FakeApiService
 import com.example.composeapp.data.network.toEntity
-import com.example.composeapp.utils.FakeLocationHelper
+import com.example.composeapp.utils.fakes.FakeLocationHelper
 import com.example.composeapp.utils.LocationHelperInterface
 import com.example.composeapp.utils.UserLocation
 import com.example.composeapp.utils.getOrAwaitValue
@@ -58,7 +58,7 @@ class CafeRepositoryTest {
 
     @Test
     fun whenGetAllCafesAndDatabaseIsEmptyThenApiDataIsReturned() = runTest(testDispatcher) {
-        // Arrange - set location near test cafes so nearby API works
+        // Arrange
         val testLocation = UserLocation(latitude = 37.78, longitude = -122.03) // Near Palo Alto
         (fakeLocationHelper as FakeLocationHelper).setCurrentLocation(testLocation)
         val expectedCafes = fakeApiService.findNearbyCafes(testLocation.longitude, testLocation.latitude, 10000.0)
@@ -80,10 +80,8 @@ class CafeRepositoryTest {
         val cachedCafe = createTestCafeEntity(1, "Cached Cafe")
         fakeCafeDao.insertCafe(cachedCafe)
         val liveData = underTest.getAllCafesLiveData()
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Result should be success", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -100,7 +98,6 @@ class CafeRepositoryTest {
 
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Result should be success", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -115,7 +112,6 @@ class CafeRepositoryTest {
         val testCafe = createTestCafeEntity(1, "Test Cafe")
         fakeCafeDao.insertCafe(testCafe)
         val liveData = underTest.getCafeByIdLiveData(1)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
 
@@ -136,7 +132,6 @@ class CafeRepositoryTest {
 
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Result should be success", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -145,13 +140,12 @@ class CafeRepositoryTest {
 
     @Test
     fun whenRefreshCafesWithLocationThenDataIsFetched() = runTest(testDispatcher) {
-        // Arrange - use location near the test cafes in California
-        val testLocation = UserLocation(latitude = 37.78, longitude = -122.03) // Near Palo Alto
+        // Arrange
+        val testLocation = UserLocation(latitude = 37.78, longitude = -122.03)
         (fakeLocationHelper as FakeLocationHelper).setCurrentLocation(testLocation)
 
         // Act
         val actualResult = underTest.refreshCafes()
-
         // Assert
         assertTrue("Refresh should be successful", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -165,10 +159,8 @@ class CafeRepositoryTest {
         fakeCafeDao.insertCafe(cafe)
         val cafeId = 1L
         val isBookmarked = true
-
         // Act
         underTest.bookmarkCafe(cafeId, isBookmarked)
-
         // Assert
         val updatedCafe = fakeCafeDao.getCafeById(cafeId)
         assertEquals("Bookmark status should be updated", isBookmarked, updatedCafe?.isBookmarked)
@@ -182,10 +174,8 @@ class CafeRepositoryTest {
         fakeCafeDao.insertCafe(bookmarkedCafe)
         fakeCafeDao.insertCafe(normalCafe)
         val liveData = underTest.getBookmarkedCafes()
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertEquals("Should return only bookmarked cafes", 1, actualResult.size)
         assertTrue("Returned cafe should be bookmarked", actualResult[0].isBookmarked)
@@ -199,10 +189,8 @@ class CafeRepositoryTest {
         val latitude = 34.0522
         val maxDistance = 3000.0
         val liveData = underTest.findNearbyCafesLiveData(longitude, latitude, maxDistance)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Result should be success", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -230,7 +218,6 @@ class CafeRepositoryTest {
         // Arrange
         val amenities = listOf("WiFi", "Power outlets")
         val liveData = underTest.findCafesByAmenitiesLiveData(amenities)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
 
@@ -246,7 +233,6 @@ class CafeRepositoryTest {
         val apiCafes = fakeApiService.getAllCafes()
         assertTrue("API should return cafes", apiCafes.isNotEmpty())
         assertEquals("API should return 2 cafes", 2, apiCafes.size)
-        
         // Test if conversion works
         val entities = apiCafes.map { it.toEntity() }
         assertEquals("Conversion should work", 2, entities.size)

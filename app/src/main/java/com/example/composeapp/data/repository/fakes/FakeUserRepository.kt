@@ -1,12 +1,16 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.data.repository.fakes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.composeapp.data.network.*
+import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.Bookmark
+import com.example.composeapp.data.network.Cafe
+import com.example.composeapp.data.network.LoginResponse
+import com.example.composeapp.data.network.UserResponse
+import com.example.composeapp.data.network.UserUpdate
+import com.example.composeapp.data.repository.interfaces.UserRepositoryInterface
 
 class FakeUserRepository : UserRepositoryInterface {
-
-    // Tracking flags
     var loginWasCalled = false
     var createUserWasCalled = false
     var getUserByIdWasCalled = false
@@ -22,10 +26,6 @@ class FakeUserRepository : UserRepositoryInterface {
     var lastGetAllUsersSkip: Int? = null
     var lastGetAllUsersLimit: Int? = null
     var lastSearchQuery: String? = null
-
-
-
-    // Private backing properties to avoid conflicts
     private var _loginResult: ApiResult<LoginResponse>? = null
     private var _userResult: ApiResult<UserResponse>? = null
     private var _updateUserResult: ApiResult<UserResponse>? = null
@@ -100,7 +100,6 @@ class FakeUserRepository : UserRepositoryInterface {
         return MutableLiveData(ApiResult.Success(emptyList()))
     }
 
-    // Setter functions that modify the private backing properties
     fun configureLoginResult(result: ApiResult<LoginResponse>?) {
         _loginResult = result
     }

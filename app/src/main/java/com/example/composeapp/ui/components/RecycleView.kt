@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.composeapp.ui.components.card.CafeCard
 
 @Composable
 fun CafeList(
@@ -21,7 +22,7 @@ fun CafeList(
     LazyColumn {
         items(cafeList) { cafe ->
             CafeCard(
-                cafe = cafe, 
+                cafe = cafe,
                 onClick = { onCafeClick(cafe) },
                 onBookmarkClick = { onBookmarkClick(cafe) }
             )

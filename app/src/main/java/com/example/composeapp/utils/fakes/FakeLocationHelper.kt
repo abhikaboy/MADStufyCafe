@@ -1,4 +1,7 @@
-package com.example.composeapp.utils
+package com.example.composeapp.utils.fakes
+
+import com.example.composeapp.utils.LocationHelperInterface
+import com.example.composeapp.utils.UserLocation
 
 class FakeLocationHelper : LocationHelperInterface {
     private var currentLocation: UserLocation? = null

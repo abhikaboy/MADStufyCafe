@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.bar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -30,10 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.R
 import androidx.compose.ui.draw.clip
-import com.example.composeapp.ui.theme.CardBackground
-import com.example.composeapp.ui.theme.LargeCardBackground
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.ui.graphics.Color
+import com.example.composeapp.ui.components.tag.Tag
 import com.example.composeapp.ui.theme.TextPrimary
 import kotlin.collections.listOf
 

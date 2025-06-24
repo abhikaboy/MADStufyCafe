@@ -2,6 +2,7 @@ package com.example.composeapp.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.network.*
+import com.example.composeapp.data.network.fakes.FakeApiService
 import com.example.composeapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,7 +50,6 @@ class ReviewRepositoryTest {
 
         // Act
         val actualResult = underTest.createReview(reviewCreate)
-
         // Assert
         assertTrue("Review creation should be successful", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -66,7 +66,6 @@ class ReviewRepositoryTest {
             ReviewCreate("1", "1", 4.0, 3.5, 4.0)
         )
         val liveData = underTest.getReviewById(review.id)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
 
@@ -82,10 +81,8 @@ class ReviewRepositoryTest {
         // Arrange
         val nonExistentReviewId = "999"
         val liveData = underTest.getReviewById(nonExistentReviewId)
-
         // Act
         val actualResult = liveData.getOrAwaitValue(time = 2)
-
         // Assert
         assertTrue("Should return error", actualResult.isError)
         val errorResult = actualResult as ApiResult.Error
@@ -104,7 +101,6 @@ class ReviewRepositoryTest {
             atmosphere = "excellent",
             study_friendly = "perfect"
         )
-
         // Act
         val actualResult = underTest.updateReview(review.id, reviewUpdate)
 
@@ -122,10 +118,8 @@ class ReviewRepositoryTest {
         val review = fakeApiService.createReview(
             ReviewCreate("1", "1", 4.0, 4.0, 4.0)
         )
-
         // Act
         val actualResult = underTest.deleteReview(review.id)
-
         // Assert
         assertTrue("Delete should be successful", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
@@ -182,7 +176,6 @@ class ReviewRepositoryTest {
             url = "https://example.com/photo.jpg",
             caption = "Great atmosphere"
         )
-
         // Act
         val actualResult = underTest.addPhotoToReview(review.id, photo)
 

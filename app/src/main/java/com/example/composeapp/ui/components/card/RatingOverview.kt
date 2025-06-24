@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.card
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeapp.ui.theme.ComposeAppTheme
-import com.example.composeapp.ui.theme.LargeCardBackground
 import com.example.composeapp.ui.theme.TagBackground
 import com.example.composeapp.ui.theme.TextPrimary
 

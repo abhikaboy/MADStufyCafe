@@ -2,10 +2,10 @@ package com.example.composeapp.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.composeapp.data.network.*
-import com.example.composeapp.data.repository.FakeReviewRepository
-import com.example.composeapp.data.repository.FakeUserRepository
-import com.example.composeapp.data.repository.ReviewRepositoryInterface
-import com.example.composeapp.data.repository.UserRepositoryInterface
+import com.example.composeapp.data.repository.fakes.FakeReviewRepository
+import com.example.composeapp.data.repository.fakes.FakeUserRepository
+import com.example.composeapp.data.repository.interfaces.ReviewRepositoryInterface
+import com.example.composeapp.data.repository.interfaces.UserRepositoryInterface
 import com.example.composeapp.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,7 +59,7 @@ class UserViewModelTest {
         // Act
         underTest.login(username, password)
 
-        // Assert - trigger the switchMap by observing loginResult
+        // Assert
         val loginResult = underTest.loginResult.getOrAwaitValue()
         assertTrue("Login should have been called", fakeUserRepository.loginWasCalled)
     }
@@ -169,11 +169,9 @@ class UserViewModelTest {
     @Test
     fun whenLogoutThenUserStateIsCleared() {
         // Arrange
-        fakeUserRepository.configureUserResult(ApiResult.Success(  // Fixed: method name
+        fakeUserRepository.configureUserResult(ApiResult.Success(
             UserResponse("user123", "Test User", 5, 4.2)
         ))
-        // Simulate logged in state - this method might not exist, so we'll comment it out
-        // underTest.handleUserCreateResult(fakeUserRepository.userResult!!)
 
         // Act
         underTest.logout()
@@ -194,7 +192,7 @@ class UserViewModelTest {
         // Act
         underTest.searchUsers(query)
 
-        // Assert - trigger the switchMap by observing searchResults
+        // Assert
         val searchResults = underTest.searchResults.getOrAwaitValue()
         assertTrue("Search users should have been called", fakeUserRepository.searchUsersWasCalled)
         assertEquals("Should use correct query", query, fakeUserRepository.lastSearchQuery)
@@ -209,8 +207,6 @@ class UserViewModelTest {
         underTest.loadUserBookmarks(userId)
 
         // Assert
-        // Note: Since switchMap is used, we can't easily verify the LiveData transformation
-        // In a real scenario, you'd test this by observing the userBookmarks LiveData
         assertNotNull("User bookmarks LiveData should be available", underTest.userBookmarks)
     }
 
@@ -232,18 +228,6 @@ class UserViewModelTest {
         // Arrange
         val loginResponse = LoginResponse("Success", "user123", "testuser")
         val result = ApiResult.Success(loginResponse)
-
-        // Act - this method might not exist, so we'll comment it out for now
-        // underTest.handleLoginResult(result)
-
-        // Assert - simplified test
-        // val isLoggedIn = underTest.isLoggedIn.getOrAwaitValue()
-        // val errorMessage = underTest.errorMessage.getOrAwaitValue()
-
-        // assertTrue("Should be logged in", isLoggedIn)
-        // assertNull("Should have no error", errorMessage)
-
-        // Simplified assertion - just verify the result is success
         assertTrue("Result should be success", result.isSuccess)
     }
 
@@ -251,18 +235,6 @@ class UserViewModelTest {
     fun whenHandleLoginResultWithErrorThenErrorIsShown() {
         // Arrange
         val result = ApiResult.Error("Login failed")
-
-        // Act - this method might not exist, so we'll comment it out for now
-        // underTest.handleLoginResult(result)
-
-        // Assert - simplified test
-        // val isLoggedIn = underTest.isLoggedIn.getOrAwaitValue()
-        // val errorMessage = underTest.errorMessage.getOrAwaitValue()
-
-        // assertFalse("Should not be logged in", isLoggedIn)
-        // assertEquals("Should show error message", "Login failed", errorMessage)
-
-        // Simplified assertion - just verify the result is error
         assertTrue("Result should be error", result.isError)
     }
 
@@ -271,18 +243,6 @@ class UserViewModelTest {
         // Arrange
         val userResponse = UserResponse("user123", "New User", 0, 0.0)
         val result = ApiResult.Success(userResponse)
-
-        // Act - this method might not exist, so we'll comment it out for now
-        // underTest.handleUserCreateResult(result)
-
-        // Assert - simplified test
-        // val currentUser = underTest.currentUser.getOrAwaitValue()
-        // val errorMessage = underTest.errorMessage.getOrAwaitValue()
-
-        // assertEquals("Should set current user", "New User", currentUser?.name)
-        // assertNull("Should have no error", errorMessage)
-
-        // Simplified assertion
         assertTrue("Result should be success", result.isSuccess)
         assertEquals("Should have correct user name", "New User", result.data.name)
     }
@@ -291,23 +251,11 @@ class UserViewModelTest {
     fun whenHandleUserCreateResultWithErrorThenErrorIsShown() {
         // Arrange
         val result = ApiResult.Error("User creation failed")
-
-        // Act - this method might not exist, so we'll comment it out for now
-        // underTest.handleUserCreateResult(result)
-
-        // Assert - simplified test
-        // val errorMessage = underTest.errorMessage.getOrAwaitValue()
-        // assertEquals("Should show error message", "User creation failed", errorMessage)
-
-        // Simplified assertion
         assertTrue("Result should be error", result.isError)
     }
 
     @Test
     fun whenClearErrorThenErrorMessageIsCleared() {
-        // Arrange - this method might not exist, so we'll comment it out for now
-        // underTest.handleLoginResult(ApiResult.Error("Test error"))
-
         // Act
         underTest.clearError()
 
@@ -323,15 +271,6 @@ class UserViewModelTest {
             Bookmark("bookmark123", "user123", "cafe123", "2024-01-01T00:00:00Z")
         ))
         underTest.createBookmark("user123", "cafe123")
-
-        // Act - this method might not exist, so we'll comment it out for now
-        // underTest.clearBookmarkSuccess()
-
-        // Assert - simplified test
-        // val successMessage = underTest.bookmarkActionSuccess.getOrAwaitValue()
-        // assertNull("Success message should be cleared", successMessage)
-
-        // Just verify the bookmark was created successfully
         assertTrue("Create bookmark should have been called",
             fakeUserRepository.createBookmarkWasCalled)
     }
@@ -343,12 +282,6 @@ class UserViewModelTest {
         val cafeId = "cafe123"
         var callbackResult: Boolean? = null
 
-        // Act - this method might have different signature, so we'll simplify
-        // underTest.checkBookmarkExists(userId, cafeId) { exists ->
-        //     callbackResult = exists
-        // }
-
-        // Simplified test - just call the repository method directly
         val result = fakeUserRepository.checkBookmarkExists(userId, cafeId)
 
         // Assert

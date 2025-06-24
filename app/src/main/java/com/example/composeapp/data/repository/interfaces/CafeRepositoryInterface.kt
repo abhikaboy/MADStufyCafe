@@ -1,4 +1,4 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.data.repository.interfaces
 
 import androidx.lifecycle.LiveData
 import com.example.composeapp.data.database.CafeEntity

@@ -1,6 +1,7 @@
 package com.example.composeapp.data.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.composeapp.data.database.fakes.FakeCafeDao
 import com.example.composeapp.utils.TestDataFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -465,7 +466,7 @@ class FakeCafeDaoTest {
     fun whenGetCafeCountCalledThenCorrectCountReturned() = runTest {
         // Arrange
         assertEquals(0, underTest.getCafeCount())
-        // Act - Add cafes
+        // Act
         val testCafes = TestDataFactory.createTestCafeList()
         underTest.insertCafes(testCafes)
         // Assert

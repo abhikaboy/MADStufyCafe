@@ -1,7 +1,12 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.data.repository.interfaces
 
 import androidx.lifecycle.LiveData
-import com.example.composeapp.data.network.*
+import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.Bookmark
+import com.example.composeapp.data.network.Cafe
+import com.example.composeapp.data.network.LoginResponse
+import com.example.composeapp.data.network.UserResponse
+import com.example.composeapp.data.network.UserUpdate
 
 interface UserRepositoryInterface {
     fun loginUser(username: String, password: String): LiveData<ApiResult<LoginResponse>>

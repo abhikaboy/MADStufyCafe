@@ -1,4 +1,4 @@
-package com.example.composeapp.ui.components
+package com.example.composeapp.ui.components.card
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -37,6 +38,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.composeapp.R
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.components.tag.LightLabel
 import com.example.composeapp.ui.theme.Background
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme
@@ -67,7 +69,6 @@ fun CafeCard(
         ) {
             Box {
                 CafeImage(cafe.imageUrl)
-                // Bookmark button overlaid on image
                 IconButton(
                     onClick = onBookmarkClick,
                     modifier = Modifier
@@ -77,7 +78,7 @@ fun CafeCard(
                     Icon(
                         imageVector = if (cafe.isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
                         contentDescription = if (cafe.isBookmarked) "Remove bookmark" else "Add bookmark",
-                        tint = if (cafe.isBookmarked) Primary else androidx.compose.ui.graphics.Color.White,
+                        tint = if (cafe.isBookmarked) Primary else Color.White,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -89,7 +90,7 @@ fun CafeCard(
             )
 
             Row(
-                verticalAlignment = Alignment.CenterVertically, // aligns image & text nicely
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.location_icon),
@@ -103,7 +104,6 @@ fun CafeCard(
                 )
             }
 
-            //Three card component
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -124,13 +124,11 @@ fun CafeCard(
                         modifier = Modifier
                             .padding(8.dp),
                     ) {
-                        // Top Text
                         Text(
                             text = "Study Rating",
                             style = MaterialTheme.typography.bodySmall
                         )
 
-                        //Add vertical spacing
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -141,11 +139,10 @@ fun CafeCard(
                                 Image(
                                     painter = painterResource(id = R.drawable.filled_star),
                                     contentDescription = "Star",
-                                    modifier = Modifier.size(13.dp) // Adjust star size here
+                                    modifier = Modifier.size(13.dp)
                                 )
                             }
 
-                            // Empty stars for the rest
                             repeat(5 - rating) {
                                 Image(
                                     painter = painterResource(id = R.drawable.star_icon),
@@ -240,7 +237,6 @@ fun CafeCard(
     }
 }
 
-//This makes image show in Preview
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CafeImage(imageUrl: String) {

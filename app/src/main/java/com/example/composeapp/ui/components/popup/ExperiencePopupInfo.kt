@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.composeapp.R
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.button.CustomButton
-import com.example.composeapp.ui.components.Tag
+import com.example.composeapp.ui.components.tag.Tag
 import com.example.composeapp.ui.components.button.WifiRateButton
 import com.example.composeapp.ui.theme.CardBackground
 import com.example.composeapp.ui.theme.ComposeAppTheme

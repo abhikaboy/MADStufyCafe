@@ -9,7 +9,7 @@ import com.example.composeapp.data.network.ApiResult
 import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.safeApiCall
 import com.example.composeapp.data.network.toEntity
-import com.example.composeapp.utils.LocationHelper
+import com.example.composeapp.data.repository.interfaces.CafeRepositoryInterface
 import com.example.composeapp.utils.LocationHelperInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -37,18 +37,13 @@ class CafeRepository (
 
             try {
                 var userLocation = locationHelper?.getCurrentLocation()
-                android.util.Log.d("CafeRepository", "LocationHelper result: $userLocation")
 
                 // If no location helper, permission, or last known location, use default location
                 if (userLocation == null) {
                     userLocation = LocationHelperInterface.DEFAULT_LOCATION
-                    android.util.Log.d("CafeRepository", "Using default location: $userLocation")
-                } else {
-                    android.util.Log.d("CafeRepository", "Using actual location: $userLocation")
                 }
 
                 // Try nearby cafes first
-                android.util.Log.d("CafeRepository", "Calling nearby cafes API with location: lat=${userLocation.latitude}, lng=${userLocation.longitude}")
                 apiResult = safeApiCall("Get Nearby Cafes") {
                     apiService.findNearbyCafes(
                         longitude = userLocation.longitude,
@@ -59,15 +54,12 @@ class CafeRepository (
 
                 // If nearby API call fails or returns no results, we'll fall back to generic call
                 if (apiResult is ApiResult.Error) {
-                    android.util.Log.w("CafeRepository", "Nearby API call failed, will fallback to generic: ${(apiResult as ApiResult.Error).message}")
                     apiResult = null
                 } else if (apiResult is ApiResult.Success && apiResult.data.isEmpty()) {
-                    android.util.Log.w("CafeRepository", "Nearby API call returned no results, will fallback to generic")
                     apiResult = null
                 }
             } catch (e: Exception) {
                 // Location failed, will fallback to generic call
-                android.util.Log.e("CafeRepository", "Location/nearby call exception, will fallback to generic: ${e.message}")
                 apiResult = null
             }
 

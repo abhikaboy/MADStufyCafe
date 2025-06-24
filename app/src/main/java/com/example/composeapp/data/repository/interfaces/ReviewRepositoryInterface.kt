@@ -1,7 +1,11 @@
-package com.example.composeapp.data.repository
+package com.example.composeapp.data.repository.interfaces
 
 import androidx.lifecycle.LiveData
-import com.example.composeapp.data.network.*
+import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.PhotoCreate
+import com.example.composeapp.data.network.Review
+import com.example.composeapp.data.network.ReviewCreate
+import com.example.composeapp.data.network.ReviewUpdate
 import okhttp3.MultipartBody
 
 interface ReviewRepositoryInterface {

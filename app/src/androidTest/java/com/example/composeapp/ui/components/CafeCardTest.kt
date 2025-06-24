@@ -4,6 +4,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.composeapp.data.database.CafeEntity
+import com.example.composeapp.ui.components.card.CafeCard
 import com.example.composeapp.ui.theme.ComposeAppTheme
 import org.junit.Before
 import org.junit.Rule

@@ -40,8 +40,8 @@ import com.example.composeapp.R
 import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.Review
 import com.example.composeapp.data.network.UserResponse
-import com.example.composeapp.ui.components.ReviewCard
-import com.example.composeapp.ui.components.RatingOverviewCard
+import com.example.composeapp.ui.components.card.ReviewCard
+import com.example.composeapp.ui.components.card.RatingOverviewCard
 import com.example.composeapp.ui.theme.TextPrimary
 import com.example.composeapp.ui.viewmodel.LoginViewModel
 
@@ -54,11 +54,10 @@ fun UserProfile(
     onReviewClick: (Review) -> Unit = {},
     onResume: () -> Unit = {},
     onLogout: () -> Unit = {},
-    loginViewModel: LoginViewModel? = null // Pass as parameter instead of creating inside
+    loginViewModel: LoginViewModel? = null
 ) {
     var showDropdownMenu by remember { mutableStateOf(false) }
 
-    // Handle onResume lifecycle event
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -128,8 +127,6 @@ fun UserProfile(
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        // Profile picture placeholder
         Image(
             painterResource(id = R.drawable.cafe),
             contentDescription = "Profile Picture",
@@ -140,25 +137,20 @@ fun UserProfile(
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(20.dp))
-
-        // User name
         Text(
             text = currentUser?.name ?: "Guest User",
             style = MaterialTheme.typography.headlineSmall,
             color = TextPrimary
         )
         Spacer(modifier = Modifier.height(15.dp))
-
-        // User statistics
         RatingOverviewCard(
             cafesVisited = currentUser?.cafes_visited ?: 0,
             averageRating = currentUser?.average_rating?.toFloat() ?: 0f,
             bookmarks = userBookmarks.size,
-            exploredPercentage = calculateExploredPercentage(currentUser?.cafes_visited ?: 0, userBookmarks.size)
+            exploredPercentage = calculateExploredPercentage(userReviews, userBookmarks)
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Recent reviews section
         Text(
             text = "RECENT REVIEWS",
             style = MaterialTheme.typography.bodyMedium,
@@ -191,13 +183,17 @@ fun UserProfile(
     }
 }
 
-// Helper function to calculate explored percentage
-private fun calculateExploredPercentage(cafesVisited: Int, cafesBookmarked: Int): Int {
-    return if (cafesBookmarked > 0) {
-        ((cafesVisited.toDouble() / cafesBookmarked) * 100).toInt().coerceAtMost(100)
-    } else {
-        0
+// Helper function to calculate explored percentage based on reviews vs bookmarks
+private fun calculateExploredPercentage(userReviews: List<Review>, userBookmarks: List<Cafe>): Int {
+    if (userBookmarks.isEmpty()) return 0
+    val bookmarkedCafeIds = userBookmarks.mapNotNull { cafe ->
+        cafe.id
+    }.toSet()
+
+    val reviewedBookmarkedCafes = userReviews.count { review ->
+        review.study_spot_id in bookmarkedCafeIds
     }
+    return ((reviewedBookmarkedCafes.toDouble() / userBookmarks.size) * 100).toInt().coerceAtMost(100)
 }
 
 @Preview(showBackground = true)

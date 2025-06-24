@@ -1,7 +1,30 @@
-package com.example.composeapp.data.network
+package com.example.composeapp.data.network.fakes
 
+import com.example.composeapp.data.network.Address
+import com.example.composeapp.data.network.ApiService
+import com.example.composeapp.data.network.Bookmark
+import com.example.composeapp.data.network.BookmarkCreate
+import com.example.composeapp.data.network.BookmarkWithCafe
+import com.example.composeapp.data.network.Cafe
+import com.example.composeapp.data.network.CafeCreate
+import com.example.composeapp.data.network.CafeInBookmark
+import com.example.composeapp.data.network.CafeUpdate
+import com.example.composeapp.data.network.FileUploadResponse
+import com.example.composeapp.data.network.Location
+import com.example.composeapp.data.network.LoginResponse
+import com.example.composeapp.data.network.Photo
+import com.example.composeapp.data.network.PhotoCreate
+import com.example.composeapp.data.network.Review
+import com.example.composeapp.data.network.ReviewCreate
+import com.example.composeapp.data.network.ReviewUpdate
+import com.example.composeapp.data.network.UserCreate
+import com.example.composeapp.data.network.UserLogin
+import com.example.composeapp.data.network.UserResponse
+import com.example.composeapp.data.network.UserUpdate
 import okhttp3.MultipartBody
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.collections.plus
+import kotlin.math.sqrt
 
 class FakeApiService : ApiService {
     private val users = mutableListOf<UserResponse>()
@@ -9,8 +32,8 @@ class FakeApiService : ApiService {
     private val reviews = mutableListOf<Review>()
     private val bookmarks = mutableListOf<Bookmark>()
 
-    private val userIdGenerator = AtomicInteger(100) // Start after test data
-    private val cafeIdGenerator = AtomicInteger(100) // Start after test data
+    private val userIdGenerator = AtomicInteger(100)
+    private val cafeIdGenerator = AtomicInteger(100)
     private val reviewIdGenerator = AtomicInteger(100)
     private val bookmarkIdGenerator = AtomicInteger(100)
 
@@ -180,7 +203,7 @@ class FakeApiService : ApiService {
     }
 
     override suspend fun getCafeById(cafeId: String): Cafe {
-        return cafes.find { it.id == cafeId } // FIX: Remove .toString()
+        return cafes.find { it.id == cafeId }
             ?: throw IllegalArgumentException("Cafe not found")
     }
 
@@ -239,10 +262,9 @@ class FakeApiService : ApiService {
     }
 
     private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        // Simplified distance calculation for testing (Haversine would be more accurate)
         val deltaLat = lat2 - lat1
         val deltaLon = lon2 - lon1
-        return kotlin.math.sqrt(deltaLat * deltaLat + deltaLon * deltaLon) * 111000 // Rough conversion to meters
+        return sqrt(deltaLat * deltaLat + deltaLon * deltaLon) * 11100
     }
 
     override suspend fun findCafesByAmenities(amenities: List<String>): List<Cafe> {
@@ -276,7 +298,8 @@ class FakeApiService : ApiService {
 
     override suspend fun createReview(review: ReviewCreate): Review {
         val newReview = Review(
-            id = reviewIdGenerator.getAndIncrement().toString(), // FIX: Now reviewIdGenerator is defined
+            id = reviewIdGenerator.getAndIncrement()
+                .toString(),
             study_spot_id = review.study_spot_id,
             user_id = review.user_id,
             overall_rating = review.overall_rating,
@@ -414,7 +437,6 @@ class FakeApiService : ApiService {
         return mapOf("exists" to exists)
     }
 
-    // File management endpoints
     override suspend fun uploadFile(file: MultipartBody.Part): FileUploadResponse {
         return FileUploadResponse(
             url = "https://fake-api.com/files/uploaded_${System.currentTimeMillis()}.jpg",
@@ -449,7 +471,6 @@ class FakeApiService : ApiService {
         )
     }
 
-    // Health check endpoints
     override suspend fun apiRoot(): Map<String, Any> {
         return mapOf(
             "message" to "Fake API Service",
@@ -466,7 +487,6 @@ class FakeApiService : ApiService {
         )
     }
 
-    // Helper methods for testing
     fun clearAllData() {
         users.clear()
         cafes.clear()
