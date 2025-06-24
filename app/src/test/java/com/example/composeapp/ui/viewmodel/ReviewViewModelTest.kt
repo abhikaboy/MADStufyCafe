@@ -108,7 +108,7 @@ class ReviewViewModelTest {
 
         assertEquals("Atmosphere should be updated", atmosphere, atmosphereValue)
         assertEquals("Current review should have updated atmosphere",
-            atmosphere, currentReview?.atmosphere)
+            listOf(atmosphere), currentReview?.atmosphere)
     }
 
     @Test
@@ -125,7 +125,7 @@ class ReviewViewModelTest {
             overall_rating = 4.0,
             outlet_accessibility = 0.0,
             wifi_quality = 0.0,
-            atmosphere = "cozy"
+            atmosphere = listOf("cozy")
         )
         fakeReviewRepository.configureCreateReviewResult(ApiResult.Success(expectedReview))
 

@@ -101,9 +101,9 @@ class ReviewViewModel(private val reviewRepository: ReviewRepositoryInterface) :
                 overall_rating = _overallRating.value ?: 0.0,
                 outlet_accessibility = _outletAccessibility.value ?: 0.0,
                 wifi_quality = _wifiQuality.value ?: 0.0,
-                atmosphere = _atmosphere.value?.takeIf { it.isNotBlank() },
-                energy_level = _energyLevel.value?.takeIf { it.isNotBlank() },
-                study_friendly = _studyFriendly.value?.takeIf { it.isNotBlank() }
+                atmosphere = _atmosphere.value?.takeIf { it.isNotBlank() }?.let { listOf(it) },
+                energy_level = _energyLevel.value?.takeIf { it.isNotBlank() }?.let { listOf(it) },
+                study_friendly = _studyFriendly.value?.takeIf { it.isNotBlank() }?.let { listOf(it) }
             )
         }
     }

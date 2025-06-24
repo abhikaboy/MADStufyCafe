@@ -32,8 +32,11 @@ import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.components.button.CustomButton
 import com.example.composeapp.ui.components.tag.LightLabel
 import com.example.composeapp.ui.components.tag.Tag
+import com.example.composeapp.ui.viewmodel.CafeViewModel
 import com.example.composeapp.ui.viewmodel.ReviewViewModel
 import com.example.composeapp.ui.viewmodel.UserViewModel
+import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.CafePhoto
 
 @Composable
 fun RatingPopupInfo(
@@ -42,9 +45,20 @@ fun RatingPopupInfo(
     reviewViewModel: ReviewViewModel? = null,
     onBookmarkClick: ((CafeEntity) -> Unit)? = null,
     userViewModel: UserViewModel? = null,
-    currentUserId: String? = null
+    currentUserId: String? = null,
+    cafeViewModel: CafeViewModel? = null
 ) {
     val context = LocalContext.current
+    
+    // Observe cafe photos from the ViewModel
+    val cafePhotos = cafeViewModel?.cafePhotos?.observeAsState()?.value
+    
+    // Fetch photos when the component loads
+    LaunchedEffect(cafe.apiId) {
+        if (cafeViewModel != null && !cafe.apiId.isNullOrEmpty()) {
+            cafeViewModel.getCafePhotos(cafe.apiId)
+        }
+    }
     
     // Observe bookmark action success to show toast
     userViewModel?.bookmarkActionSuccess?.observeAsState()?.value?.let { message ->
@@ -215,7 +229,7 @@ fun RatingPopupInfo(
 
             PhotosSection(
                 title = "Recent Photos",
-                imageUrls = cafe.ratingImageUrls.stringToList()
+                cafePhotos = cafePhotos
             )
         }
     }
@@ -255,7 +269,7 @@ fun TagSection(
 @Composable
 fun PhotosSection(
     title: String,
-    imageUrls: List<String>
+    cafePhotos: ApiResult<List<CafePhoto>>?
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -265,49 +279,99 @@ fun PhotosSection(
             style = MaterialTheme.typography.titleMedium
         )
 
-        if (imageUrls.isNotEmpty()) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.height(120.dp)
-            ) {
-                val imagesToShow = imageUrls.take(4).take(if (imageUrls.size > 4) 4 else imageUrls.size)
+        when (cafePhotos) {
+            is ApiResult.Success -> {
+                val photos = cafePhotos.data
+                if (photos.isNotEmpty()) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.height(120.dp)
+                    ) {
+                        val photosToShow = photos.take(4)
 
-                imagesToShow.forEachIndexed { index, imageUrl ->
-                    val isLastItem = index == 3 && imageUrls.size > 4
-                    val remainingCount = if (imageUrls.size > 4) imageUrls.size - 4 else 0
+                        photosToShow.forEachIndexed { index, photo ->
+                            val isLastItem = index == 3 && photos.size > 4
+                            val remainingCount = if (photos.size > 4) photos.size - 4 else 0
 
-                    PhotoCard(
-                        imageUrl = imageUrl,
+                            PhotoCard(
+                                imageUrl = photo.url,
+                                caption = photo.caption,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight(),
+                                isLastItem = isLastItem,
+                                remainingCount = remainingCount
+                            )
+                        }
+                        repeat(4 - photosToShow.size) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                } else {
+                    Card(
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        isLastItem = isLastItem,
-                        remainingCount = remainingCount
-                    )
-                }
-                repeat(4 - imagesToShow.size) {
-                    Spacer(modifier = Modifier.weight(1f))
+                            .fillMaxWidth()
+                            .height(120.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFF5F5F5)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No photos available",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = TextSecondary
+                            )
+                        }
+                    }
                 }
             }
-        } else {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFF5F5F5)
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+            is ApiResult.Error -> {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFF5F5F5)
+                    ),
+                    shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text(
-                        text = "No photos available",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Failed to load photos",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TextSecondary
+                        )
+                    }
+                }
+            }
+            null -> {
+                // Loading state
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFF5F5F5)
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = TextPrimary
+                        )
+                    }
                 }
             }
         }
@@ -318,6 +382,7 @@ fun PhotosSection(
 @Composable
 fun PhotoCard(
     imageUrl: String,
+    caption: String? = null,
     modifier: Modifier = Modifier,
     isLastItem: Boolean = false,
     remainingCount: Int = 0
@@ -375,7 +440,8 @@ fun PreviewRatingPopupInfo() {
         energyLevelTags = "Quiet,Low-Key,Tranquil,Moderate,Average",
         studyFriendlyTags = "Study-Haven,Good,Decent,Mixed,Fair",
         imageUrl = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
-        ratingImageUrls = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400,https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400,https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400"
+        ratingImageUrls = "",
+        apiId = "sample-cafe-id"
     )
 
     ComposeAppTheme {

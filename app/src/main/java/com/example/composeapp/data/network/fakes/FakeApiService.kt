@@ -8,6 +8,7 @@ import com.example.composeapp.data.network.BookmarkWithCafe
 import com.example.composeapp.data.network.Cafe
 import com.example.composeapp.data.network.CafeCreate
 import com.example.composeapp.data.network.CafeInBookmark
+import com.example.composeapp.data.network.CafePhoto
 import com.example.composeapp.data.network.CafeUpdate
 import com.example.composeapp.data.network.FileUploadResponse
 import com.example.composeapp.data.network.Location
@@ -78,6 +79,9 @@ class FakeApiService : ApiService {
                 wifi_access = 2,
                 outlet_accessibility = 2,
                 average_rating = 4,
+                atmosphere = listOf("Cozy", "Warm", "Traditional", "Clean"),
+                energy_level = listOf("moderate", "tranquil", "quiet", "low-key"),
+                study_friendly = listOf("good", "decent", "study heaven", "mixed"),
                 created_at = "2024-01-01T00:00:00Z"
             ),
             Cafe(
@@ -96,6 +100,9 @@ class FakeApiService : ApiService {
                 wifi_access = 1,
                 outlet_accessibility = 2,
                 average_rating = 4,
+                atmosphere = listOf("Modern", "Bustling", "Social"),
+                energy_level = listOf("energetic", "lively", "vibrant"),
+                study_friendly = listOf("fair", "mixed", "decent"),
                 created_at = "2024-01-01T00:00:00Z"
             )
         ))
@@ -195,6 +202,9 @@ class FakeApiService : ApiService {
             wifi_access = cafe.wifi_access,
             outlet_accessibility = cafe.outlet_accessibility,
             average_rating = cafe.average_rating,
+            atmosphere = cafe.atmosphere,
+            energy_level = cafe.energy_level,
+            study_friendly = cafe.study_friendly,
             created_at = "2024-01-01T00:00:00Z",
             updated_at = "2024-01-01T00:00:00Z"
         )
@@ -227,6 +237,9 @@ class FakeApiService : ApiService {
             wifi_access = cafe.wifi_access ?: current.wifi_access,
             outlet_accessibility = cafe.outlet_accessibility ?: current.outlet_accessibility,
             average_rating = cafe.average_rating ?: current.average_rating,
+            atmosphere = cafe.atmosphere ?: current.atmosphere,
+            energy_level = cafe.energy_level ?: current.energy_level,
+            study_friendly = cafe.study_friendly ?: current.study_friendly,
             updated_at = "2024-01-01T00:00:00Z"
         )
         cafes[index] = updated
@@ -281,17 +294,23 @@ class FakeApiService : ApiService {
         return cafes.filter { it.average_rating >= minRating.toInt() }
     }
 
-    override suspend fun getCafePhotos(cafeId: String): List<Map<String, Any>> {
+    override suspend fun getCafePhotos(cafeId: String): List<CafePhoto> {
         return listOf(
-            mapOf(
-                "id" to "photo_1",
-                "url" to "https://fake-api.com/photos/cafe_${cafeId}_1.jpg",
-                "caption" to "Interior view"
+            CafePhoto(
+                id = "photo_1",
+                url = "https://fake-api.com/photos/cafe_${cafeId}_1.jpg",
+                caption = "Interior view",
+                review_id = "review_1",
+                user_id = "user_1",
+                created_at = "2024-01-01T00:00:00Z"
             ),
-            mapOf(
-                "id" to "photo_2",
-                "url" to "https://fake-api.com/photos/cafe_${cafeId}_2.jpg",
-                "caption" to "Coffee bar"
+            CafePhoto(
+                id = "photo_2",
+                url = "https://fake-api.com/photos/cafe_${cafeId}_2.jpg",
+                caption = "Coffee bar",
+                review_id = "review_2",
+                user_id = "user_2",
+                created_at = "2024-01-01T00:00:00Z"
             )
         )
     }
@@ -419,6 +438,9 @@ class FakeApiService : ApiService {
                         wifi_access = it.wifi_access,
                         outlet_accessibility = it.outlet_accessibility,
                         average_rating = it.average_rating,
+                        atmosphere = it.atmosphere,
+                        energy_level = it.energy_level,
+                        study_friendly = it.study_friendly,
                         created_at = it.created_at,
                         updated_at = it.updated_at
                     )

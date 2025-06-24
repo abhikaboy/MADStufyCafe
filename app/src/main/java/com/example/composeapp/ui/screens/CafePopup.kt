@@ -19,6 +19,7 @@ import com.example.composeapp.ui.components.popup.ExperiencePopupInfo
 import com.example.composeapp.ui.components.popup.RatingPopupInfo
 import com.example.composeapp.ui.components.popup.UploadPhotoInfo
 import com.example.composeapp.ui.theme.CardBackground
+import com.example.composeapp.ui.viewmodel.CafeViewModel
 import com.example.composeapp.ui.viewmodel.ReviewViewModel
 import com.example.composeapp.ui.viewmodel.UserViewModel
 
@@ -32,7 +33,8 @@ fun CafePopup(
     reviewViewModel: ReviewViewModel? = null,
     onBookmarkClick: ((CafeEntity) -> Unit)? = null,
     userViewModel: UserViewModel? = null,
-    currentUserId: String? = null
+    currentUserId: String? = null,
+    cafeViewModel: CafeViewModel? = null
 ) {
     val context = LocalContext.current
     val bottomSheetState = rememberModalBottomSheetState(
@@ -103,7 +105,8 @@ fun CafePopup(
                             },
                             onBookmarkClick = onBookmarkClick,
                             userViewModel = userViewModel,
-                            currentUserId = currentUserId
+                            currentUserId = currentUserId,
+                            cafeViewModel = cafeViewModel
                         )
                     }
                     composable("experience") {

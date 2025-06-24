@@ -7,6 +7,7 @@ import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiService
 import com.example.composeapp.data.network.ApiResult
 import com.example.composeapp.data.network.Cafe
+import com.example.composeapp.data.network.CafePhoto
 import com.example.composeapp.data.network.safeApiCall
 import com.example.composeapp.data.network.toEntity
 import com.example.composeapp.data.repository.interfaces.CafeRepositoryInterface
@@ -339,6 +340,12 @@ class CafeRepository (
             is ApiResult.Error -> {
                 emit(apiResult)
             }
+        }
+    }
+
+    override suspend fun getCafePhotos(cafeId: String): ApiResult<List<CafePhoto>> {
+        return safeApiCall("Get Cafe Photos") {
+            apiService.getCafePhotos(cafeId)
         }
     }
 }

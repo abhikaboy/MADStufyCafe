@@ -360,7 +360,8 @@ fun MainAppContent(
                                             userViewModel = userViewModel,
                                             onResume = {
                                                 viewModel.refreshCafes()
-                                            }
+                                            },
+                                            cafeViewModel = viewModel
                                         )
                                     }
                                 }
@@ -395,7 +396,8 @@ fun MainAppContent(
                                         },
                                         reviewViewModel = reviewViewModel,
                                         currentUserId = currentUser?.id,
-                                        userViewModel = userViewModel
+                                        userViewModel = userViewModel,
+                                        cafeViewModel = viewModel
                                     )
                                 }
 
@@ -476,7 +478,8 @@ fun BookmarkContent(
     onResume: () -> Unit = {},
     reviewViewModel: ReviewViewModel? = null,
     currentUserId: String? = null,
-    userViewModel: UserViewModel? = null
+    userViewModel: UserViewModel? = null,
+    cafeViewModel: CafeViewModel? = null
 ) {
     val blankCafe = CafeEntity(
         id = 0,
@@ -516,7 +519,8 @@ fun BookmarkContent(
             reviewViewModel = reviewViewModel,
             onBookmarkClick = onBookmarkClick,
             userViewModel = userViewModel,
-            currentUserId = currentUserId
+            currentUserId = currentUserId,
+            cafeViewModel = cafeViewModel
         )
     }
 }

@@ -217,9 +217,9 @@ fun PreviewUserProfile() {
             overall_rating = 4.5,
             outlet_accessibility = 4.0,
             wifi_quality = 5.0,
-            atmosphere = "Cozy, Warm",
-            energy_level = "Quiet",
-            study_friendly = "Study Haven",
+            atmosphere = listOf("Cozy", "Warm"),
+            energy_level = listOf("Quiet"),
+            study_friendly = listOf("Study Haven"),
             photos = emptyList(),
             created_at = "2024-01-15T10:30:00Z"
         ),
@@ -230,9 +230,9 @@ fun PreviewUserProfile() {
             overall_rating = 3.5,
             outlet_accessibility = 3.0,
             wifi_quality = 4.0,
-            atmosphere = "Modern, Clean",
-            energy_level = "Moderate",
-            study_friendly = "Good",
+            atmosphere = listOf("Modern", "Clean"),
+            energy_level = listOf("Moderate"),
+            study_friendly = listOf("Good"),
             photos = emptyList(),
             created_at = "2024-01-10T14:20:00Z"
         )

@@ -43,9 +43,9 @@ class ReviewRepositoryTest {
             overall_rating = 4.5,
             outlet_accessibility = 4.0,
             wifi_quality = 4.5,
-            atmosphere = "cozy",
-            energy_level = "calm",
-            study_friendly = "yes"
+            atmosphere = listOf("cozy"),
+            energy_level = listOf("calm"),
+            study_friendly = listOf("yes")
         )
 
         // Act
@@ -98,8 +98,8 @@ class ReviewRepositoryTest {
         )
         val reviewUpdate = ReviewUpdate(
             overall_rating = 5.0,
-            atmosphere = "excellent",
-            study_friendly = "perfect"
+            atmosphere = listOf("excellent"),
+            study_friendly = listOf("perfect")
         )
         // Act
         val actualResult = underTest.updateReview(review.id, reviewUpdate)
@@ -108,8 +108,8 @@ class ReviewRepositoryTest {
         assertTrue("Update should be successful", actualResult.isSuccess)
         val successResult = actualResult as ApiResult.Success
         assertEquals("Should return updated overall rating", 5.0, successResult.data.overall_rating, 0.001)
-        assertEquals("Should return updated atmosphere", "excellent", successResult.data.atmosphere)
-        assertEquals("Should return updated study friendly", "perfect", successResult.data.study_friendly)
+        assertEquals("Should return updated atmosphere", listOf("excellent"), successResult.data.atmosphere)
+        assertEquals("Should return updated study friendly", listOf("perfect"), successResult.data.study_friendly)
     }
 
     @Test

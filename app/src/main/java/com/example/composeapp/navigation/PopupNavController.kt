@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.ui.screens.CafePopup
 import com.example.composeapp.ui.screens.HomeScreen
+import com.example.composeapp.ui.viewmodel.CafeViewModel
 import com.example.composeapp.ui.viewmodel.ReviewViewModel
 import com.example.composeapp.ui.viewmodel.UserViewModel
 
@@ -25,7 +26,8 @@ fun MainContent(
     reviewViewModel: ReviewViewModel? = null,
     currentUserId: String? = null,
     userViewModel: UserViewModel? = null,
-    onResume: () -> Unit = {}
+    onResume: () -> Unit = {},
+    cafeViewModel: CafeViewModel? = null
 ) {
     //Created blank cafe since I don't want to deal with null CafeEntity
     val blankCafe = CafeEntity(
@@ -70,7 +72,8 @@ fun MainContent(
             reviewViewModel = reviewViewModel,
             onBookmarkClick = onBookmarkClick,
             userViewModel = userViewModel,
-            currentUserId = currentUserId
+            currentUserId = currentUserId,
+            cafeViewModel = cafeViewModel
         )
     }
 }

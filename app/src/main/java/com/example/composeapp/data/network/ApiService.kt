@@ -70,7 +70,7 @@ interface ApiService {
     suspend fun findCafesByRating(@Query("min_rating") minRating: Double): List<Cafe>
     
     @GET("api/v1/cafes/{cafe_id}/photos")
-    suspend fun getCafePhotos(@Path("cafe_id") cafeId: String): List<Map<String, Any>>
+    suspend fun getCafePhotos(@Path("cafe_id") cafeId: String): List<CafePhoto>
     
     // Review endpoints
     @POST("api/v1/reviews/")
@@ -172,16 +172,19 @@ data class CafeUpdate(
     val thumbnail_url: String? = null,
     val wifi_access: Int? = null,
     val outlet_accessibility: Int? = null,
-    val average_rating: Int? = null
+    val average_rating: Int? = null,
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null
 )
 
 data class ReviewUpdate(
     val overall_rating: Double? = null,
     val outlet_accessibility: Double? = null,
     val wifi_quality: Double? = null,
-    val atmosphere: String? = null,
-    val energy_level: String? = null,
-    val study_friendly: String? = null
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null
 )
 
 data class PhotoCreate(

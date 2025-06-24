@@ -103,20 +103,20 @@ fun ReviewCard(
                 color = TextSecondary
             )
 
-            if (!review.atmosphere.isNullOrBlank()) {
+            if (!review.atmosphere.isNullOrEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Atmosphere: ${review.atmosphere}",
+                    text = "Atmosphere: ${review.atmosphere?.joinToString(", ") ?: ""}",
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            if (!review.study_friendly.isNullOrBlank()) {
+            if (!review.study_friendly.isNullOrEmpty()) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Study-friendly: ${review.study_friendly}",
+                    text = "Study-friendly: ${review.study_friendly?.joinToString(", ") ?: ""}",
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary,
                     maxLines = 2,

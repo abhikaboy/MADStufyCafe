@@ -3,6 +3,7 @@ package com.example.composeapp.data.repository.interfaces
 import androidx.lifecycle.LiveData
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.CafePhoto
 import kotlinx.coroutines.flow.Flow
 
 interface CafeRepositoryInterface {
@@ -35,4 +36,6 @@ interface CafeRepositoryInterface {
     fun findCafesByRatingLiveData(minRating: Double): LiveData<ApiResult<List<CafeEntity>>>
 
     fun findCafesByAmenitiesLiveData(amenities: List<String>): LiveData<ApiResult<List<CafeEntity>>>
+
+    suspend fun getCafePhotos(cafeId: String): ApiResult<List<CafePhoto>>
 }

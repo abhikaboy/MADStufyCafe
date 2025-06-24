@@ -413,9 +413,9 @@ class FakeApiServiceTest {
             overall_rating = 4.5,
             outlet_accessibility = 4.0,
             wifi_quality = 3.5,
-            atmosphere = "Cozy",
-            energy_level = "Moderate",
-            study_friendly = "Very friendly"
+            atmosphere = listOf("Cozy"),
+            energy_level = listOf("Moderate"),
+            study_friendly = listOf("Very friendly")
         )
         // Act
         val result = underTest.createReview(reviewCreate)
@@ -501,17 +501,17 @@ class FakeApiServiceTest {
             overall_rating = 3.0,
             outlet_accessibility = 2.0,
             wifi_quality = 3.0,
-            atmosphere = "Original"
+            atmosphere = listOf("Original")
         ))
         val update = ReviewUpdate(
             overall_rating = 5.0,
-            atmosphere = "Updated Atmosphere"
+            atmosphere = listOf("Updated Atmosphere")
         )
         // Act
         val result = underTest.updateReview(review.id, update)
         // Assert
         assertEquals(5.0, result.overall_rating, 0.01)
-        assertEquals("Updated Atmosphere", result.atmosphere)
+        assertEquals(listOf("Updated Atmosphere"), result.atmosphere)
         assertEquals(review.id, result.id)
         assertEquals(2.0, result.outlet_accessibility, 0.01) // Should remain unchanged
     }

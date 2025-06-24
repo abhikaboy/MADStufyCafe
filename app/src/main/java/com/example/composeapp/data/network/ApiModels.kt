@@ -61,6 +61,9 @@ data class Cafe(
     val wifi_access: Int = 0, // AccessLevel 0-3
     val outlet_accessibility: Int = 0, // AccessLevel 0-3
     val average_rating: Int = 1,
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null,
     val created_at: String? = null,
     val updated_at: String? = null
 )
@@ -76,7 +79,10 @@ data class CafeCreate(
     val thumbnail_url: String? = null,
     val wifi_access: Int = 0,
     val outlet_accessibility: Int = 0,
-    val average_rating: Int = 1
+    val average_rating: Int = 1,
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null
 )
 
 // Review models
@@ -87,9 +93,9 @@ data class Review(
     val overall_rating: Double,
     val outlet_accessibility: Double,
     val wifi_quality: Double,
-    val atmosphere: String? = null,
-    val energy_level: String? = null,
-    val study_friendly: String? = null,
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null,
     val photos: List<Photo> = emptyList(),
     val created_at: String? = null,
     val updated_at: String? = null
@@ -101,15 +107,25 @@ data class ReviewCreate(
     val overall_rating: Double,
     val outlet_accessibility: Double,
     val wifi_quality: Double,
-    val atmosphere: String? = null,
-    val energy_level: String? = null,
-    val study_friendly: String? = null
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null
 )
 
 data class Photo(
     @SerializedName("_id") val id: String,
     val url: String,
     val caption: String? = null
+)
+
+// Photo response model for cafe photos endpoint
+data class CafePhoto(
+    val id: String,
+    val url: String,
+    val caption: String? = null,
+    val review_id: String? = null,
+    val user_id: String? = null,
+    val created_at: String? = null
 )
 
 // Bookmark models
@@ -147,6 +163,9 @@ data class CafeInBookmark(
     val wifi_access: Int = 0,
     val outlet_accessibility: Int = 0,
     val average_rating: Int = 1,
+    val atmosphere: List<String>? = null,
+    val energy_level: List<String>? = null,
+    val study_friendly: List<String>? = null,
     val created_at: String? = null,
     val updated_at: String? = null
 )
@@ -202,9 +221,9 @@ fun Cafe.toEntity(): CafeEntity {
         } ?: true,
         imageUrl = thumbnail_url ?: "",
         thumbnailUrl = thumbnail_url ?: "",
-        atmosphereTags = "",
-        energyLevelTags = "",
-        studyFriendlyTags = "",
+        atmosphereTags = atmosphere?.joinToString(",") ?: "",
+        energyLevelTags = energy_level?.joinToString(",") ?: "",
+        studyFriendlyTags = study_friendly?.joinToString(",") ?: "",
         ratingImageUrls = "",
         createdAt = created_at,
         updatedAt = updated_at,
@@ -251,6 +270,9 @@ fun CafeEntity.toCafe(): Cafe {
             else -> 0
         },
         average_rating = studyRating,
+        atmosphere = atmosphereTags?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() },
+        energy_level = energyLevelTags?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() },
+        study_friendly = studyFriendlyTags?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() },
         created_at = createdAt,
         updated_at = updatedAt
     )
@@ -271,6 +293,9 @@ fun CafeInBookmark.toCafe(): Cafe {
         wifi_access = wifi_access,
         outlet_accessibility = outlet_accessibility,
         average_rating = average_rating,
+        atmosphere = atmosphere,
+        energy_level = energy_level,
+        study_friendly = study_friendly,
         created_at = created_at,
         updated_at = updated_at
     )

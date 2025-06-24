@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.CafePhoto
 import com.example.composeapp.data.repository.interfaces.CafeRepositoryInterface
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -106,4 +107,29 @@ class FakeCafeRepository : CafeRepositoryInterface {
      override suspend fun deleteAllCafes() { _cafes.clear() }
      override fun searchCafes(query: String): Flow<List<CafeEntity>> = MutableStateFlow(emptyList())
      override fun getBookmarkedCafes(): LiveData<List<CafeEntity>> = MutableLiveData(emptyList())
+
+     override suspend fun getCafePhotos(cafeId: String): ApiResult<List<CafePhoto>> {
+        return if (shouldReturnError) {
+            ApiResult.Error(errorMessage)
+        } else {
+            ApiResult.Success(listOf(
+                CafePhoto(
+                    id = "fake_photo_1",
+                    url = "https://fake-api.com/photos/cafe_${cafeId}_1.jpg",
+                    caption = "Fake interior view",
+                    review_id = "fake_review_1",
+                    user_id = "fake_user_1",
+                    created_at = "2024-01-01T00:00:00Z"
+                ),
+                CafePhoto(
+                    id = "fake_photo_2",
+                    url = "https://fake-api.com/photos/cafe_${cafeId}_2.jpg",
+                    caption = "Fake coffee bar",
+                    review_id = "fake_review_2",
+                    user_id = "fake_user_2",
+                    created_at = "2024-01-01T00:00:00Z"
+                )
+            ))
+        }
+    }
 }

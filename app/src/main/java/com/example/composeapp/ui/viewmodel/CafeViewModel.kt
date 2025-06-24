@@ -7,6 +7,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.composeapp.data.database.CafeEntity
 import com.example.composeapp.data.network.ApiResult
+import com.example.composeapp.data.network.CafePhoto
 import com.example.composeapp.data.repository.interfaces.CafeRepositoryInterface
 import kotlinx.coroutines.launch
 
@@ -63,6 +64,10 @@ class CafeViewModel(private val repository: CafeRepositoryInterface) : ViewModel
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
     
+    // LiveData for cafe photos
+    private val _cafePhotos = MutableLiveData<ApiResult<List<CafePhoto>>>()
+    val cafePhotos: LiveData<ApiResult<List<CafePhoto>>> = _cafePhotos
+    
     init {
         // Load cafes on initialization
         refreshCafes()
@@ -86,6 +91,24 @@ class CafeViewModel(private val repository: CafeRepositoryInterface) : ViewModel
     
     fun findCafesByAmenities(amenities: List<String>) {
         _amenities.value = amenities
+    }
+    
+    fun getCafePhotos(cafeId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val result = repository.getCafePhotos(cafeId)
+                _cafePhotos.value = result
+                if (result is ApiResult.Error) {
+                    _errorMessage.value = result.message
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to load photos: ${e.localizedMessage}"
+                _cafePhotos.value = ApiResult.Error("Failed to load photos")
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
     
     fun refreshCafes() {
