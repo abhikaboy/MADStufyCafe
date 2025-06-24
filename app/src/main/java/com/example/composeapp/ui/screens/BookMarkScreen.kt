@@ -1,5 +1,6 @@
 package com.example.composeapp.ui.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,12 +38,55 @@ fun BookMarkScreen(
 ) {
     val context = LocalContext.current
     var filteredList by remember(cafeList) { mutableStateOf(cafeList) }
-    
+    val selectedLabels = remember { mutableStateOf(mutableSetOf<String>()) }
+
     // Convert Cafe objects to CafeEntity for display
     val cafeEntities = remember(filteredList) {
         filteredList.map { it.toEntity() }
     }
-    
+
+    //Logging to see if cafe has tagsAdd commentMore actions
+    LaunchedEffect(cafeEntities) {
+        cafeEntities.forEach { cafe ->
+            Log.d(
+                "CafeEntities", "Cafe: ${cafe.name}, " +
+                        "Atmosphere: ${cafe.atmosphereTags}, " +
+                        "EnergyLevel: ${cafe.energyLevelTags}" +
+                        "StudyFriendly: ${cafe.studyFriendlyTags}"
+            )
+        }
+    }
+
+    //Filtered List Of Cafe Entity
+    val filteredCafeEntity = remember(selectedLabels.value, cafeEntities) {
+        if (selectedLabels.value.isEmpty()) {
+            cafeEntities
+        } else {
+            cafeEntities.filter { cafe ->
+                val allTags = listOf(
+                    cafe.tags,
+                    cafe.atmosphereTags,
+                    cafe.energyLevelTags,
+                    cafe.studyFriendlyTags
+                )
+                    .filter { it.isNotBlank() }
+                    .flatMap { it.split(",").map { tag -> tag.trim() } }
+
+                selectedLabels.value.any { label ->
+                    allTags.any { tag -> tag.equals(label, ignoreCase = true) }
+                }
+            }
+        }
+    }
+
+    //Checking size of filtered Cafe
+    LaunchedEffect(filteredCafeEntity) {
+        Log.d("FilteredCafes", "Count: ${filteredCafeEntity.size}")
+        filteredCafeEntity.forEach {
+            Log.d("FilteredCafes", it.name)
+        }
+    }
+
     // Handle onResume lifecycle event
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -56,7 +100,7 @@ fun BookMarkScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,19 +126,26 @@ fun BookMarkScreen(
                     cafeList
                 } else {
                     cafeList.filter { cafe ->
-                        val fullAddress = cafe.address?.let { 
-                            "${it.street}, ${it.city}, ${it.state} ${it.zip_code}" 
+                        val fullAddress = cafe.address?.let {
+                            "${it.street}, ${it.city}, ${it.state} ${it.zip_code}"
                         } ?: "Address not available"
                         val cafeName = cafe.name ?: "Unknown Cafe"
                         cafeName.contains(query, ignoreCase = true) ||
-                        fullAddress.contains(query, ignoreCase = true)
+                                fullAddress.contains(query, ignoreCase = true)
                     }
                 }
                 onSearch(query)
             }
         )
         Spacer(modifier = Modifier.height(10.dp))
-        ExpandableFilterBar()
+        ExpandableFilterBar(
+            selectedLabels = selectedLabels.value,
+            onLabelToggle = { label ->
+                selectedLabels.value = selectedLabels.value.toMutableSet().apply {
+                    if (!add(label)) remove(label) // Toggle
+                }
+            }
+        )
         Spacer(modifier = Modifier.height(15.dp))
         Text(
             text = "Showing ${filteredList.size} bookmarked cafes",
@@ -103,7 +154,7 @@ fun BookMarkScreen(
             modifier = Modifier.align(Alignment.Start)
         )
         CafeList(
-            cafeList = cafeEntities,
+            cafeList = filteredCafeEntity,
             onCafeClick = onCafeClick,
             onBookmarkClick = { cafe ->
                 onBookmarkClick(cafe)
